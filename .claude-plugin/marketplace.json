@@ -22,6 +22,15 @@
       "tags": [
         "skill"
       ]
+    },
+    {
+      "name": "address-pr-review",
+      "source": "./plugins/address-pr-review",
+      "description": "Address unresolved review comments on the current branch\u2019s PR from any reviewer, validating each finding independently before fixing or pushing back.",
+      "category": "Productivity",
+      "tags": [
+        "skill"
+      ]
     }
   ]
 }

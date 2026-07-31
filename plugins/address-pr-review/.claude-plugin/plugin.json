@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "address-pr-review",
+  "displayName": "Address PR Review",
+  "version": "0.1.0",
+  "description": "Address unresolved review comments on the current branch\u2019s PR from any reviewer, validating each finding independently before fixing or pushing back.",
+  "author": {
+    "name": "Clayton Black"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "skills": "./skills/"
+}
