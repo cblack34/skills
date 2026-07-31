@@ -26,3 +26,10 @@ jobs:
           uv run --locked scripts/new_skill.py smoke-test \
             --description "Exercise the generated cross-harness plugin structure."
           uv run --locked scripts/validate.py
+          cp -R \
+            plugins/smoke-test/skills/smoke-test \
+            plugins/smoke-test/skills/extra-skill
+          if uv run --locked scripts/validate.py; then
+            echo "Expected validation to reject a plugin with multiple skills."
+            exit 1
+          fi
