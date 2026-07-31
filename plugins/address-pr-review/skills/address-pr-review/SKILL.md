@@ -72,14 +72,15 @@ Clayton's own comments do):
 - `[Issue]` / `[Blocking]` — full validation loop below; these deserve the
   most scrutiny in BOTH directions (fixing and pushing back).
 
-**(a) Read the actual code at the cited path/line.** Use `Read`, not the
-snippet in the comment — line numbers may have moved since the review ran.
+**(a) Read the actual code at the cited path/line.** Inspect the file itself,
+not just the snippet in the comment — line numbers may have moved since the
+review ran.
 
 **(b) Validate the claim against an authoritative source**, chosen by category:
 
 | Category | How to validate |
 | --- | --- |
-| Library/SDK/provider syntax or behavior | `WebFetch` the official docs/registry page, or a relevant MCP tool; or write a tiny repro and run/validate it |
+| Library/SDK/provider syntax or behavior | Consult the official docs or registry with available documentation or browsing access, or write a tiny repro and run/validate it |
 | Language-level claims (typing, imports, syntax) | Check the project's actual runtime/`requires-python`/tsconfig; verify empirically with a quick import or run |
 | Regex / pattern claims | Test the literal string; check it byte-for-byte |
 | File-existence / dead-link claims | `ls` / `find` / `grep` the repo |
@@ -171,20 +172,32 @@ Summarize for the user:
 ### Unresolved threads with IDs for replying and resolving
 
 ```bash
-gh api graphql -f query='
-query($owner:String!,$repo:String!,$num:Int!){
+gh api graphql --paginate -f query='
+query($owner:String!,$repo:String!,$num:Int!,$endCursor:String){
   repository(owner:$owner,name:$repo){
     pullRequest(number:$num){
-      reviewThreads(first:100){
-        nodes{
-          id isResolved path line
-          comments(first:20){ nodes{ databaseId author{login} body } }
-        }
+      reviewThreads(first:100,after:$endCursor){
+        nodes{ id isResolved }
+        pageInfo{ hasNextPage endCursor }
       }
     }
   }
 }' -F owner="$O" -F repo="$R" -F num="$N" \
-  --jq '.data.repository.pullRequest.reviewThreads.nodes | map(select(.isResolved==false))'
+  --jq '.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false) | .id' |
+while IFS= read -r thread_id; do
+  gh api graphql --paginate -f query='
+  query($thread:ID!,$endCursor:String){
+    node(id:$thread){
+      ... on PullRequestReviewThread{
+        id isResolved path line
+        comments(first:100,after:$endCursor){
+          nodes{ databaseId author{login} body }
+          pageInfo{ hasNextPage endCursor }
+        }
+      }
+    }
+  }' -F thread="$thread_id"
+done
 ```
 
 ### Latest review by a given author (for the body / suppressed comments)
