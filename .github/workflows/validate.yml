@@ -1,0 +1,28 @@
+name: Validate marketplace
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v8
+        with:
+          version: "0.11.29"
+          enable-cache: true
+      - run: uv lock --check
+      - run: uv run --locked python -m py_compile scripts/new_skill.py scripts/validate.py
+      - run: uv run --locked scripts/validate.py
+      - name: Smoke-test the skill generator
+        run: |
+          git clone . "$RUNNER_TEMP/skills-marketplace"
+          cd "$RUNNER_TEMP/skills-marketplace"
+          uv run --locked scripts/new_skill.py smoke-test \
+            --description "Exercise the generated cross-harness plugin structure."
+          uv run --locked scripts/validate.py
