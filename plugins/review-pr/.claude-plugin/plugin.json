@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "review-pr",
+  "displayName": "Review PR",
+  "version": "0.1.0",
+  "description": "Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels, and suggested changes.",
+  "author": {
+    "name": "Clayton Black"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "skills": "./skills/"
+}
