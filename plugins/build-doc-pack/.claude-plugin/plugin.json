@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "build-doc-pack",
+  "displayName": "Build Doc Pack",
+  "version": "0.1.0",
+  "description": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+  "author": {
+    "name": "Clayton Black"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "skills": "./skills/"
+}

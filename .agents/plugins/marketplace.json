@@ -3,5 +3,18 @@
   "interface": {
     "displayName": "Clayton's Skills"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "build-doc-pack",
+      "source": {
+        "source": "local",
+        "path": "./plugins/build-doc-pack"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer"
+    }
+  ]
 }
