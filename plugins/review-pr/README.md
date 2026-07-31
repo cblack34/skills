@@ -1,4 +1,4 @@
-# Review Pr
+# Review PR
 
 Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels, and suggested changes.
 

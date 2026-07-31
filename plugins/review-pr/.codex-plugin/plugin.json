@@ -12,14 +12,14 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Review Pr",
+    "displayName": "Review PR",
     "shortDescription": "Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels, and suggested changes.",
     "longDescription": "Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels, and suggested changes.",
     "developerName": "Clayton Black",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "Help me use Review Pr."
+      "Help me use Review PR."
     ]
   }
 }

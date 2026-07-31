@@ -235,19 +235,32 @@ unknown).
 All threads with replies + resolution state:
 
 ```bash
-gh api graphql -f query='
-query($owner:String!,$repo:String!,$num:Int!){
+gh api graphql --paginate -f query='
+query($owner:String!,$repo:String!,$num:Int!,$endCursor:String){
   repository(owner:$owner,name:$repo){
     pullRequest(number:$num){
-      reviewThreads(first:100){
-        nodes{
-          id isResolved path line
-          comments(first:20){ nodes{ databaseId author{login} body } }
-        }
+      reviewThreads(first:100,after:$endCursor){
+        nodes{ id }
+        pageInfo{ hasNextPage endCursor }
       }
     }
   }
-}' -F owner="$O" -F repo="$R" -F num="$N"
+}' -F owner="$O" -F repo="$R" -F num="$N" \
+  --jq '.data.repository.pullRequest.reviewThreads.nodes[].id' |
+while IFS= read -r thread_id; do
+  gh api graphql --paginate -f query='
+  query($thread:ID!,$endCursor:String){
+    node(id:$thread){
+      ... on PullRequestReviewThread{
+        id isResolved path line
+        comments(first:100,after:$endCursor){
+          nodes{ databaseId author{login} body }
+          pageInfo{ hasNextPage endCursor }
+        }
+      }
+    }
+  }' -F thread="$thread_id"
+done
 ```
 
 File-level comment (finding outside diff hunks):
