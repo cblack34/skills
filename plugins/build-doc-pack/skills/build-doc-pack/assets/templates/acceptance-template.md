@@ -7,7 +7,7 @@ The active scope is complete when every criterion below holds and every required
 ## Run and verify
 
 ```bash
-<!-- Exact install, run, smoke, lint, typecheck, test, and build commands required for final verification. Keep them character-identical to AGENTS.md. -->
+# PROJECT-FILL: Exact install, run, smoke, lint, typecheck, test, and build commands required for final verification. Keep them character-identical to AGENTS.md.
 ```
 
 <!-- Create one H2 section per user-visible capability or strategic invariant. Each active brief capability must map to at least one criterion, and each criterion must trace to active scope.

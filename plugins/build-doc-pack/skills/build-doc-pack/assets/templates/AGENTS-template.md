@@ -23,7 +23,7 @@ The pack's high-level suggested implementation approach is informed but non-bind
 Run these exact commands before every PR is integration-ready and before declaring the project complete:
 
 ```bash
-<!-- Exact verification commands, one per line. Include a smoke/run check for a runnable product. Keep commands character-identical everywhere. -->
+# PROJECT-FILL: Exact verification commands, one per line. Include a smoke/run check for a runnable product. Keep commands character-identical everywhere.
 ```
 
 Every item in the final acceptance document must also pass. Slice-level checks show progress but never replace final acceptance.
