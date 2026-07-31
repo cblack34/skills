@@ -4,5 +4,15 @@
     "name": "Clayton Black"
   },
   "description": "Personal agent skills maintained by Clayton Black.",
-  "plugins": []
+  "plugins": [
+    {
+      "name": "build-doc-pack",
+      "source": "./plugins/build-doc-pack",
+      "description": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+      "category": "Developer",
+      "tags": [
+        "skill"
+      ]
+    }
+  ]
 }

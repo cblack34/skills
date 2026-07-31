@@ -1,0 +1,25 @@
+{
+  "name": "build-doc-pack",
+  "version": "0.1.0",
+  "description": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+  "author": {
+    "name": "Clayton Black",
+    "url": "https://github.com/cblack34"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "keywords": [
+    "agent-skill"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Build Doc Pack",
+    "shortDescription": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+    "longDescription": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+    "developerName": "Clayton Black",
+    "category": "Developer",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Help me use Build Doc Pack."
+    ]
+  }
+}
