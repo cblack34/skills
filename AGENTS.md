@@ -21,7 +21,7 @@ These instructions apply to the entire repository.
 ## Changing a skill
 
 - Preserve cross-harness behavior in the shared `SKILL.md`; isolate unavoidable harness differences in clearly labeled sections.
-- Bump the version in both plugin manifests when publishing changes to an existing plugin.
+- When publishing changes to an existing plugin, bump both plugin manifests together with `uv run --locked scripts/bump_plugin_version.py <plugin> <major|minor|patch|VERSION>`.
 - Do not add secrets, credentials, machine-specific absolute paths, or private source material.
 - Prefer deterministic helper scripts for mechanical work and keep them inside the owning skill.
 
