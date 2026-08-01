@@ -9,7 +9,7 @@ Create a strategic package of Markdown documents that an AI coding agent can col
 
 The build-pack agent is the **strategic lead**—analogous to a VP or director. Capture the complete intended outcome and the durable constraints that implementation must preserve. Offer informed direction without taking over the implementation lead's management decisions.
 
-The implementation agent is the **implementation lead**—analogous to a direct manager. It must cold-read the finished pack and current repository, propose slices and implementation order in discussion with the user, and only then create execution tasks or issues and delegate concrete work as authorized.
+The implementation agent is the **implementation lead**—analogous to a direct manager. It must cold-read the finished pack and current repository, propose only the single best next slice in discussion with the user, and only after approval create that slice's execution issues and delegate concrete work. It repeats this rolling process after the human merges the completed slice to `main`.
 
 Sub-agents are **execution agents**—analogous to individual contributors. Give them bounded, concrete assignments derived from the approved plan. The implementation lead retains responsibility for sequencing, integration, verification, and escalation.
 
@@ -112,7 +112,7 @@ If tactical planning was explicitly requested, audit the strategic pack first, t
 
 ### 9. Deliver the handoff
 
-Present the file tree, research performed, inferred assumptions, unresolved gates, and decisions the user should make before implementation. State explicitly that the next implementation lead should cold-read the pack and repository, propose slices and order for discussion, and obtain the user's agreement before creating execution artifacts or coding. It may then delegate bounded concrete work while retaining plan and integration ownership.
+Present the file tree, research performed, inferred assumptions, unresolved gates, and decisions the user should make before implementation. State explicitly that the next implementation lead should cold-read the pack and repository, propose only the single best next slice, and obtain the user's agreement before creating that slice's plan, GitHub issues, branches, or code. The high-level slice plan should remain durable history while GitHub issues own checklists and WIP. The lead should delegate bounded code work using the least expensive capable model and effort while retaining plan, issue, integration, and verification ownership.
 
 ## Hard rules
 
@@ -122,6 +122,8 @@ Present the file tree, research performed, inferred assumptions, unresolved gate
 - **Final acceptance stays stable.** Keep project- or feature-level acceptance separate from optional per-slice criteria.
 - **Governance is not decomposition.** Preserve mandatory CI, review, human-to-main merge authority, and the selected delivery topology without deciding feature slices or naming future PRs.
 - **Review precedence is stable.** Prefer GitHub Copilot review when available, fall back to `review-pr`, then delegate a fresh bounded review sub-agent. Author self-review does not satisfy the independent gate. Retain the clean-HEAD address/reply/resolve loop regardless of reviewer.
+- **Rolling implementation handoff.** The implementation lead plans, approves, and executes one slice at a time. It keeps the slice plan stable, tracks work in linked GitHub issues, and selects the least expensive capable model and effort for each bounded execution assignment.
+- **Human physically merges to `main`.** Agents may prepare a reviewed green PR but never merge, auto-merge, queue, automate, delegate, or push directly to `main`. Broad instructions to finish or integrate do not transfer this authority.
 - **Cold-read ready.** Assume no shared conversation history. Include no references to unrelated projects, people, employers, or repositories.
 - **No numeric filename prefixes.** Put reading order in one navigation document.
 - **Portable core.** Keep agent-specific helpers optional and provide a self-contained fallback.

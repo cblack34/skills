@@ -20,7 +20,7 @@ The repository targets Python 3.14 through `.python-version` and `pyproject.toml
 uv sync --locked
 ```
 
-Create a one-skill plugin from the repository root:
+Create a new plugin with its primary skill from the repository root:
 
 ```bash
 uv run --locked scripts/new_skill.py my-skill \
@@ -38,7 +38,7 @@ Then:
 uv run --locked scripts/validate.py
 ```
 
-The generator creates both plugin manifests and appends matching entries to both catalogs. One plugin per skill is the default because it keeps installation, versioning, and ownership independent. Add future Python dependencies with `uv add` or development-only dependencies with `uv add --dev` so `pyproject.toml` and `uv.lock` stay synchronized.
+The generator creates both plugin manifests and appends matching entries to both catalogs. Separate plugins remain the default when skills should be installed or versioned independently; closely related companion skills may share a plugin after confirming that placement with the user. Add future Python dependencies with `uv add` or development-only dependencies with `uv add --dev` so `pyproject.toml` and `uv.lock` stay synchronized.
 
 ## Repository layout
 
@@ -54,7 +54,11 @@ The generator creates both plugin manifests and appends matching entries to both
 │       ├── .claude-plugin/plugin.json
 │       ├── .codex-plugin/plugin.json
 │       ├── README.md
-│       └── skills/<skill>/SKILL.md
+│       └── skills/
+│           ├── <primary-skill>/SKILL.md
+│           └── <related-companion>/          # optional
+│               ├── SKILL.md
+│               └── agents/openai.yaml        # optional Codex metadata
 └── scripts/
     ├── new_skill.py
     └── validate.py

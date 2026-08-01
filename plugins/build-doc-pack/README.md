@@ -1,8 +1,13 @@
-# Build Doc Pack
+# Build Pack Workflow
 
-Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.
+Create a strategic documentation package, then lead its implementation through approved, rolling slices.
 
-The shared skill instructions are in `skills/build-doc-pack/SKILL.md`.
+This closely related plugin contains two explicitly separated responsibilities:
+
+- `skills/build-doc-pack/SKILL.md` authors or audits the durable strategic contract.
+- `skills/implement-build-pack/SKILL.md` proposes and executes one approved slice at a time, using durable slice plans, GitHub issues, and right-sized execution agents.
+
+The implementation skill is manual-only. It prepares reviewed, green PRs, but only the human may physically merge to `main`.
 
 ## Development
 

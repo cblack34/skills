@@ -189,14 +189,19 @@ def validate_plugin(name: str, check: Validation) -> None:
         path for path in skills_root.iterdir() if path.is_dir() and not path.name.startswith(".")
     )
     skill_names = [path.name for path in skill_dirs]
-    if skill_names != [name]:
+    if not skill_names:
+        check.error(skills_root, "plugin must contain at least one skill directory")
+    if name not in skill_names:
         check.error(
             skills_root,
-            f"plugin must contain exactly one skill directory named {name!r}; "
+            f"plugin must contain a primary skill directory named {name!r}; "
             f"found {skill_names!r}",
         )
     for skill_root in skill_dirs:
-        validate_skill(skill_root / "SKILL.md", name, check)
+        skill_name = skill_root.name
+        if NAME_RE.fullmatch(skill_name) is None or len(skill_name) > 64:
+            check.error(skill_root, f"invalid skill directory name: {skill_name!r}")
+        validate_skill(skill_root / "SKILL.md", skill_name, check)
 
 
 def main() -> int:

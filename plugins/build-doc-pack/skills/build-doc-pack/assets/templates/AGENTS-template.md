@@ -12,7 +12,7 @@ Instructions for the AI agent that plans and builds this project. This file is t
 
 ## Prime directive
 
-**Cold-read the active pack and current repository, then propose a tactical implementation plan to the user before coding.** Preserve the complete strategic outcome and stop when final acceptance passes.
+**Cold-read the active pack and current repository, then propose only the single best next implementation slice before coding.** Preserve the complete strategic outcome and stop when final acceptance passes.
 
 The pack's high-level suggested implementation approach is informed but non-binding. Keep hard causal dependencies, but revise advisory order when current code, tests, or unforeseen constraints justify a better plan. Discuss material replanning with the user.
 
@@ -35,14 +35,15 @@ Every item in the final acceptance document must also pass. Slice-level checks s
 ## Strategic-to-tactical handoff
 
 - The strategic lead and pack own scope, directives, architecture boundaries, research gates, risks, known dependencies, suggested high-level order, and final acceptance.
-- The implementation lead inspects live code, proposes execution-sized slices and actual order, discusses them with the user, and retains integration responsibility.
-- Create tasks, issues, branches, PRs, or sub-agent assignments only after the plan is agreed and the relevant action is authorized.
-- Give execution sub-agents bounded concrete assignments. They surface surprises to the implementation lead rather than changing scope or replanning the broader effort.
+- The implementation lead understands the full strategy but proposes, plans, and executes only one slice at a time. It retains issue, sequencing, integration, and verification responsibility.
+- Create the slice plan, GitHub issues, branches, PRs, or sub-agent assignments only after that slice is agreed and the relevant action is authorized.
+- Keep the durable slice plan focused on high-level what and why. Use linked GitHub issues for task checklists, WIP, blockers, assignments, and evidence.
+- Give execution sub-agents bounded code and test assignments. Select the least expensive capable model and reasoning effort for each task rather than inheriting the primary agent's configuration. They surface surprises to the implementation lead rather than changing scope or replanning the broader effort.
 - When evidence invalidates the plan, explain the impact and propose a revision; do not treat the strategic suggestion as a hard sequence.
 
 ## Delivery governance
 
-- A human is the only authority that merges to `main`.
+- A human is the only authority that physically merges to `main` in GitHub. Agents never merge, auto-merge, queue, automate, delegate, or push directly to `main`.
 - **Active topology:** <!-- direct PRs to main OR feature spine with leaf PRs. State one and remove this comment. -->
 - For direct PRs, the agent stops after review and green CI for human merge.
 - For spine-and-leaf delivery, the implementation lead may squash-merge clean leaf PRs to the spine; the final spine PR to `main` requires human merge.
@@ -54,7 +55,7 @@ Every item in the final acceptance document must also pass. Slice-level checks s
 
 - **Always:** follow [`docs/engineering/workflow.md`](docs/engineering/workflow.md); resolve required research gates; verify unfamiliar APIs against current official docs; run required checks; update affected strategic and descriptive docs with behavior changes.
 - **Ask first or stop:** changing active scope, public contracts, non-negotiables, final acceptance, or an architecture boundary; adopting a paid service; making an external or destructive change beyond recorded authority; starting a broad refactor.
-- **Never:** invent repository facts; commit secrets; bypass red verification; merge to `main`; force current code into an obsolete plan; implement deferred scope or speculative adapters.
+- **Never:** invent repository facts; commit secrets; bypass red verification; merge, auto-merge, queue, automate, delegate, or push directly to `main`; force current code into an obsolete plan; implement deferred scope or speculative adapters.
 <!-- Add project-specific rules, paired with their approved alternative or escalation path. -->
 
 ## Dependencies

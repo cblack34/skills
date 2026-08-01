@@ -8,7 +8,7 @@
     {
       "name": "build-doc-pack",
       "source": "./plugins/build-doc-pack",
-      "description": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+      "description": "Author strategic build packs and implement them through approved, rolling slices with durable plans and delegated execution.",
       "category": "Developer",
       "tags": [
         "skill"

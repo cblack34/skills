@@ -1,7 +1,7 @@
 {
   "name": "build-doc-pack",
-  "version": "0.1.0",
-  "description": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+  "version": "0.2.0",
+  "description": "Author strategic build packs and implement them through approved, rolling slices with durable plans and delegated execution.",
   "author": {
     "name": "Clayton Black",
     "url": "https://github.com/cblack34"
@@ -13,13 +13,18 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Build Doc Pack",
-    "shortDescription": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
-    "longDescription": "Author or audit a strategic documentation package that lets an AI coding agent cold-read complete product or feature scope before implementation planning.",
+    "shortDescription": "Author strategic build packs and implement them through approved, rolling slices.",
+    "longDescription": "Create or audit a durable strategic build pack, then lead implementation one human-approved slice at a time with stable slice plans, GitHub issue tracking, right-sized delegated execution, and a human-only merge gate for main.",
     "developerName": "Clayton Black",
     "category": "Developer",
-    "capabilities": [],
+    "capabilities": [
+      "Strategic build-pack authoring",
+      "Rolling one-slice implementation planning",
+      "Right-sized execution-agent delegation"
+    ],
     "defaultPrompt": [
-      "Help me use Build Doc Pack."
+      "Help me author a strategic build pack.",
+      "Use $implement-build-pack to propose or resume one implementation slice from the active strategic build pack."
     ]
   }
 }
