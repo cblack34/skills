@@ -51,7 +51,7 @@ Do not ask the user for facts current documentation can establish. Research them
 - What existing CI, merge, branch-protection, or release policies are durable company-wide governance facts?
 - Which conditions require implementation to stop and return to the user?
 
-Strategic mode defaults to this handoff: the implementation agent cold-reads the pack and repository, proposes slices and implementation order in discussion with the user, and only after agreement creates execution artifacts and delegates work. Confirm a different handoff only if the user requests one.
+Strategic mode defaults to this handoff: the implementation agent cold-reads the pack and repository, proposes only the single best next slice, and only after human agreement creates that slice's durable high-level plan and GitHub execution issues. It delegates bounded code work using the least expensive capable model and effort, prepares a reviewed green PR, and stops for the human to physically merge it to `main` before proposing another slice. Confirm a different handoff only if the user requests one, except that agent merge authority never extends to `main`.
 
 ## Feature-pack variant
 

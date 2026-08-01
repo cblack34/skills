@@ -46,10 +46,11 @@ For the default strategic mode:
 - [ ] Any suggested implementation order stays at broad capability or decision-gate level, explains its rationale, and is labeled non-binding.
 - [ ] The implementation agent is explicitly allowed to reorder the suggestion when live code, tests, or unforeseen constraints justify it.
 - [ ] Final acceptance remains project- or feature-level and is not folded into per-task acceptance.
-- [ ] The handoff tells the implementation agent to inspect the current repository, propose slices and order to the user, and obtain agreement before creating execution artifacts or coding.
+- [ ] The handoff tells the implementation agent to inspect the current repository, propose only the single best next slice, and obtain agreement before creating that slice's plan, GitHub issues, branches, assignments, or code.
 - [ ] Authority is clear: the strategic agent sets direction, the implementation lead owns tactical planning and integration, and execution sub-agents receive bounded concrete assignments.
+- [ ] The workflow keeps durable slice plans focused on high-level what and why, uses linked GitHub issues for task checklists and WIP, and selects the least expensive capable model and effort for each execution assignment.
 - [ ] Exactly one delivery topology is active: human-merge-each-PR to `main`, or agent-merge leaves to a spine with human merge of the final spine PR to `main`.
-- [ ] Only a human may merge to `main`; the agent's merge authority, if any, is limited to clean leaf PRs targeting the spine.
+- [ ] Only a human may physically merge to `main` in GitHub; agents cannot merge, auto-merge, queue, automate, delegate, or push directly to `main`. Agent merge authority, if any, is limited to clean leaf PRs targeting the spine.
 - [ ] The workflow retains self-verification, CI, review, reply/resolve, re-request-until-clean, clean-HEAD review, documentation, and stop gates without preassigning feature scope to PRs.
 - [ ] Reviewer precedence is explicit: GitHub Copilot first when available, `review-pr` fallback, then a fresh bounded review sub-agent; author self-review never substitutes for independent review.
 - [ ] PR mechanics retain base synchronization, Conventional Commits titles, verification evidence, protected-branch safety, and issue closure only through a PR to `main`.

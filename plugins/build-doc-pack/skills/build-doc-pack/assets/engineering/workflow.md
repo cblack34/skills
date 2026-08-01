@@ -9,7 +9,7 @@ Treat suggested order as informed guidance, not a command. Preserve hard causal 
 - **Strategic lead:** sets outcomes, guardrails, company-wide delivery governance, and final acceptance.
 - **Implementation lead:** proposes and manages slices, actual order, integration, replanning, and delegation.
 - **Execution agents:** complete bounded assignments and surface surprises; they do not change wider scope or architecture.
-- **Human:** approves the tactical plan and is the only authority that merges to `main`.
+- **Human:** approves each tactical slice and is the only authority that physically merges to `main` in GitHub. This authority cannot be delegated.
 
 ## Before implementation
 
@@ -17,8 +17,8 @@ Treat suggested order as informed guidance, not a command. Preserve hard causal 
 2. Inspect current code, tests, manifests, CI, branch state, and repository rules.
 3. Resolve required research gates or return them to the user; do not adopt an irreversible design while its gate is open.
 4. Evaluate the suggested implementation approach against repository reality.
-5. Propose execution-sized slices, actual order and rationale, verification per slice, risk checkpoints, and useful delegation.
-6. Discuss and revise the plan with the user before coding or creating execution artifacts.
+5. Select and propose only the single best next slice: its outcome, boundaries, rationale, checks, risks, delivery shape, and useful delegation.
+6. Discuss and revise that slice with the user before coding or creating its plan, issues, branches, PRs, or agent assignments. Do not build an upfront execution backlog for the full feature.
 
 When evidence invalidates the plan, stop affected work, explain the impact, and propose a revision. Do not force reality to match the original suggestion.
 
@@ -38,7 +38,7 @@ Use this when the human wants to review and merge every delivery unit:
 4. Open a PR to `main`, run the review loop, and require green CI.
 5. Stop for the human to merge. Confirm the resulting state before starting dependent work.
 
-The agent never merges a PR whose base is `main`.
+The agent never merges a PR whose base is `main`, enables auto-merge, uses a merge queue, calls a merge API, automates the GitHub merge UI, pushes directly to `main`, or delegates any of those actions. When the PR is ready, the human physically pushes the merge button in GitHub.
 
 ### Option B — feature spine with leaf PRs
 
@@ -54,11 +54,11 @@ Use this when the implementation lead may integrate work while the human keeps t
 8. When final acceptance passes on the spine, sync it with `main`, resolve only trivial conflicts, and open the spine PR to `main`.
 9. Stop for the human to review and merge the spine PR.
 
-The agent never merges the spine to `main`. Do not run multiple spines for the same active scope unless the user approves that coordination cost.
+The agent never merges the spine to `main`, enables auto-merge, uses a merge queue, calls a merge API, automates the GitHub merge UI, pushes directly to `main`, or delegates any of those actions. When the spine PR is ready, the human physically pushes the merge button in GitHub. Do not run multiple spines for the same active scope unless the user approves that coordination cost.
 
 ## Delegation
 
-The implementation lead retains plan, ordering, integration, and verification ownership. Delegate only concrete bounded assignments after the relevant plan is agreed. Give each execution agent its scope, constraints, interfaces, expected result, and checks. Require it to return unexpected dependencies or contradictions instead of expanding scope. Review delegated work before integration.
+The implementation lead retains slice selection, plan, issue, ordering, integration, and verification ownership. Delegate production code and test writing as concrete bounded assignments after the slice is approved. Size every assignment independently and use the least expensive capable model and reasoning effort; do not inherit an expensive primary configuration by default. Give each execution agent its scope, exclusions, constraints, interfaces, expected result, checks, branch ownership, and stop conditions. Require a concise return receipt with changed files, verification, decisions, surprises, and a commit or diff reference. Review delegated work before integration. If capable delegation is unavailable, stop and tell the human instead of silently moving implementation into the primary context.
 
 ## Build and self-verify
 

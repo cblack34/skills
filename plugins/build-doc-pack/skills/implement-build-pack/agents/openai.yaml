@@ -1,0 +1,7 @@
+interface:
+  display_name: "Implement Build Pack"
+  short_description: "Implement one approved build-pack slice at a time."
+  default_prompt: "Use $implement-build-pack to propose or resume one implementation slice from the active strategic build pack."
+
+policy:
+  allow_implicit_invocation: false

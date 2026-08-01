@@ -9,7 +9,7 @@ Write every pack for a capable agent with no shared conversation history. Lean, 
 - Do not default to milestones, execution-sized slices, stories, tasks, branch plans, PR plans, issue backlogs, or sub-agent assignments.
 - Distinguish three things: a hard causal constraint, a broad advisory order, and a tactical plan. “Evaluate standard X before adopting the canonical schema because interoperability depends on it” may be hard; “then establish domain contracts before output adapters to reduce rework” may be suggested; execution-sized steps are tactical.
 - When tactical planning is explicitly requested, put it in a separate, revisable addendum. Strategic specs and final acceptance remain authoritative.
-- Preserve the authority ladder: strategic lead sets outcomes and guardrails; implementation lead owns planning, sequencing, integration, and delegation; execution agents own bounded assigned work.
+- Preserve the authority ladder: strategic lead sets outcomes and guardrails; implementation lead owns rolling one-slice planning, issues, sequencing, integration, and delegation; execution agents own bounded assigned code work; only the human physically merges to `main`.
 - Separate governance from decomposition. Mandatory CI/review rules and merge authority may govern every future PR without the strategic pack deciding how many PRs exist or which scope each contains.
 
 ## 2. Non-obvious only

@@ -5,15 +5,16 @@ These instructions apply to the entire repository.
 ## Source of truth
 
 - Keep reusable instructions in `plugins/<plugin>/skills/<skill>/SKILL.md`.
-- Keep harness-specific metadata in `.claude-plugin/` and `.codex-plugin/` files only.
-- Default to one skill per plugin so skills can be installed and versioned independently.
+- Keep shared workflow instructions in `SKILL.md`. Keep plugin-level harness metadata in `.claude-plugin/` and `.codex-plugin/`; use skill-local `agents/openai.yaml` only for Codex UI or invocation policy that has no portable equivalent.
+- Group only closely related skills in the same plugin. Use separate plugins when skills should be installed or versioned independently.
 - Keep every runtime dependency inside its plugin directory. Installed plugins cannot safely reference sibling directories.
 
 ## Adding a skill
 
 - Run `uv run --locked scripts/new_skill.py <name> --description <description>` from the repository root.
 - Use lowercase kebab-case names no longer than 64 characters.
-- Keep the plugin folder name, both plugin manifest names, the skill folder name, and `SKILL.md` frontmatter name identical.
+- Before creating a skill inside an existing plugin, confirm that placement with the user.
+- Keep the plugin folder name and both plugin manifest names identical. Keep each skill folder name identical to its `SKILL.md` frontmatter name.
 - Do not hand-edit only one marketplace catalog. The Claude and Codex catalogs must contain the same plugin names in the same order.
 - Do not leave placeholder instructions in a published skill.
 
