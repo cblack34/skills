@@ -1,0 +1,25 @@
+{
+  "name": "address-pr-review",
+  "version": "0.1.0",
+  "description": "Address unresolved review comments on the current branch\u2019s PR from any reviewer, validating each finding independently before fixing or pushing back.",
+  "author": {
+    "name": "Clayton Black",
+    "url": "https://github.com/cblack34"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "keywords": [
+    "agent-skill"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Address PR Review",
+    "shortDescription": "Address unresolved review comments on the current branch\u2019s PR from any reviewer, validating each finding independently before fixing or pushing back.",
+    "longDescription": "Address unresolved review comments on the current branch\u2019s PR from any reviewer, validating each finding independently before fixing or pushing back.",
+    "developerName": "Clayton Black",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Help me use Address PR Review."
+    ]
+  }
+}
