@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -91,6 +92,31 @@ class BumpPluginVersionTests(unittest.TestCase):
 
         self.assertLess(beta_2.compare_precedence(beta_11), 0)
         self.assertLess(beta_11.compare_precedence(release), 0)
+
+    def test_numeric_prerelease_identifiers_reject_leading_zeroes(self) -> None:
+        for version in ("1.0.0-01", "1.0.0-alpha.01"):
+            with self.subTest(version=version):
+                with self.assertRaisesRegex(ValueError, "invalid semantic version"):
+                    SemVer.parse(version)
+
+    def test_keyboard_interrupt_rolls_back_both_manifests(self) -> None:
+        original_write_text = Path.write_text
+        interrupted = False
+
+        def interrupt_second_manifest_write(
+            path: Path, contents: str, *, encoding: str | None = None
+        ) -> int:
+            nonlocal interrupted
+            if path == self.paths[1] and not interrupted:
+                interrupted = True
+                raise KeyboardInterrupt
+            return original_write_text(path, contents, encoding=encoding)
+
+        with patch.object(Path, "write_text", new=interrupt_second_manifest_write):
+            with self.assertRaises(KeyboardInterrupt):
+                update_plugin_version(self.plugins_root, self.plugin, "minor")
+
+        self.assertEqual(self.versions(), ["1.2.3", "1.2.3"])
 
 
 if __name__ == "__main__":

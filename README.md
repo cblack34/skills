@@ -33,9 +33,9 @@ Then:
 2. Add any supporting `scripts/`, `references/`, or `assets/` inside that skill directory.
 3. When releasing changes to an existing plugin, update both manifest versions together:
 
-```bash
-uv run --locked scripts/bump_plugin_version.py my-skill minor
-```
+    ```bash
+    uv run --locked scripts/bump_plugin_version.py my-skill minor
+    ```
 
 Use `major`, `minor`, `patch`, or an explicit semantic version. Add `--dry-run` to preview the change without writing either manifest.
 

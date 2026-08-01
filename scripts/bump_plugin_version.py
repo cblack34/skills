@@ -38,6 +38,11 @@ class SemVer:
             raise ValueError(f"invalid semantic version: {value!r}")
         prerelease = tuple(match.group(4).split(".")) if match.group(4) else ()
         build = tuple(match.group(5).split(".")) if match.group(5) else ()
+        if any(
+            identifier.isdigit() and len(identifier) > 1 and identifier.startswith("0")
+            for identifier in prerelease
+        ):
+            raise ValueError(f"invalid semantic version: {value!r}")
         return cls(
             major=int(match.group(1)),
             minor=int(match.group(2)),
@@ -173,7 +178,7 @@ def update_plugin_version(
             for path, manifest in zip(paths, manifests):
                 manifest["version"] = str(target)
                 path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-        except OSError:
+        except BaseException:
             for path, original in zip(paths, originals):
                 path.write_text(original, encoding="utf-8")
             raise
