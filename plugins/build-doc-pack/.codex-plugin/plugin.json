@@ -13,7 +13,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Build Doc Pack",
-    "shortDescription": "Author strategic build packs and implement them through approved, rolling slices.",
+    "shortDescription": "Author, transition, and implement strategic build packs through approved rolling slices.",
     "longDescription": "Create, audit, or transition a durable strategic build pack, preserve completed packs as clearly subordinate history, then lead implementation one human-approved slice at a time with stable slice plans, GitHub issue tracking, right-sized delegated execution, and a human-only merge gate for main.",
     "developerName": "Clayton Black",
     "category": "Developer",

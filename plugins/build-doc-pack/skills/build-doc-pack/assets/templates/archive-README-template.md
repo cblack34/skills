@@ -1,8 +1,8 @@
-<!-- TEMPLATE: archive README. Resolve and delete every template comment and placeholder. Keep this short; the archived files contain the history. -->
+<!-- TEMPLATE: archive README. Resolve and delete every template comment and placeholder. Keep this short; the archived files contain the history. State completion, acceptance, accepted gaps, and the archive date or release reference accurately. -->
 
 # {{MILESTONE_NAME}} Pack
 
-**Status:** completed and archived {{ACCEPTANCE_DATE_OR_RELEASE_REFERENCE}}.
+**Status:** {{ARCHIVE_STATUS}}.
 
 This directory preserves the strategic contract and verification evidence for {{DELIVERED_OUTCOME}}. It is useful when investigating shipped behavior, regressions, or the decisions that shaped that milestone. It is historical evidence, not an active build specification.
 
