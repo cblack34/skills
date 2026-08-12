@@ -57,6 +57,8 @@ Strategic mode defaults to this handoff: the implementation agent cold-reads the
 
 Read the repository's active agent instructions, specs, relevant code, manifests, and verification commands first. Then confirm only the feature-specific outcome, scope and deferrals, invariants, architecture boundaries, research gates, risks, causal dependencies, and final acceptance. Follow the repository's spec location and priority rules. Treat archived packs and issue history as evidence, not authority.
 
+When this is the first pack after a delivered milestone, establish the lifecycle transition from evidence before asking questions. Ask only for facts the repository cannot prove: whether the prior outcome is accepted despite any explicit gaps, the stable milestone/archive name if no convention exists, the next active outcome or roadmap selection, and whether old deferred or rejected directions still constrain new work. Do not ask the user to classify documents you can classify by reading their content and current code.
+
 ## Tactical addendum variant — only after an explicit request
 
 First finish and audit the strategic contract. Then ask about desired planning granularity, delivery constraints, user checkpoints, issue tracker, and delegation model. Make proposed slices and order discussable; do not present them as strategic facts. Do not create external issues, branches, or PRs without authorization.

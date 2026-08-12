@@ -58,6 +58,8 @@ Summarize the few project invariants in `AGENTS.md`, explain them in the brief o
 - Make agent-specific tools optional and provide an inline fallback.
 - Resolve placeholders or surface them explicitly in delivery.
 - Include personal or account identifiers only when they are facts required for this project.
+- Make active versus historical authority explicit. Root navigation leads to exactly one roadmap or active pack; archives state their status, current entry point, and precedence without retelling another project's convention.
+- Preserve completed contracts as evidence. Limit archive edits to status, provenance, and link repair; do not rewrite history to make the old design resemble the new one.
 
 ## 10. Formatting
 

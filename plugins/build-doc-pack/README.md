@@ -1,10 +1,10 @@
 # Build Pack Workflow
 
-Create a strategic documentation package, then lead its implementation through approved, rolling slices.
+Create or transition a strategic documentation package, then lead its implementation through approved, rolling slices.
 
 This closely related plugin contains two explicitly separated responsibilities:
 
-- `skills/build-doc-pack/SKILL.md` authors or audits the durable strategic contract.
+- `skills/build-doc-pack/SKILL.md` authors or audits the durable strategic contract, including the cold-read transition from a delivered pack to new feature work.
 - `skills/implement-build-pack/SKILL.md` proposes and executes one approved slice at a time, using durable slice plans, GitHub issues, and right-sized execution agents.
 
 The implementation skill is manual-only. It prepares reviewed, green PRs, but only the human may physically merge to `main`.

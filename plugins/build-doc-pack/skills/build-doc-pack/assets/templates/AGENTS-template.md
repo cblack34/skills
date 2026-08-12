@@ -71,4 +71,4 @@ Prefer existing or standard-library capabilities. Add a dependency when it clear
 
 ## Active build pack
 
-<!-- List every active document that exists, in reading order, with a one-line purpose. Start with the strategic brief and end with workflow/code quality as appropriate. Name archived specs separately as historical evidence, never active instructions. -->
+<!-- List every active document that exists, in reading order, with a one-line purpose. Start with exactly one active entry point: the greenfield brief, a selected feature pack, or a roadmap that selects among multiple outcomes. End with workflow/code quality as appropriate. Name archived specs separately as historical evidence, say when to read them, and state that they never outrank active docs or current code/tests. -->
