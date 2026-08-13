@@ -17,6 +17,7 @@ Run after generation and before delivery. Fix findings, then re-run affected che
 - [ ] Every generated document appears in the pack's reading order; every listed document exists.
 - [ ] No document points to an appendix, plan, task list, or artifact that was omitted.
 - [ ] Existing-repository packs follow the repository's active navigation and do not revive archived instructions.
+- [ ] Root navigation identifies exactly one active roadmap or pack entry point and lists completed packs separately as historical evidence.
 
 ## C. Cross-document consistency
 
@@ -61,6 +62,18 @@ If the user explicitly requested a tactical addendum:
 - [ ] Every execution item traces to strategic scope and final acceptance; none expands or redefines them.
 - [ ] GitHub issues, branches, PRs, or other external state are created only with separate authorization.
 
-## F. Lean pass
+## F. Completed-pack transition — when applicable
+
+- [ ] The prior pack's completion status was checked against final acceptance, shipped code, tests/CI, and required human or live evidence; missing evidence remains explicit.
+- [ ] No materially unfinished scope was hidden by archiving; any scope cut or accepted gap is recorded as an explicit decision.
+- [ ] Documents were classified by role and current truth, not filename: constitution and living references stay active, while completed strategic and useful execution records become historical.
+- [ ] Completed files were moved rather than duplicated, unless an established repository convention requires otherwise and still leaves one unambiguous authority.
+- [ ] The archive README states the delivered outcome, completion status, contents, historical-only role, new active entry point, and conflict precedence.
+- [ ] Archived content retains the completed contract and evidence; edits are limited to accurate status/provenance notes and repaired links.
+- [ ] Active agent instructions, navigation bridges, roadmap/decision records, README pointers, and workflow references no longer describe the completed pack as future work.
+- [ ] Every relative link affected by the move resolves, and no active document points at a moved path as current authority.
+- [ ] The new feature pack follows the repository's active spec convention and does not duplicate constitution or living reference content.
+
+## G. Lean pass
 
 Ask of every paragraph: *Is this a user-owned decision, decision-shaping evidence, durable constraint, meaningful risk, or final acceptance fact that a capable implementation agent could not cheaply infer?* Cut what fails. Keep examples few and short, commands exact, and root agent instructions well under 150 lines. It is normal for this pass to shrink the pack.

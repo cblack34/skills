@@ -39,6 +39,53 @@ Place it in `docs/features/<feature-name>/` or the repository's active spec loca
 
 Feature packs do not duplicate constitution content. If the repository lacks usable agent instructions or verification guidance, flag that gap and offer a separate constitution update.
 
+## Starting the next pack after delivery
+
+Use this transition when the pack that currently defines the work has been delivered and accepted, and a new product horizon or substantial feature needs its own strategic contract. The goal is a clean cold read: one obvious active entry point, durable living references, and completed contracts preserved as history.
+
+### 1. Prove the prior pack is complete
+
+- Cold-read the prior strategic pack and final acceptance; current code and tests; CI and verification commands; living architecture, data, stack, and integration references; roadmap and active decisions; root navigation; and delivery history around the claimed completion.
+- Compare its final acceptance with shipped code, tests, CI, and required human or live evidence.
+- Reconcile stale checkboxes or status text from real evidence. Keep missing evidence explicit; do not mark an item complete because implementation merely appears present.
+- If material scope remains undelivered, keep the pack active or record an explicit scope decision before archiving it. Archiving must not hide unfinished work.
+
+### 2. Classify documents by role and current truth
+
+Do not archive by filename alone. A data model or tech-stack document may be a living reference in one repository and a milestone-specific historical record in another.
+
+| Document role | Default treatment |
+| --- | --- |
+| Constitution: root agent instructions, workflow, code quality, durable delivery governance | Keep active. Update navigation or current governance without copying it into the archive. |
+| Living descriptive/reference docs: current architecture, data model, stack, integration contracts | Keep active and reconcile with shipped code. If only one completed milestone still needs the content, archive it and make the historical status explicit. |
+| Completed strategic specs: brief, final acceptance, milestone-specific research or design | Move to `docs/archive/<milestone>/` or the repository's established archive location. |
+| Completed execution records: slice plans, milestone plans, completed tactical addenda | Move with the completed pack when they provide useful delivery or verification history. |
+| Roadmap and active decision records | Keep active when they still govern selection, deferrals, or prohibited directions. Remove or mark decisions that no longer have active force. |
+
+Move completed files rather than copying them. In a Git repository, history preserves their former paths; duplicate copies risk looking like two active contracts. Make only narrow historical-status annotations and link repairs inside archived material so the original contract and evidence remain intelligible.
+
+### 3. Create the archive boundary
+
+Default to a stable milestone or release name such as `docs/archive/<milestone>/`; follow an established local convention when one exists. Add `README.md` from `assets/templates/archive-README-template.md` stating:
+
+- what outcome the directory records and its completion or acceptance status;
+- what contract, verification, and optional execution records it contains;
+- that it is historical evidence, not an active build specification;
+- where active work begins now; and
+- that active documents and current code/tests win on conflict.
+
+A Git tag or release may add provenance, but it does not replace a repository-contained archive that a cold reader can discover.
+
+### 4. Establish the new active entry point
+
+- Put the new feature pack in `docs/features/<feature-name>/` or the repository's established spec location.
+- Use a roadmap as the entry point only when it carries real selection/status information across multiple outcomes. Otherwise point directly to the selected feature pack.
+- Keep active deferred or superseded directions in a decision record when a future agent might otherwise revive them from the archive or issue history.
+- Update root agent instructions and any small navigation bridges so their prime directive and reading order lead to active docs first. List the archive separately and say when it is appropriate to read.
+- Repair and verify every moved relative link, active-document list, root README pointer, and workflow reference. Remove stale statements that still describe the completed pack as future work.
+
+For later feature transitions, follow the repository's established delivered-feature convention. A completed feature pack may move under the archive or remain in place with an explicit delivered status, but it must leave the active reading order and cannot remain co-equal with the next pack.
+
 ## Optional tactical addendum — explicit request only
 
 Use the repository's established planning location and vocabulary. A separate `execution-plan.md` or `tasks.md` may contain proposed slices, order, dependencies, per-slice checks, and delivery mechanics only when the user explicitly requests tactical planning. Label it **revisable; strategic specs and shipped code win on conflict**.

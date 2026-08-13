@@ -1,6 +1,6 @@
 ---
 name: build-doc-pack
-description: Author or audit a strategic documentation package ("build pack") that lets an AI coding agent cold-read the complete product or feature scope before planning implementation. Capture outcomes, scope, non-negotiables, architecture boundaries, research, risks, known dependencies, and final acceptance in AGENTS.md, briefs, specs, and engineering standards. Use when the user wants to start a project with AI agents, create or revise a build/spec pack, write AGENTS.md, spec a feature for later implementation, or review a documentation package for agent-readiness. Keep execution planning optional and add slices, ordered tasks, PRs, branches, or issues only when the user explicitly requests tactical planning.
+description: Author, audit, or transition a strategic documentation package ("build pack") that lets an AI coding agent cold-read the complete product or feature scope before planning implementation. Capture outcomes, scope, non-negotiables, architecture boundaries, research, risks, known dependencies, and final acceptance in AGENTS.md, briefs, specs, and engineering standards. Use when the user wants to start a project with AI agents, create or revise a build/spec pack, preserve a completed pack and begin the next feature pack, write AGENTS.md, spec a feature for later implementation, or review a documentation package for agent-readiness. Keep execution planning optional and add slices, ordered tasks, PRs, branches, or issues only when the user explicitly requests tactical planning.
 ---
 
 # Build Doc Pack
@@ -63,25 +63,31 @@ Read `references/doc-catalog.md` and `references/writing-rules.md` completely. R
 
 ### 2. Inspect the available evidence
 
-For an existing repository, read its agent instructions, active specifications, relevant code, dependency manifests, and current verification commands before drafting. Treat archived plans and issue history as evidence, not current authority. For greenfield work, inspect every artifact the user supplied.
+For an existing repository, read its agent instructions, active specifications, relevant code and tests, dependency manifests, CI, and current verification commands before drafting. For a continuation pack, also read the prior pack's final acceptance, living reference docs, roadmap and active decision records, navigation bridges, and delivery history before deciding what remains active or moves. Treat archived plans and issue history as evidence, not current authority. For greenfield work, inspect every artifact the user supplied.
 
-### 3. Interview for strategic decisions
+### 3. Establish the document lifecycle
+
+When a delivered pack is giving way to new feature work, follow **Starting the next pack after delivery** in `references/doc-catalog.md` before drafting. Verify that the prior outcome is actually delivered and reconcile its acceptance record against available evidence. Then classify documents by role and current truth—not by filename—so completed specifications become historical without freezing living architecture or constitution docs.
+
+Make one active entry point unambiguous. Archive completed strategic and execution material under the repository's established convention, defaulting to `docs/archive/<milestone>/`; add the archive status and precedence README from `assets/templates/archive-README-template.md`; and update root navigation to lead cold readers to the roadmap or active feature pack. An archive is historical contract and verification evidence, never authority over active specifications or current code and tests.
+
+### 4. Interview for strategic decisions
 
 Follow `references/interview-guide.md`. Never one-shot a pack from a thin prompt. Ask only for facts the user must own: intended outcomes, scope, directives, non-negotiables, architecture constraints, risk tolerance, deliberate deferrals, delivery authority, and how final success is judged. Record delegated decisions as agent authority rather than inventing answers.
 
 Stop when the strategic contract is complete enough for a fresh implementation agent to identify open decisions and propose a plan. Do not interview for slices, task order, branch names, or issue structure in strategic mode.
 
-### 4. Research decision-shaping unknowns
+### 5. Research decision-shaping unknowns
 
 Research standards, libraries, external contracts, licenses, or technical feasibility when they could change architecture or acceptance. Prefer current official and primary sources. Distinguish verified facts, inferences, assumptions, and unresolved gates. Record only conclusions and provenance that future agents cannot cheaply rediscover; do not paste a research diary into the pack.
 
-### 5. Select the document set
+### 6. Select the document set
 
 Choose documents from `references/doc-catalog.md`. Every pack needs a stable strategic contract and final acceptance. Add conditional documents only when their content earns a separate home. In strategic mode, do not generate `tasks.md`, slice tables, milestone plans, or issue backlogs.
 
 Filenames have no numeric prefixes. State reading order once in the root `AGENTS.md` or the repository's existing navigation document.
 
-### 6. Copy and fill static assets
+### 7. Copy and fill static assets
 
 For a greenfield pack, copy:
 
@@ -89,9 +95,11 @@ For a greenfield pack, copy:
 - `assets/engineering/code-quality.md` to `docs/engineering/`;
 - `assets/engineering/workflow.md` to `docs/engineering/`.
 
+For a completed-pack transition, copy `assets/templates/archive-README-template.md` into the archive as `README.md`, then resolve every placeholder and template comment from repository evidence.
+
 Resolve the marked `<!-- PROJECT-FILL … -->` blocks from user decisions and discovered repository facts, and follow explicit template deletion instructions such as removing the inactive delivery topology. Preserve the remaining static governance text. The workflow asset establishes the strategic-to-tactical handoff and company-wide PR/CI/review rules; it governs how later tactical units ship without predefining those units.
 
-### 7. Draft the strategic documents
+### 8. Draft the strategic documents
 
 Use the templates in `assets/templates/` where available and follow `references/writing-rules.md`. Prioritize:
 
@@ -104,13 +112,13 @@ Use the templates in `assets/templates/` where available and follow `references/
 
 For nontrivial work, recommend a short high-level order of capability areas or decision gates. Explain why the order is likely to reduce risk or rework. Label it **suggested, not required** and instruct the implementation agent to revise it when repository reality, test feedback, or unforeseen issues justify a better plan. State hard ordering only when one decision truly cannot be valid before another, and distinguish that constraint from the advisory sequence. Never expand the suggestion into slices, execution-sized tasks, issues, branches, or PRs.
 
-### 8. Audit the pack
+### 9. Audit the pack
 
 Run `references/audit-checklist.md`: cold-read integrity, reference integrity, cross-document consistency, scope-to-acceptance coverage, research/risk coverage, and the strategic/tactical boundary. Treat a failed item as a pack defect.
 
 If tactical planning was explicitly requested, audit the strategic pack first, then audit the separate execution addendum for traceability. Never let a task plan redefine scope or final acceptance.
 
-### 9. Deliver the handoff
+### 10. Deliver the handoff
 
 Present the file tree, research performed, inferred assumptions, unresolved gates, and decisions the user should make before implementation. State explicitly that the next implementation lead should cold-read the pack and repository, propose only the single best next slice, and obtain the user's agreement before creating that slice's plan, GitHub issues, branches, or code. The high-level slice plan should remain durable history while GitHub issues own checklists and WIP. The lead should delegate bounded code work using the least expensive capable model and effort while retaining plan, issue, integration, and verification ownership.
 
@@ -124,6 +132,8 @@ Present the file tree, research performed, inferred assumptions, unresolved gate
 - **Review precedence is stable.** Prefer GitHub Copilot review when available, fall back to `review-pr`, then delegate a fresh bounded review sub-agent. Author self-review does not satisfy the independent gate. Retain the clean-HEAD address/reply/resolve loop regardless of reviewer.
 - **Rolling implementation handoff.** The implementation lead plans, approves, and executes one slice at a time. It keeps the slice plan stable, tracks work in linked GitHub issues, and selects the least expensive capable model and effort for each bounded execution assignment.
 - **Human physically merges to `main`.** Agents may prepare a reviewed green PR but never merge, auto-merge, queue, automate, delegate, or push directly to `main`. Broad instructions to finish or integrate do not transfer this authority.
+- **One active entry point.** After a completed-pack transition, root navigation must lead to the roadmap or current feature pack. Completed specs are clearly historical and never silently remain co-equal instructions.
+- **Archive by role, not filename.** Move completed strategic and execution records; keep constitution and genuinely living references active. Reconcile acceptance before declaring a pack completed, and never mark missing evidence complete.
 - **Cold-read ready.** Assume no shared conversation history. Include no references to unrelated projects, people, employers, or repositories.
 - **No numeric filename prefixes.** Put reading order in one navigation document.
 - **Portable core.** Keep agent-specific helpers optional and provide a self-contained fallback.
