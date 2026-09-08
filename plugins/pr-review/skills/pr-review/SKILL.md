@@ -1,5 +1,5 @@
 ---
-name: review-pr
+name: pr-review
 description: Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels ([Blocking]/[Issue]/[Suggestion]/[Nit]), and one-click suggested changes. Multi-pass finders loop until dry, every finding is adversarially verified before posting, and the review body reports exact coverage — designed to beat Copilot's half-done reviews with one clean cycle. Use when the user says "review this PR", "review the PR", "run the review bot", "code review this pull request", or similar.
 context: fork
 agent: pr-reviewer

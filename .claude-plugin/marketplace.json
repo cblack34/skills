@@ -15,18 +15,9 @@
       ]
     },
     {
-      "name": "review-pr",
-      "source": "./plugins/review-pr",
-      "description": "Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels, and suggested changes.",
-      "category": "Productivity",
-      "tags": [
-        "skill"
-      ]
-    },
-    {
-      "name": "address-pr-review",
-      "source": "./plugins/address-pr-review",
-      "description": "Address unresolved review comments on the current branch\u2019s PR from any reviewer, validating each finding independently before fixing or pushing back.",
+      "name": "pr-review",
+      "source": "./plugins/pr-review",
+      "description": "Review pull requests and address their review comments: one complete, verified GitHub review with inline severity-labeled comments, and a validate-then-fix loop for every unresolved thread.",
       "category": "Productivity",
       "tags": [
         "skill"

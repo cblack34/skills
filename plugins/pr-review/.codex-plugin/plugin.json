@@ -1,0 +1,26 @@
+{
+  "name": "pr-review",
+  "version": "0.3.0",
+  "description": "Review pull requests and address their review comments: one complete, verified GitHub review with inline severity-labeled comments, and a validate-then-fix loop for every unresolved thread.",
+  "author": {
+    "name": "Clayton Black",
+    "url": "https://github.com/cblack34"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "keywords": [
+    "agent-skill"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "PR Review",
+    "shortDescription": "Review PRs and address review comments, verifying every finding before posting or fixing.",
+    "longDescription": "Review pull requests and address their review comments: one complete, verified GitHub review with inline severity-labeled comments, and a validate-then-fix loop for every unresolved thread.",
+    "developerName": "Clayton Black",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Review this PR.",
+      "Address the review comments on this PR."
+    ]
+  }
+}
