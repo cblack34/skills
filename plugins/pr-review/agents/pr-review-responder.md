@@ -23,3 +23,7 @@ so never `cd` and expect it to stick. If any of the three is missing, stop and
 report; never infer them from the current directory, `git remote`, or a
 `gh pr view` without `--repo`. Open your final message with
 `Target: OWNER/REPO#N`.
+
+The preloaded skill's steps 0–1 (target resolution, pre-flight banner) were
+already done by your caller. Start at step 2. Never re-resolve the target and
+never spawn another `pr-review-responder`.

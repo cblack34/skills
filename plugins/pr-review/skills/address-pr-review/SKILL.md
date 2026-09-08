@@ -51,8 +51,10 @@ step 0 needs the conversation). Then spawn `pr-review-responder` via the Agent
 tool for steps 2–5, passing `OWNER`, `REPO`, `N`, `REPO_DIR`, the pre-flight
 banner, whether the target was explicit, and any user scoping (reviewer,
 don't-commit). The agent has this skill preloaded via its `skills:`
-frontmatter, so it follows steps 2–5 verbatim; the prompt only needs to carry
-the resolved values. The agent must never infer any of these from the cwd.
+frontmatter, so the prompt only needs to carry the resolved values plus this
+handoff line: "You are the responder. Steps 0–1 are done; start at step 2. Do
+not re-resolve the target and do not spawn another agent." The agent must never
+infer any of these from the cwd.
 
 ### 0. Resolve the target
 
@@ -222,8 +224,10 @@ wrong resolution is visible at the top rather than buried in the table:
 
 ## Useful snippets
 
-All `gh` calls take `--repo "$O/$R"` (GraphQL takes `-F owner -F repo`) and
-all `git` calls take `-C "$REPO_DIR"` — cwd does not persist between commands.
+Every `gh` call is pinned to the resolved repo — `--repo "$O/$R"` for `gh pr`,
+`-F owner="$O" -F repo="$R"` for GraphQL, an explicit `repos/$O/$R/...` route
+for REST — and every `git` call takes `-C "$REPO_DIR"`. cwd does not persist
+between commands.
 
 ### Candidate PRs across working directories (step 0.2)
 
