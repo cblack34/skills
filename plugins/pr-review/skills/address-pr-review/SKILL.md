@@ -81,9 +81,9 @@ repo of the last PR this session opened or pushed to; if none, ask.
      more than three.
 
 Once resolved, pin `OWNER`, `REPO`, `N`, and `REPO_DIR` (the known checkout
-whose `origin` matches `OWNER/REPO`, if any). Every later command uses
-`gh --repo "$OWNER/$REPO"` (or `export GH_REPO`) and `git -C "$REPO_DIR"`;
-never rely on `cd` persisting.
+whose `origin` matches `OWNER/REPO`, if any). Every later `gh` subcommand
+takes `--repo "$OWNER/$REPO"` (or set `GH_REPO` once) and every `git` call
+takes `-C "$REPO_DIR"`; never rely on `cd` persisting.
 
 ### 1. Pre-flight
 
@@ -241,8 +241,9 @@ done | jq -s 'add | sort_by(.updatedAt) | reverse'
 ### Pre-flight banner
 
 ```bash
-gh pr view "$N" --repo "$O/$R" --json headRefName,updatedAt,headRefOid \
-  --jq '"Target: '"$O/$R#$N"' (branch \(.headRefName), last updated \(.updatedAt), head SHA \(.headRefOid[:7]))"'
+HEAD_SHA=$(gh pr view "$N" --repo "$O/$R" --json headRefOid --jq .headRefOid)
+gh pr view "$N" --repo "$O/$R" --json headRefName,updatedAt \
+  --jq '"Target: '"$O/$R#$N"' (branch \(.headRefName), last updated \(.updatedAt), head SHA '"${HEAD_SHA:0:7}"')"'
 # checkout check: does any known repo have a branch at that SHA?
 for dir in "$PRIMARY_DIR" "${EXTRA_DIRS[@]}"; do git -C "$dir" branch --points-at "$HEAD_SHA"; done
 ```

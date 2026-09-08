@@ -5,7 +5,7 @@ context: fork
 agent: pr-reviewer
 ---
 
-# Review PR
+# PR Review
 
 Produce ONE complete, verified review of a pull request. The goal is a single
 clean cycle — review, fix, merge — not five dirty rounds. Two failure modes to
