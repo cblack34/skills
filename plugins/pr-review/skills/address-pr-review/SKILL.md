@@ -1,13 +1,11 @@
 ---
 name: address-pr-review
-description: Address unresolved review comments on the current branch's PR from any reviewer — GitHub Copilot, other bots, automated review skills, or humans. Validate each finding independently against authoritative sources before acting (reviewers are frequently wrong), apply correct fixes, push back with evidence on wrong ones, reply to every comment, and resolve threads that were fixed. Use when the user says "address review comments", "address copilot review", "handle PR feedback", "respond to the review", or similar.
-context: fork
-agent: pr-review-responder
+description: Address unresolved review comments on a PR from any reviewer — GitHub Copilot, other bots, automated review skills, or humans. Takes a PR URL (preferred), OWNER/REPO#N, or a number; with no argument, targets the last PR this session opened or pushed to — never the current directory's branch. Validate each finding independently against authoritative sources before acting (reviewers are frequently wrong), apply correct fixes, push back with evidence on wrong ones, reply to every comment, and resolve threads that were fixed. Use when the user says "address review comments", "address copilot review", "handle PR feedback", "respond to the review", or similar.
 ---
 
 # Address PR Review Comments
 
-Work through unresolved review comments on the current branch's PR: fix what's
+Work through unresolved review comments on the target PR: fix what's
 right, push back on what's wrong, reply to everything, resolve only what you
 fixed. Handle ALL unresolved threads regardless of author (Copilot, bots,
 review automation, humans) unless the user scoped the request to a specific
@@ -32,15 +30,71 @@ validate/run — *then* decide whether to apply the fix, modify it, or push back
 
 ## Inputs
 
-- Optional PR number. If omitted, infer from the current branch:
-  `gh pr view --json number` (or `gh pr list --head "$(git branch --show-current)"`).
-- Get OWNER/REPO from `git remote get-url origin`.
+Optional target, in any of these forms:
+
+- `https://github.com/OWNER/REPO/pull/N` — **preferred**; fixes owner, repo,
+  and number in one token with no filesystem lookup.
+- `OWNER/REPO#N`
+- bare `N` — resolved against the repo chosen in step 0.
+
+If omitted, resolve from session history (step 0). **Never infer the target
+from the current directory's branch or `origin` remote.** The shell's cwd
+resets to the primary working directory between commands, so "current branch"
+silently means "whatever the primary repo is on", not the repo the
+conversation was about. That produced a confident "nothing to do" against the
+wrong repo's stale PR.
 
 ## Workflow
 
+Steps 0–1 run in the main context (this skill is deliberately not forked —
+step 0 needs the conversation). Then spawn `pr-review-responder` via the Agent
+tool for steps 2–5, passing `OWNER`, `REPO`, `N`, `REPO_DIR`, the pre-flight
+banner, whether the target was explicit, and any user scoping (reviewer,
+don't-commit). The agent has this skill preloaded via its `skills:`
+frontmatter, so the prompt only needs to carry the resolved values plus this
+handoff line: "You are the responder. Steps 0–1 are done; start at step 2. Do
+not re-resolve the target and do not spawn another agent." The agent must never
+infer any of these from the cwd.
+
+### 0. Resolve the target
+
+**Explicit target given** → use it. A bare number still needs a repo: take the
+repo of the last PR this session opened or pushed to; if none, ask.
+
+**No target given:**
+
+1. **Last PR this session opened or pushed to.** Scan the conversation for the
+   most recent PR the assistant itself created or pushed to. Evidence, most
+   reliable first: a `gh pr create` result URL in a tool result; a `git push`
+   followed by any `gh pr` call naming a number; a PR URL the user pasted after
+   the assistant's push. Found → print
+   `Target: OWNER/REPO#N (last PR opened this session)` and proceed. No
+   confirmation needed; this is the common case.
+2. **Otherwise, discover candidates** across the primary and every additional
+   working directory (snippet below), merged and sorted by `updatedAt`
+   descending:
+   - Zero → ask the user for a PR URL.
+   - One → use it, print the `Target:` line, proceed.
+   - Two or more → `AskUserQuestion` with the three most recently updated PRs
+     as options (label `OWNER/REPO#N`, description = PR title). The built-in
+     "Other" is how the user pastes a URL for anything not listed. Never list
+     more than three.
+
+Once resolved, pin `OWNER`, `REPO`, `N`, and `REPO_DIR` (the known checkout
+whose `origin` matches `OWNER/REPO`, if any). Every later `gh` subcommand
+takes `--repo "$OWNER/$REPO"` (or set `GH_REPO` once) and every `git` call
+takes `-C "$REPO_DIR"`; never rely on `cd` persisting.
+
 ### 1. Pre-flight
 
-- Confirm a git repo + the PR exists.
+- Print the banner before anything else:
+  `Target: OWNER/REPO#N (branch X, last updated T, head SHA S)` (snippet below).
+- **Stale check.** No explicit target given and `updatedAt` older than 48 hours
+  → stop and confirm with the user before doing any work. A stale PR with no
+  unresolved threads is the exact signature of a wrong-repo resolution.
+- **Checkout check.** If head SHA S matches no local branch HEAD across the
+  known repos, say so in the banner — the local checkout may not be the repo
+  the PR came from. Fetch/check out the PR branch in `REPO_DIR` before editing.
 - Fetch **all unresolved review threads** (REST doesn't expose resolution state;
   GraphQL is required — snippet below). Don't filter by author unless asked.
 - Fetch recent review bodies (`gh api repos/{O}/{R}/pulls/{N}/reviews`, sort by
@@ -62,7 +116,7 @@ full exchange, say so once more with your strongest evidence, tag the thread
 "needs a human decision" in your summary, and stop — no infinite loops.
 
 **(a1) Triage by severity prefix** when the reviewer uses labels like
-`[Blocking]`/`[Issue]`/`[Suggestion]`/`[Nit]` (the review-pr skill and
+`[Blocking]`/`[Issue]`/`[Suggestion]`/`[Nit]` (the pr-review skill and
 Clayton's own comments do):
 
 - `[Nit]` — low ceremony: apply if trivially correct (often just "Commit
@@ -147,10 +201,11 @@ a proposed commit title (sentence case, ~50–72 chars) and body.
 
 ### 5. Report
 
-Summarize for the user:
+Summarize for the user, opening with the same `Target: OWNER/REPO#N` line so a
+wrong resolution is visible at the top rather than buried in the table:
 
 - **Per-comment table**: `author | file:line | claim | verdict | action (commit SHA or push-back rationale)`
-- **Diff scope** (`git diff --stat` of what changed)
+- **Diff scope** (`git -C "$REPO_DIR" diff --stat` of what changed)
 - **Validation status** (what ran, what passed)
 - **Threads left open**, and why
 
@@ -168,6 +223,30 @@ Summarize for the user:
   and remember stale `updated:` frontmatter dates trigger fresh flags next round.
 
 ## Useful snippets
+
+Every `gh` call is pinned to the resolved repo — `--repo "$O/$R"` for `gh pr`,
+`-F owner="$O" -F repo="$R"` for GraphQL, an explicit `repos/$O/$R/...` route
+for REST — and every `git` call takes `-C "$REPO_DIR"`. cwd does not persist
+between commands.
+
+### Candidate PRs across working directories (step 0.2)
+
+```bash
+for dir in "$PRIMARY_DIR" "${EXTRA_DIRS[@]}"; do
+  gh pr list --repo "$(git -C "$dir" remote get-url origin | sed -E 's#.*github.com[:/]##; s#\.git$##')" \
+    --author @me --state open --json number,title,url,updatedAt
+done | jq -s 'add | sort_by(.updatedAt) | reverse'
+```
+
+### Pre-flight banner
+
+```bash
+HEAD_SHA=$(gh pr view "$N" --repo "$O/$R" --json headRefOid --jq .headRefOid)
+gh pr view "$N" --repo "$O/$R" --json headRefName,updatedAt \
+  --jq '"Target: '"$O/$R#$N"' (branch \(.headRefName), last updated \(.updatedAt), head SHA '"${HEAD_SHA:0:7}"')"'
+# checkout check: does any known repo have a branch at that SHA?
+for dir in "$PRIMARY_DIR" "${EXTRA_DIRS[@]}"; do git -C "$dir" branch --points-at "$HEAD_SHA"; done
+```
 
 ### Unresolved threads with IDs for replying and resolving
 
