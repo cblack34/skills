@@ -1,6 +1,6 @@
 {
   "name": "build-doc-pack",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Author, transition, and implement strategic build packs through approved, rolling slices with durable history and delegated execution.",
   "author": {
     "name": "Clayton Black",
