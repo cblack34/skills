@@ -100,7 +100,7 @@ Ensure the repository has a `.gitignore` covering `windows,macos,linux,visualstu
 ```bash
 STACK=python,node  # replace with the template names matching the inspected repo's stack(s)
 URL="https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,$STACK"
-curl -fsSL "$URL" -o /tmp/gitignore.gen && { [ -f .gitignore ] && awk 1 .gitignore; cat /tmp/gitignore.gen; } | awk '{if($0==""){p=1;next} if(seen[$0]++)next; if(p){print "";p=0}; print}' > .gitignore.tmp && mv .gitignore.tmp .gitignore
+O=$( [ ! -f .gitignore ] || cat .gitignore ) && G=$(curl -fsSL "$URL") && printf '%s\n%s\n' "$O" "$G" | awk 'NR==1&&$0==""{next}$0==""{p=1;next}seen[$0]++{next}p{print "";p=0}{print}' > .gitignore.tmp && mv .gitignore.tmp .gitignore
 ```
 
 Unknown template names return only the header comment with no rules rather than an error, so check names against `https://www.toptal.com/developers/gitignore/api/list?format=lines` when unsure and confirm the written file contains real entries.
