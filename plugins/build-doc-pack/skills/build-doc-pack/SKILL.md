@@ -95,6 +95,16 @@ For a greenfield pack, copy:
 - `assets/engineering/code-quality.md` to `docs/engineering/`;
 - `assets/engineering/workflow.md` to `docs/engineering/`.
 
+Ensure the repository has a `.gitignore` covering `windows,macos,linux,visualstudiocode,jetbrains+all` plus the stack's template names. Fetch the template, then combine it with any existing file and remove duplicate lines while preserving order, existing custom rules, and blank lines:
+
+```bash
+URL="https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,python,node"
+curl -fsSL "$URL" -o /tmp/gitignore.gen
+{ [ -f .gitignore ] && awk 1 .gitignore; cat /tmp/gitignore.gen; } | awk '/^$/ || !seen[$0]++' > .gitignore.tmp && mv .gitignore.tmp .gitignore
+```
+
+Unknown template names return only the header comment with no rules rather than an error, so check names against `https://www.toptal.com/developers/gitignore/api/list?format=lines` when unsure and confirm the written file contains real entries.
+
 For a completed-pack transition, copy `assets/templates/archive-README-template.md` into the archive as `README.md`, then resolve every placeholder and template comment from repository evidence.
 
 Resolve the marked `<!-- PROJECT-FILL … -->` blocks from user decisions and discovered repository facts, and follow explicit template deletion instructions such as removing the inactive delivery topology. Preserve the remaining static governance text. The workflow asset establishes the strategic-to-tactical handoff and company-wide PR/CI/review rules; it governs how later tactical units ship without predefining those units.

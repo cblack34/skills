@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "build-doc-pack",
   "displayName": "Build Doc Pack",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Author, transition, and implement strategic build packs through approved, rolling slices with durable history and delegated execution.",
   "author": {
     "name": "Clayton Black"
