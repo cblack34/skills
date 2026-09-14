@@ -95,7 +95,7 @@ For a greenfield pack, copy:
 - `assets/engineering/code-quality.md` to `docs/engineering/`;
 - `assets/engineering/workflow.md` to `docs/engineering/`.
 
-Ensure the repository has a `.gitignore` covering `windows,macos,linux,visualstudiocode,jetbrains+all` plus the stack's template names. Fetch the template, then combine it with any existing file and remove duplicate lines while preserving order, existing custom rules, and blank lines. Chain the fetch to the merge so a failed download leaves the repository unchanged:
+Ensure the repository has a `.gitignore` covering `windows,macos,linux,visualstudiocode,jetbrains+all` plus the stack's template names. Fetch the template, then combine it with any existing file and remove duplicate lines while preserving order and existing custom rules, collapsing blank-line runs to a single separator between kept lines. Chain the fetch to the merge so a failed download leaves the repository unchanged:
 
 ```bash
 STACK=python,node  # replace with the template names matching the inspected repo's stack(s)
