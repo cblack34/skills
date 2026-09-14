@@ -95,12 +95,12 @@ For a greenfield pack, copy:
 - `assets/engineering/code-quality.md` to `docs/engineering/`;
 - `assets/engineering/workflow.md` to `docs/engineering/`.
 
-Ensure the repository has a `.gitignore` covering `windows,macos,linux,visualstudiocode,jetbrains+all` plus the stack's template names. Fetch the template, then combine it with any existing file and remove duplicate lines while preserving order, existing custom rules, and blank lines:
+Ensure the repository has a `.gitignore` covering `windows,macos,linux,visualstudiocode,jetbrains+all` plus the stack's template names. Fetch the template, then combine it with any existing file and remove duplicate lines while preserving order, existing custom rules, and blank lines. Chain the fetch to the merge so a failed download leaves the repository unchanged:
 
 ```bash
-URL="https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,python,node"
-curl -fsSL "$URL" -o /tmp/gitignore.gen
-{ [ -f .gitignore ] && awk 1 .gitignore; cat /tmp/gitignore.gen; } | awk '/^$/ || !seen[$0]++' > .gitignore.tmp && mv .gitignore.tmp .gitignore
+STACK=python,node  # replace with the template names matching the inspected repo's stack(s)
+URL="https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,$STACK"
+curl -fsSL "$URL" -o /tmp/gitignore.gen && { [ -f .gitignore ] && awk 1 .gitignore; cat /tmp/gitignore.gen; } | awk '{if($0==""){p=1;next} if(seen[$0]++)next; if(p){print "";p=0}; print}' > .gitignore.tmp && mv .gitignore.tmp .gitignore
 ```
 
 Unknown template names return only the header comment with no rules rather than an error, so check names against `https://www.toptal.com/developers/gitignore/api/list?format=lines` when unsure and confirm the written file contains real entries.
