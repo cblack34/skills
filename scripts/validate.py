@@ -188,8 +188,7 @@ def validate_plugin(name: str, check: Validation) -> None:
     skill_dirs = sorted(
         path for path in skills_root.iterdir() if path.is_dir() and not path.name.startswith(".")
     )
-    skill_names = [path.name for path in skill_dirs]
-    if not skill_names:
+    if not skill_dirs:
         check.error(skills_root, "plugin must contain at least one skill directory")
     for skill_root in skill_dirs:
         skill_name = skill_root.name
