@@ -1,7 +1,7 @@
 {
-  "name": "build-doc-pack",
-  "version": "0.3.0",
-  "description": "Author, transition, and implement strategic build packs through approved, rolling slices with durable history and delegated execution.",
+  "name": "build-pack",
+  "version": "0.4.0",
+  "description": "Author, transition, implement, and refactor-before-handoff strategic build packs through approved, rolling slices with durable history and delegated execution.",
   "author": {
     "name": "Clayton Black",
     "url": "https://github.com/cblack34"
@@ -12,7 +12,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Build Doc Pack",
+    "displayName": "Build Pack",
     "shortDescription": "Author, transition, and implement strategic build packs through approved rolling slices.",
     "longDescription": "Create, audit, or transition a durable strategic build pack, preserve completed packs as clearly subordinate history, then lead implementation one human-approved slice at a time with stable slice plans, GitHub issue tracking, right-sized delegated execution, and a human-only merge gate for main.",
     "developerName": "Clayton Black",
@@ -21,11 +21,13 @@
       "Strategic build-pack authoring",
       "Completed-pack archival and continuation",
       "Rolling one-slice implementation planning",
-      "Right-sized execution-agent delegation"
+      "Right-sized execution-agent delegation",
+      "Refactor-before-handoff design review"
     ],
     "defaultPrompt": [
-      "Help me author a strategic build pack.",
-      "Use $implement-build-pack to propose or resume one implementation slice from the active strategic build pack."
+      "Use $create-build-pack to author a strategic build pack.",
+      "Use $implement-build-pack to propose or resume one implementation slice from the active strategic build pack.",
+      "Use $refactor-before-handoff to make this passing change maintainable before the PR."
     ]
   }
 }

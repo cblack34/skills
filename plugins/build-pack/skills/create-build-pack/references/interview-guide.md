@@ -47,11 +47,11 @@ Do not ask the user for facts current documentation can establish. Research them
 - Which criteria require human judgment, external hardware, licensed software, or another environment?
 - Which decisions may the implementation agent make, and which require user approval?
 - Which delivery topology applies: human merge of every PR to `main`, or agent squash-merge of leaf PRs to a feature spine followed by human merge of the spine PR to `main`?
-- Is GitHub Copilot review available in this repository, and what exact request method works? Are the `review-pr` and `address-pr-review` fallback skills and sub-agent delegation available?
+- Is GitHub Copilot review available in this repository, and what exact request method works? Are the `pr-review` and `address-pr-review` fallback skills and sub-agent delegation available?
 - What existing CI, merge, branch-protection, or release policies are durable company-wide governance facts?
 - Which conditions require implementation to stop and return to the user?
 
-Strategic mode defaults to this handoff: the implementation agent cold-reads the pack and repository, proposes only the single best next slice, and only after human agreement creates that slice's durable high-level plan and GitHub execution issues. It delegates bounded code work using the least expensive capable model and effort, prepares a reviewed green PR, and stops for the human to physically merge it to `main` before proposing another slice. Confirm a different handoff only if the user requests one, except that agent merge authority never extends to `main`.
+Strategic mode defaults to this handoff: the implementation agent cold-reads the pack and repository, proposes only the single best next slice, and only after human agreement creates that slice's durable high-level plan and GitHub execution issues. It delegates bounded code work using the least expensive capable model and effort, takes the passing draft through the refactor-before-handoff gate, prepares a reviewed green PR, and stops for the human to physically merge it to `main` before proposing another slice. Confirm a different handoff only if the user requests one, except that agent merge authority never extends to `main`.
 
 ## Feature-pack variant
 

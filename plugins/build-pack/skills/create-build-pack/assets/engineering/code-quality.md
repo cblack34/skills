@@ -5,7 +5,11 @@ Write code a strict senior engineer would approve on the first read. Two named f
 Code, SOLID, Clean Architecture) and **ArjanCodes** (cohesion/coupling, program-to-abstractions,
 composition over inheritance, separate creation from use, data-first, simplicity/YAGNI). Apply as
 judgment tools **only when you touch the code** — one focused change at a time, never a big-bang
-refactor.
+refactor of code you did not touch.
+
+These rules apply at two moments: continuous cleanup while you write, and the mandatory
+refactor-before-handoff pass in [`workflow.md`](workflow.md), which reviews a delivery unit's complete
+changed surface once its behavior passes. Passing tests end the first moment; they do not skip the second.
 
 ## Design (module / type level)
 

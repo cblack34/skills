@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "build-doc-pack",
+      "name": "build-pack",
       "source": {
         "source": "local",
-        "path": "./plugins/build-doc-pack"
+        "path": "./plugins/build-pack"
       },
       "policy": {
         "installation": "AVAILABLE",

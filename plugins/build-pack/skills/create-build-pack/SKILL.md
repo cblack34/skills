@@ -1,9 +1,9 @@
 ---
-name: build-doc-pack
+name: create-build-pack
 description: Author, audit, or transition a strategic documentation package ("build pack") that lets an AI coding agent cold-read the complete product or feature scope before planning implementation. Capture outcomes, scope, non-negotiables, architecture boundaries, research, risks, known dependencies, and final acceptance in AGENTS.md, briefs, specs, and engineering standards. Use when the user wants to start a project with AI agents, create or revise a build/spec pack, preserve a completed pack and begin the next feature pack, write AGENTS.md, spec a feature for later implementation, or review a documentation package for agent-readiness. Keep execution planning optional and add slices, ordered tasks, PRs, branches, or issues only when the user explicitly requests tactical planning.
 ---
 
-# Build Doc Pack
+# Create Build Pack
 
 Create a strategic package of Markdown documents that an AI coding agent can cold-read before it proposes how to build a project (greenfield) or feature (existing repo). The output follows the AGENTS.md open standard, so the same pack works with Claude Code, Codex, Copilot, Cursor, Gemini CLI, and Grok-based tools.
 
@@ -42,7 +42,7 @@ The strategic pack owns:
 - relevant research, source-backed conclusions, unresolved research gates, and assumptions;
 - material risks, failure modes, and known hard dependencies;
 - a high-level suggested implementation order for nontrivial work, labeled as guidance the implementation agent may revise;
-- company-wide delivery governance such as CI, review, merge authority, and the selected PR topology;
+- company-wide delivery governance such as CI, the refactor-before-handoff gate, review, merge authority, and the selected PR topology;
 - final project- or feature-level acceptance and verification.
 
 The tactical implementation agent owns:
@@ -107,7 +107,7 @@ Unknown template names return only the header comment with no rules rather than 
 
 For a completed-pack transition, copy `assets/templates/archive-README-template.md` into the archive as `README.md`, then resolve every placeholder and template comment from repository evidence.
 
-Resolve the marked `<!-- PROJECT-FILL … -->` blocks from user decisions and discovered repository facts, and follow explicit template deletion instructions such as removing the inactive delivery topology. Preserve the remaining static governance text. The workflow asset establishes the strategic-to-tactical handoff and company-wide PR/CI/review rules; it governs how later tactical units ship without predefining those units.
+Resolve the marked `<!-- PROJECT-FILL … -->` blocks from user decisions and discovered repository facts, and follow explicit template deletion instructions such as removing the inactive delivery topology. Preserve the remaining static governance text. The workflow asset establishes the strategic-to-tactical handoff, the refactor-before-handoff gate, and company-wide PR/CI/review rules; it governs how later tactical units ship without predefining those units. For a feature pack, audit the repository's existing workflow and code-quality governance for an equivalent refactor-before-handoff requirement and reference that authority; if it is missing, flag the gap and offer a constitution update rather than duplicating governance in feature documents.
 
 ### 8. Draft the strategic documents
 
@@ -130,7 +130,7 @@ If tactical planning was explicitly requested, audit the strategic pack first, t
 
 ### 10. Deliver the handoff
 
-Present the file tree, research performed, inferred assumptions, unresolved gates, and decisions the user should make before implementation. State explicitly that the next implementation lead should cold-read the pack and repository, propose only the single best next slice, and obtain the user's agreement before creating that slice's plan, GitHub issues, branches, or code. The high-level slice plan should remain durable history while GitHub issues own checklists and WIP. The lead should delegate bounded code work using the least expensive capable model and effort while retaining plan, issue, integration, and verification ownership.
+Present the file tree, research performed, inferred assumptions, unresolved gates, and decisions the user should make before implementation. State explicitly that the next implementation lead should cold-read the pack and repository, propose only the single best next slice, and obtain the user's agreement before creating that slice's plan, GitHub issues, branches, or code. The high-level slice plan should remain durable history while GitHub issues own checklists and WIP. The lead should delegate bounded code work using the least expensive capable model and effort while retaining plan, issue, integration, and verification ownership, and should treat each passing draft as unfinished until the workflow's refactor-before-handoff gate and its receipt are complete.
 
 ## Hard rules
 
@@ -139,7 +139,8 @@ Present the file tree, research performed, inferred assumptions, unresolved gate
 - **Separate constraints from suggestions.** Record hard causal dependencies as facts. Present broader sequencing only as a rationale-backed recommendation the implementation agent may change.
 - **Final acceptance stays stable.** Keep project- or feature-level acceptance separate from optional per-slice criteria.
 - **Governance is not decomposition.** Preserve mandatory CI, review, human-to-main merge authority, and the selected delivery topology without deciding feature slices or naming future PRs.
-- **Review precedence is stable.** Prefer GitHub Copilot review when available, fall back to `review-pr`, then delegate a fresh bounded review sub-agent. Author self-review does not satisfy the independent gate. Retain the clean-HEAD address/reply/resolve loop regardless of reviewer.
+- **A passing draft is not handoff-ready.** Generated governance must require, for every tactical delivery unit, a distinct post-implementation refactor/design pass against the repository's code-quality rules; a fresh-context read-only design review separate from author self-review and from PR review; focused then complete verification after structural edits; package and artifact checks when packages move; and a recorded refactor and handoff receipt before PR readiness. Keep it governance: no file-size limits, mandated abstractions, or prescribed refactors, and do not ask the user whether ordinary refactoring should occur.
+- **Review precedence is stable.** Prefer GitHub Copilot review when available, fall back to `pr-review`, then delegate a fresh bounded review sub-agent. Author self-review does not satisfy the independent gate. Retain the clean-HEAD address/reply/resolve loop regardless of reviewer.
 - **Rolling implementation handoff.** The implementation lead plans, approves, and executes one slice at a time. It keeps the slice plan stable, tracks work in linked GitHub issues, and selects the least expensive capable model and effort for each bounded execution assignment.
 - **Human physically merges to `main`.** Agents may prepare a reviewed green PR but never merge, auto-merge, queue, automate, delegate, or push directly to `main`. Broad instructions to finish or integrate do not transfer this authority.
 - **One active entry point.** After a completed-pack transition, root navigation must lead to the roadmap or current feature pack. Completed specs are clearly historical and never silently remain co-equal instructions.

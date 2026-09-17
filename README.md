@@ -20,7 +20,7 @@ The repository targets Python 3.14 through `.python-version` and `pyproject.toml
 uv sync --locked
 ```
 
-Create a new plugin with its primary skill from the repository root:
+Create a new plugin with its first skill from the repository root:
 
 ```bash
 uv run --locked scripts/new_skill.py my-skill \
@@ -62,7 +62,7 @@ The generator creates both plugin manifests and appends matching entries to both
 │       ├── .codex-plugin/plugin.json
 │       ├── README.md
 │       └── skills/
-│           ├── <primary-skill>/SKILL.md
+│           ├── <skill>/SKILL.md                # names need not match the plugin
 │           └── <related-companion>/          # optional
 │               ├── SKILL.md
 │               └── agents/openai.yaml        # optional Codex metadata

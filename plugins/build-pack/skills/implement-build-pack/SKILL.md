@@ -1,6 +1,6 @@
 ---
 name: implement-build-pack
-description: Lead implementation from an approved strategic build pack using rolling, one-slice-at-a-time planning. Use only when the human explicitly invokes this skill or explicitly asks to begin or resume implementation from a build pack. Propose one slice for approval, preserve a durable high-level slice plan, use GitHub issues as the execution tracker, delegate code writing to the least expensive capable agents, and prepare a reviewed green PR for the human to merge to main. Do not invoke merely because a build pack or implementation work is mentioned.
+description: Lead implementation from an approved strategic build pack using rolling, one-slice-at-a-time planning. Use only when the human explicitly invokes this skill or explicitly asks to begin or resume implementation from a build pack. Propose one slice for approval, preserve a durable high-level slice plan, use GitHub issues as the execution tracker, delegate code writing to the least expensive capable agents, refactor the passing draft before handoff, and prepare a reviewed green PR for the human to merge to main. Do not invoke merely because a build pack or implementation work is mentioned.
 disable-model-invocation: true
 ---
 
@@ -25,6 +25,7 @@ Read these files completely before acting:
 1. `references/kickoff-checklist.md`
 2. `references/slice-plan-audit.md`
 3. `references/delegation-routing.md`
+4. `../refactor-before-handoff/SKILL.md`, the companion skill this workflow runs before PR preparation
 
 Use `assets/slice-plan-template.md` when materializing an approved slice. Follow the repository's `AGENTS.md` family and active workflow documents when they are stricter. Surface contradictions instead of silently choosing one authority.
 
@@ -49,6 +50,7 @@ Audit the plan with `references/slice-plan-audit.md`:
 - If it remains valid, do not rewrite or re-approve it. Continue from the next unfinished actionable GitHub issue and surface any blocker recorded on the critical path.
 - Put progress, assignments, checklists, blockers, and verification evidence in GitHub issues, not the plan.
 - Amend the plan only for a material invalidation. Present the evidence and minimal proposed amendment to the human before editing the plan or redirecting work.
+- If the slice's issues are draft-complete but no refactor and handoff receipt exists for the current delivery unit, the next action is **Refactor before handoff**, not PR preparation, even when a PR is already open.
 
 ## Propose the next slice
 
@@ -119,16 +121,31 @@ For each issue:
 6. Update the GitHub issue with decisions, evidence, commits or PRs, and remaining blockers.
 7. Integrate only through the repository's authorized non-`main` workflow.
 
+Passing checks and an accepted execution-agent receipt make an issue **draft-complete**. They do not make the slice handoff-ready; that requires the next phase.
+
 When evidence reveals a wider issue, stop the affected assignment. Update the issue with the evidence, then decide whether it is an issue-level adjustment, a material slice-plan amendment requiring human approval, or a strategic conflict requiring human resolution.
+
+## Refactor before handoff
+
+When the delivery unit's issues are draft-complete and its focused behavioral checks pass, run the `refactor-before-handoff` skill from this plugin before any PR preparation. Pass it the base ref, the covered GitHub issue(s) as the record target, and the instruction to route refactor edits as bounded assignments. If the harness cannot invoke skills, follow the repository workflow's refactor-before-handoff section directly. In summary:
+
+1. Treat the passing implementation as a working draft, not finished code.
+2. Read every changed production file in full, plus the affected owning abstractions and callers, against the repository's code-quality rules; the diff selects files, it is not the review surface, and no line threshold decides what is reviewed.
+3. Apply behavior-preserving refactors the review justifies, routed as bounded assignments. Do not split files, create one-class modules, or add abstraction for its own sake.
+4. Verify manifests, package discovery, built artifacts, and a clean-install import whenever modules or subpackages were added or moved.
+5. Obtain a fresh-context, read-only design review of the complete changed surface with explicit file coverage, using the plugin's `design-reviewer` agent when available and the documented fallback otherwise.
+6. Validate every finding against the code before acting; apply correct findings, reject weak ones with evidence.
+7. After each structural edit run the cheapest focused check first, then the complete repository verification before handoff.
+8. Post the refactor and handoff receipt on the covered GitHub issue(s) and carry it into the PR and delivery record.
 
 ## Prepare the slice PR
 
-When all slice issues are complete:
+When all slice issues are complete and the refactor and handoff receipt exists for this delivery unit:
 
 1. Reconcile the implementation with the strategic pack and final acceptance it advances.
 2. Run the repository's complete required verification on the proposed final head.
-3. Open or update the PR with scope, issue links, verification evidence, risks, and deviations.
-4. Fill the slice plan's delivery record with the outcome, deviations, unresolved gates, issue links, and final PR link, then push that documentation update to the PR. This is a completion record, not WIP tracking.
+3. Open or update the PR with scope, issue links, verification evidence, the refactor and handoff receipt, risks, and deviations.
+4. Fill the slice plan's delivery record with the outcome, deviations, unresolved gates, issue links, the receipt link, and final PR link, then push that documentation update to the PR. This is a completion record, not WIP tracking.
 5. Re-run checks affected by the delivery-record update.
 6. Complete the repository-defined independent review and address-review loop. Prefer the repository's recorded reviewer. Do not invoke an unrelated review or publishing skill unless the human explicitly requests it or `AGENTS.md` requires it for this stage.
 7. Require green CI, no genuine unresolved review findings, and review evidence that matches the current PR head.
@@ -145,7 +162,7 @@ The implementation lead and every execution agent must never:
 - push commits directly to `main`;
 - ask another agent or service to perform the merge.
 
-After the PR is reviewed, green, and ready, stop and give the human the PR link plus concise merge-readiness evidence. Authorized leaf-to-spine merges remain allowed only when the recorded repository workflow explicitly grants that authority and the target is not `main`.
+After the PR is reviewed, green, and ready, stop and give the human the PR link, concise merge-readiness evidence, and the refactor and handoff receipt. Authorized leaf-to-spine merges remain allowed only when the recorded repository workflow explicitly grants that authority and the target is not `main`.
 
 Do not start the next slice until the human has merged the current slice to `main` and the resulting repository state is confirmed. After confirmation, inspect the updated repository, propose one next slice, and repeat.
 
@@ -157,5 +174,6 @@ Do not start the next slice until the human has merged the current slice to `mai
 - Preserve the shipped MVP unless the approved slice explicitly changes it.
 - Distinguish hard causal dependencies from preferred sequence.
 - Delegate bounded code work using the least expensive capable model and effort.
+- A passing draft is not handoff-ready. Every delivery unit passes **Refactor before handoff**, including the fresh-context design review and a recorded receipt, before its PR is declared ready.
 - Never claim checks, review, routing, or integration that were not verified.
 - Never merge, auto-merge, queue, automate, delegate, or push directly to `main`.

@@ -53,7 +53,11 @@ For the default strategic mode:
 - [ ] Exactly one delivery topology is active: human-merge-each-PR to `main`, or agent-merge leaves to a spine with human merge of the final spine PR to `main`.
 - [ ] Only a human may physically merge to `main` in GitHub; agents cannot merge, auto-merge, queue, automate, delegate, or push directly to `main`. Agent merge authority, if any, is limited to clean leaf PRs targeting the spine.
 - [ ] The workflow retains self-verification, CI, review, reply/resolve, re-request-until-clean, clean-HEAD review, documentation, and stop gates without preassigning feature scope to PRs.
-- [ ] Reviewer precedence is explicit: GitHub Copilot first when available, `review-pr` fallback, then a fresh bounded review sub-agent; author self-review never substitutes for independent review.
+- [ ] Reviewer precedence is explicit: GitHub Copilot first when available, `pr-review` fallback, then a fresh bounded review sub-agent; author self-review never substitutes for independent review.
+- [ ] The workflow states that a behaviorally passing implementation is a working draft and requires, for every tactical delivery unit, a distinct post-implementation refactor/design pass against the repository's code-quality rules before PR readiness, reading changed files in full rather than diff hunks. A pack whose workflow can hand off a merely passing draft fails this item even when tests and PR review are mandatory.
+- [ ] That pass includes a fresh-context, read-only design review separate from author self-review and from the PR correctness/security review; focused then complete verification after structural edits; manifest, built-artifact, and clean-install checks when packages or subpackages move; and a recorded refactor and handoff receipt in which `Structural changes made: none` must name the reviewed surface and justify it.
+- [ ] The gate stays governance: no file-size limits, mandated abstractions, or prescribed refactors; the bundled `design-reviewer` agent is optional with a self-contained fallback (fresh read-only sub-agent or explicit human review).
+- [ ] A feature pack in a repository with equivalent refactor governance references that authority instead of duplicating it; when it is missing, the gap is flagged with an offered constitution update.
 - [ ] PR mechanics retain base synchronization, Conventional Commits titles, verification evidence, protected-branch safety, and issue closure only through a PR to `main`.
 
 If the user explicitly requested a tactical addendum:

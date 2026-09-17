@@ -6,9 +6,9 @@
   "description": "Personal agent skills maintained by Clayton Black.",
   "plugins": [
     {
-      "name": "build-doc-pack",
-      "source": "./plugins/build-doc-pack",
-      "description": "Author strategic build packs and implement them through approved, rolling slices with durable plans and delegated execution.",
+      "name": "build-pack",
+      "source": "./plugins/build-pack",
+      "description": "Author strategic build packs, implement them through approved rolling slices, and refactor each passing draft before handoff.",
       "category": "Developer",
       "tags": [
         "skill"

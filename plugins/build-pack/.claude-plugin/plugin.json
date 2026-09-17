@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "build-pack",
+  "displayName": "Build Pack",
+  "version": "0.4.0",
+  "description": "Author, transition, implement, and refactor-before-handoff strategic build packs through approved, rolling slices with durable history and delegated execution.",
+  "author": {
+    "name": "Clayton Black"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "skills": "./skills/",
+  "agents": [
+    "./agents/design-reviewer.md"
+  ]
+}

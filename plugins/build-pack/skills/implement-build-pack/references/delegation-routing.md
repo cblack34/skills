@@ -114,6 +114,8 @@ Keep independent review separate from authorship. Review and review-addressing a
 
 Follow the repository's recorded reviewer precedence. Do not invoke an installed or available skill merely because it could help; explicit human instruction or applicable repository instructions must authorize it.
 
+The pre-PR design review in the `refactor-before-handoff` skill is a separate, read-only assignment for the plugin's `design-reviewer` agent or its documented fallback. It receives the changed-file list, base ref, code-quality rules, and slice plan, and returns a receipt; it never posts to the PR.
+
 ## Parallelism
 
 Parallelize independent read-only research, test execution, or non-overlapping worktree assignments when it reduces latency. Default to serial execution when agents would modify the same files, depend on uncommitted outputs, or compete over shared external state.
@@ -131,4 +133,4 @@ Require a concise receipt containing:
 5. Commit, branch, PR, or diff reference.
 6. Follow-up work, if any, that remains inside the issue.
 
-The receipt is evidence for the implementation lead. Durable progress and verification belong in the GitHub issue.
+The receipt is evidence for the implementation lead. Durable progress and verification belong in the GitHub issue. A green receipt marks the issue draft-complete; the slice becomes handoff-ready only through the `refactor-before-handoff` skill.
