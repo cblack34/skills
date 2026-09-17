@@ -45,7 +45,7 @@ Use `major`, `minor`, `patch`, or an explicit semantic version. Add `--dry-run` 
 uv run --locked scripts/validate.py
 ```
 
-The generator creates both plugin manifests and appends matching entries to both catalogs. Separate plugins remain the default when skills should be installed or versioned independently; closely related companion skills may share a plugin after confirming that placement with the user. Add future Python dependencies with `uv add` or development-only dependencies with `uv add --dev` so `pyproject.toml` and `uv.lock` stay synchronized.
+The generator creates both plugin manifests and appends matching entries to both catalogs. To add a skill to an existing plugin instead, pass `--plugin <existing-plugin>`; that writes only the new `SKILL.md`, and you then update the plugin README and bump its version. Separate plugins remain the default when skills should be installed or versioned independently; closely related companion skills may share a plugin after confirming that placement with the user. Add future Python dependencies with `uv add` or development-only dependencies with `uv add --dev` so `pyproject.toml` and `uv.lock` stay synchronized.
 
 ## Repository layout
 
