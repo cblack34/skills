@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a cross-harness, one-skill plugin and register it in both catalogs."""
+"""Create a cross-harness plugin with its first skill, or add a skill to an existing plugin."""
 
 from __future__ import annotations
 
@@ -33,6 +33,10 @@ def parse_args() -> argparse.Namespace:
         "--description",
         required=True,
         help="Specific description of what the skill does and when to use it",
+    )
+    parser.add_argument(
+        "--plugin",
+        help="Add the skill to this existing plugin instead of creating a new plugin",
     )
     parser.add_argument("--category", default="Productivity")
     parser.add_argument("--version", default="0.1.0")
@@ -122,6 +126,19 @@ uv run --locked scripts/validate.py
 """
 
 
+def add_skill(plugin: str, name: str, description: str) -> Path:
+    plugin_root = PLUGINS_ROOT / plugin
+    if not (plugin_root / ".claude-plugin" / "plugin.json").is_file():
+        raise FileNotFoundError(f"plugin does not exist: {plugin_root.relative_to(PLUGINS_ROOT.parent)}")
+    skill_root = plugin_root / "skills" / name
+    if skill_root.exists():
+        raise FileExistsError(f"skill directory already exists: {skill_root.relative_to(PLUGINS_ROOT.parent)}")
+    skill_root.mkdir(parents=True)
+    skill_path = skill_root / "SKILL.md"
+    skill_path.write_text(skill_markdown(name, description), encoding="utf-8")
+    return skill_path
+
+
 def main() -> None:
     args = parse_args()
     name = normalize_name(args.name)
@@ -129,6 +146,14 @@ def main() -> None:
     category = args.category.strip()
     if not description:
         raise ValueError("description must not be empty")
+    if args.plugin:
+        skill_path = add_skill(normalize_name(args.plugin), name, description)
+        if name != args.name:
+            print(f"Normalized skill name to {name!r}.")
+        print(f"Edit: {skill_path.relative_to(ROOT)}")
+        print(f"Then bump: uv run --locked scripts/bump_plugin_version.py {args.plugin} minor")
+        print("Validate: uv run --locked scripts/validate.py")
+        return
     if not category:
         raise ValueError("category must not be empty")
     if SEMVER_RE.fullmatch(args.version) is None:

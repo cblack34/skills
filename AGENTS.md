@@ -11,7 +11,8 @@ These instructions apply to the entire repository.
 
 ## Adding a skill
 
-- Run `uv run --locked scripts/new_skill.py <name> --description <description>` from the repository root.
+- Run `uv run --locked scripts/new_skill.py <name> --description <description>` from the repository root to create a new plugin with its first skill.
+- Add `--plugin <existing-plugin>` to add a skill to an existing plugin instead; this writes only the skill's `SKILL.md`, so update the plugin README and bump its version yourself.
 - Use lowercase kebab-case names no longer than 64 characters.
 - Before creating a skill inside an existing plugin, confirm that placement with the user.
 - Keep the plugin folder name and both plugin manifest names identical. Keep each skill folder name identical to its `SKILL.md` frontmatter name. Skill names need not match the plugin name; renaming a plugin forces users to reinstall it, so name plugins for their whole purpose and rename skills freely.
