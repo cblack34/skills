@@ -147,7 +147,7 @@ The **address → reply → resolve** flow is mandatory regardless of reviewer:
 - **Re-run self-verification and CI** after every code change prompted by review.
 - **A base change invalidates review.** After a PR is synchronized with its base or retargeted, including every stack advancement, a review against the previous base/head relationship is stale; re-run affected checks and re-request review.
 - **Re-request review and wait for a zero-new-comment, HEAD-matched pass** before any permitted merge. Resolving the first batch alone is not a clean review.
-- **Bound the loop:** at most three request → address cycles total, with a reasonable wait each. If Copilot is unavailable or does not post a usable HEAD review within a reasonable wait, switch to `pr-review`; changing reviewers does not reset the bound. If neither reviewer can complete, delegate the fresh review sub-agent, note that fallback in the PR, and never merge with a genuine unresolved issue.
+- **Bound the loop:** at most three request → address cycles total per stable base/head relationship, with a reasonable wait each. Ordinary pushes that address review comments do not reset this count; only a base synchronization or retarget (including a stack-advancement step) establishes a new base/head relationship and starts a fresh bounded loop. If Copilot is unavailable or does not post a usable HEAD review within a reasonable wait, switch to `pr-review`; changing reviewers does not reset the bound. If neither reviewer can complete, delegate the fresh review sub-agent, note that fallback in the PR, and never merge with a genuine unresolved issue.
 
 ## CI bootstrap
 

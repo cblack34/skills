@@ -93,6 +93,7 @@ Keep only the block for the repository's active topology.
 
 - **Merge strategy for `main`:** {{RECORDED_IN_WORKFLOW}}
 - **Advancement method:** {{RECORDED_IN_WORKFLOW}}
+- **Predecessor merges:** Agents never merge a stacked PR into its predecessor branch; only the bottom PR is ever merged, only by the human, only to `main`. Advancing the stack is sync + verify incremental diff + retarget, never a merge.
 
 | Position | Branch | PR | Base | Predecessor | Dependents | Issues |
 | --- | --- | --- | --- | --- | --- | --- |
