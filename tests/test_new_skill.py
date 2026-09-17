@@ -18,9 +18,12 @@ class AddSkillTests(unittest.TestCase):
         self.temporary_directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary_directory.cleanup)
         self.plugins_root = Path(self.temporary_directory.name) / "plugins"
-        manifest = self.plugins_root / "existing" / ".claude-plugin" / "plugin.json"
-        manifest.parent.mkdir(parents=True)
-        manifest.write_text("{}", encoding="utf-8")
+        claude_manifest = self.plugins_root / "existing" / ".claude-plugin" / "plugin.json"
+        codex_manifest = self.plugins_root / "existing" / ".codex-plugin" / "plugin.json"
+        claude_manifest.parent.mkdir(parents=True)
+        codex_manifest.parent.mkdir(parents=True)
+        claude_manifest.write_text("{}", encoding="utf-8")
+        codex_manifest.write_text("{}", encoding="utf-8")
 
     def test_adds_skill_to_existing_plugin(self) -> None:
         with patch.object(new_skill, "PLUGINS_ROOT", self.plugins_root):
@@ -35,6 +38,14 @@ class AddSkillTests(unittest.TestCase):
             new_skill.add_skill("existing", "dup", "x")
             with self.assertRaises(FileExistsError):
                 new_skill.add_skill("existing", "dup", "x")
+
+    def test_rejects_plugin_missing_codex_manifest(self) -> None:
+        incomplete_manifest = self.plugins_root / "incomplete" / ".claude-plugin" / "plugin.json"
+        incomplete_manifest.parent.mkdir(parents=True)
+        incomplete_manifest.write_text("{}", encoding="utf-8")
+        with patch.object(new_skill, "PLUGINS_ROOT", self.plugins_root):
+            with self.assertRaises(FileNotFoundError):
+                new_skill.add_skill("incomplete", "skill", "x")
 
 
 if __name__ == "__main__":

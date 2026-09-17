@@ -128,7 +128,9 @@ uv run --locked scripts/validate.py
 
 def add_skill(plugin: str, name: str, description: str) -> Path:
     plugin_root = PLUGINS_ROOT / plugin
-    if not (plugin_root / ".claude-plugin" / "plugin.json").is_file():
+    has_claude_manifest = (plugin_root / ".claude-plugin" / "plugin.json").is_file()
+    has_codex_manifest = (plugin_root / ".codex-plugin" / "plugin.json").is_file()
+    if not (has_claude_manifest and has_codex_manifest):
         raise FileNotFoundError(f"plugin does not exist: {plugin_root.relative_to(PLUGINS_ROOT.parent)}")
     skill_root = plugin_root / "skills" / name
     if skill_root.exists():
@@ -147,11 +149,12 @@ def main() -> None:
     if not description:
         raise ValueError("description must not be empty")
     if args.plugin:
-        skill_path = add_skill(normalize_name(args.plugin), name, description)
+        plugin_name = normalize_name(args.plugin)
+        skill_path = add_skill(plugin_name, name, description)
         if name != args.name:
             print(f"Normalized skill name to {name!r}.")
         print(f"Edit: {skill_path.relative_to(ROOT)}")
-        print(f"Then bump: uv run --locked scripts/bump_plugin_version.py {args.plugin} minor")
+        print(f"Then bump: uv run --locked scripts/bump_plugin_version.py {plugin_name} minor")
         print("Validate: uv run --locked scripts/validate.py")
         return
     if not category:
