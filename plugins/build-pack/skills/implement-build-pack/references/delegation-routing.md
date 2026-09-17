@@ -120,7 +120,7 @@ The pre-PR design review in the `refactor-before-handoff` skill is a separate, r
 
 Parallelize independent read-only research, test execution, or non-overlapping worktree assignments when it reduces latency. Default to serial execution when agents would modify the same files, depend on uncommitted outputs, or compete over shared external state.
 
-The implementation lead owns conflict avoidance. Agents must not resolve non-trivial integration conflicts by guessing or force-pushing.
+The implementation lead owns conflict avoidance. Agents must not resolve non-trivial integration conflicts by guessing or force-pushing. In a PR stack, assign one agent per layer at a time, and start a dependent layer only from its predecessor's current head.
 
 ## Return receipt
 

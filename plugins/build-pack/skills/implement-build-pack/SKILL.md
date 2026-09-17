@@ -51,6 +51,7 @@ Audit the plan with `references/slice-plan-audit.md`:
 - Put progress, assignments, checklists, blockers, and verification evidence in GitHub issues, not the plan.
 - Amend the plan only for a material invalidation. Present the evidence and minimal proposed amendment to the human before editing the plan or redirecting work.
 - If the slice's issues are draft-complete but no refactor and handoff receipt exists for the current delivery unit, the next action is **Refactor before handoff**, not PR preparation, even when a PR is already open.
+- For a PR stack, reconstruct the current order, bases, heads, and merge state from GitHub PRs and Git ancestry, not from plan prose. If reality disagrees with the plan's recorded order, stop and reconcile before advancing anything.
 
 ## Propose the next slice
 
@@ -67,7 +68,7 @@ Present only this slice for discussion. Include:
 - required tests, verification, and manual evidence;
 - risks, stop conditions, and decisions requiring human input;
 - proposed slice-plan path and GitHub issues for this slice only;
-- proposed branch and PR shape under the repository's recorded topology;
+- proposed branch and PR shape under the repository's recorded topology; for a PR stack, each PR's position, base, predecessor, and dependents;
 - proposed execution-agent assignments and capability tiers.
 
 Do not plan future slices in execution-level detail or create a complete roadmap, milestone, story hierarchy, or issue backlog.
@@ -91,7 +92,7 @@ After approval, create only the tactical artifacts needed for this slice:
 2. Create only the authorized GitHub issues for this slice. Each issue is an execution-sized tracker with its own task checklist, dependencies, verification, and completion evidence.
 3. Link every issue to the slice-plan path. Add an issue register to the plan with each issue's number, title, purpose, and dependency relationship.
 4. Treat this issue-linking pass as initial plan materialization. After it, keep the plan stable and use issues for live work.
-5. Establish the approved branch or feature-spine state according to the repository workflow.
+5. Establish the approved branch, feature-spine, or stack state according to the repository workflow. For a PR stack, create branches and PR bases in dependency order: the first from current `main`, each later one from its predecessor's current head, and record each layer's branch ownership.
 
 The slice plan records the high-level **what** and **why**. GitHub issues record the execution **how**, WIP, ownership, checklists, blockers, and evidence. Do not duplicate issue checklists into the plan.
 
@@ -105,6 +106,7 @@ Use `references/delegation-routing.md` for every assignment.
 - Delegate production code and test writing by default. The implementation lead retains the user conversation, scope decisions, sequencing, issue management, integration, and final verification.
 - If capable delegation is unavailable, stop and tell the human. Do not silently consume the primary agent for implementation.
 - Parallelize independent read-heavy work when useful. Serialize coupled or overlapping write-heavy work unless isolated branches or worktrees make ownership unambiguous.
+- In a PR stack, never let two agents write the same layer concurrently, and start a dependent layer only from its predecessor's current head.
 - Give each execution agent a minimal complete packet and require a concise return receipt. Review its diff and evidence before accepting the issue.
 
 Do not automatically reuse an expensive primary configuration for bounded implementation, review, or review-addressing. Escalate model capability or effort only when ambiguity, risk, coupling, or failed evidence justifies it.
@@ -148,7 +150,9 @@ When all slice issues are complete and the refactor and handoff receipt exists f
 4. Fill the slice plan's delivery record with the outcome, deviations, unresolved gates, issue links, the receipt link, and final PR link, then push that documentation update to the PR. This is a completion record, not WIP tracking.
 5. Re-run checks affected by the delivery-record update.
 6. Complete the repository-defined independent review and address-review loop. Prefer the repository's recorded reviewer. Do not invoke an unrelated review or publishing skill unless the human explicitly requests it or `AGENTS.md` requires it for this stage.
-7. Require green CI, no genuine unresolved review findings, and review evidence that matches the current PR head.
+7. Require green CI, no genuine unresolved review findings, and review evidence that matches the current PR head and base.
+
+For a PR stack, apply these steps to each PR against its declared base. Verify that each PR's diff against its actual base contains only its own incremental change, and treat a review against a previous base/head relationship as stale.
 
 ## Human-only merge to `main`
 
@@ -162,9 +166,13 @@ The implementation lead and every execution agent must never:
 - push commits directly to `main`;
 - ask another agent or service to perform the merge.
 
-After the PR is reviewed, green, and ready, stop and give the human the PR link, concise merge-readiness evidence, and the refactor and handoff receipt. Authorized leaf-to-spine merges remain allowed only when the recorded repository workflow explicitly grants that authority and the target is not `main`.
+After the PR is reviewed, green, and ready, stop and give the human the PR link, concise merge-readiness evidence, and the refactor and handoff receipt. Authorized leaf-to-spine merges remain allowed only when the recorded repository workflow explicitly grants that authority and the target is not `main`. A stacked PR is never a spine leaf and is never agent-mergeable.
 
-Do not start the next slice until the human has merged the current slice to `main` and the resulting repository state is confirmed. After confirmation, inspect the updated repository, propose one next slice, and repeat.
+### Advancing a PR stack
+
+The human merges a stack bottom-up. After the bottom PR lands on `main`, advance only the next PR: synchronize its branch with updated `main` using the workflow's recorded advancement method; confirm its diff against `main` contains only its intended incremental change; retarget it to `main`; add its issue-closing references; re-run affected checks; re-request a HEAD-matched, zero-new-finding review; then stop for the human. Do not advance any PR above it. Stop for the human on a non-trivial conflict, when the incremental diff cannot be restored cleanly, or when advancement requires rewriting a shared branch or a force-push the workflow does not explicitly authorize.
+
+Do not start the next slice until the human has merged the current slice, including every PR in its stack, to `main` and the resulting repository state is confirmed. After confirmation, inspect the updated repository, propose one next slice, and repeat.
 
 ## Hard rules
 
@@ -177,3 +185,4 @@ Do not start the next slice until the human has merged the current slice to `mai
 - A passing draft is not handoff-ready. Every delivery unit passes **Refactor before handoff**, including the fresh-context design review and a recorded receipt, before its PR is declared ready.
 - Never claim checks, review, routing, or integration that were not verified.
 - Never merge, auto-merge, queue, automate, delegate, or push directly to `main`.
+- A PR stack is human-merged bottom-up. Advance only the next PR after each merge, keep review matched to the current base and head, and never force-push beyond recorded authority.

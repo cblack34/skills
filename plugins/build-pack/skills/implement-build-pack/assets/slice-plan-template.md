@@ -73,10 +73,34 @@ GitHub issues are the WIP tracker and source of task-level detail.
 
 ## Delivery shape
 
-- **Topology:** {{DIRECT_PR_OR_FEATURE_SPINE}}
-- **Branch or spine:** {{NAME}}
+Keep only the block for the repository's active topology.
+
+- **Topology:** {{DIRECT_PRS_OR_FEATURE_SPINE_OR_PR_STACK}}
+- **Human merge gate:** Only the human may physically merge any PR whose base is `main`. Agents must stop when it is ready.
+
+### Direct PRs
+
+- **Branch:** {{NAME}}
 - **Final PR:** {{URL_WHEN_AVAILABLE}}
-- **Human merge gate:** Only the human may physically merge the final PR to `main`. Agents must stop when it is ready.
+
+### Feature spine
+
+- **Spine:** {{NAME}}
+- **Leaf merge authority:** the implementation lead may squash-merge clean leaf PRs to the spine; the spine PR to `main` is human-merged.
+- **Spine PR:** {{URL_WHEN_AVAILABLE}}
+
+### PR stack
+
+- **Merge strategy for `main`:** {{RECORDED_IN_WORKFLOW}}
+- **Advancement method:** {{RECORDED_IN_WORKFLOW}}
+- **Predecessor merges:** Agents never merge a stacked PR into its predecessor branch; only the bottom PR is ever merged, only by the human, only to `main`. Advancing the stack is sync + verify incremental diff + retarget, never a merge.
+
+| Position | Branch | PR | Base | Predecessor | Dependents | Issues |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | {{BRANCH}} | {{URL}} | `main` | none | {{POSITION_2_OR_NONE}} | {{ISSUE_LINKS}} |
+| 2 | {{BRANCH}} | {{URL}} | {{POSITION_1_BRANCH}} | 1 | {{POSITION_3_OR_NONE}} | {{ISSUE_LINKS}} |
+
+Record each Base at PR creation. When a PR is retargeted to `main` after its predecessor lands, update its Base cell once. Current heads, checks, and review state live in GitHub, not here.
 
 ## Amendments
 
@@ -102,5 +126,5 @@ Complete once when the final PR is ready for human merge. Do not use this sectio
 - **Deviations:** {{APPROVED_DEVIATIONS_OR_NONE}}
 - **Unresolved gates or risks:** {{ITEMS_OR_NONE}}
 - **Refactor and handoff receipt:** {{ISSUE_COMMENT_OR_PR_LINK}}
-- **Final PR:** {{URL}}
+- **Final PR:** {{URL_OR_STACK_PR_LIST}}
 - **Merge state:** Ready for the human to merge; agents do not merge to `main`.
