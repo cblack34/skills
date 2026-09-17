@@ -45,16 +45,17 @@ Every item in the final acceptance document must also pass. Slice-level checks s
 
 - A human is the only authority that physically merges to `main` in GitHub. Agents never merge, auto-merge, queue, automate, delegate, or push directly to `main`.
 - **Active topology:** <!-- direct PRs to main OR feature spine with leaf PRs. State one and remove this comment. -->
+- Passing checks make a working draft, not a handoff-ready unit. Every delivery unit completes the refactor-before-handoff gate in [`docs/engineering/workflow.md`](docs/engineering/workflow.md) (design pass against code-quality rules, fresh-context read-only design review, post-refactor verification, recorded receipt) before its PR is declared ready.
 - For direct PRs, the agent stops after review and green CI for human merge.
 - For spine-and-leaf delivery, the implementation lead may squash-merge clean leaf PRs to the spine; the final spine PR to `main` requires human merge.
-- Request GitHub Copilot review first when available; use `review-pr` when it is unavailable; otherwise delegate inline adversarial review to a fresh review sub-agent. The author's own self-review never satisfies the independent gate. Follow the full CI, HEAD-matched review, reply/resolve, re-request-until-clean, and stop loop in [`docs/engineering/workflow.md`](docs/engineering/workflow.md).
+- Request GitHub Copilot review first when available; use `pr-review` when it is unavailable; otherwise delegate inline adversarial review to a fresh review sub-agent. The author's own self-review never satisfies the independent gate. Follow the full CI, HEAD-matched review, reply/resolve, re-request-until-clean, and stop loop in [`docs/engineering/workflow.md`](docs/engineering/workflow.md).
 - Use a Conventional Commits PR title and the workflow's issue-closing rules; only a PR to `main` may carry `Closes #N`.
 <!-- Remove the inactive topology bullet and add repository-specific branch/reviewer facts. -->
 
 ## Always / Ask first / Never
 
 - **Always:** follow [`docs/engineering/workflow.md`](docs/engineering/workflow.md); resolve required research gates; verify unfamiliar APIs against current official docs; run required checks; update affected strategic and descriptive docs with behavior changes.
-- **Ask first or stop:** changing active scope, public contracts, non-negotiables, final acceptance, or an architecture boundary; adopting a paid service; making an external or destructive change beyond recorded authority; starting a broad refactor.
+- **Ask first or stop:** changing active scope, public contracts, non-negotiables, final acceptance, or an architecture boundary; adopting a paid service; making an external or destructive change beyond recorded authority; starting a refactor beyond the current unit's changed surface.
 - **Never:** invent repository facts; commit secrets; bypass red verification; merge, auto-merge, queue, automate, delegate, or push directly to `main`; force current code into an obsolete plan; implement deferred scope or speculative adapters.
 <!-- Add project-specific rules, paired with their approved alternative or escalation path. -->
 

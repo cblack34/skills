@@ -10,7 +10,7 @@ Choose the smallest document set that preserves the strategic contract. Distingu
 | `CLAUDE.md` | constitution | Portable bridge to `AGENTS.md` and the brief. Copy `assets/CLAUDE.md`. |
 | `docs/build-brief.md` | strategic spec | Product outcome, scope, directives, non-negotiables, architecture boundaries, research gates, risks, known dependencies, high-level suggested implementation approach, and definition of done. Use `assets/templates/build-brief-template.md`. |
 | `docs/acceptance.md` | strategic spec | Stable, final project-level behavioral and verification contract. Use `assets/templates/acceptance-template.md`. |
-| `docs/engineering/workflow.md` | constitution | Handoff from strategic pack to user-approved tactical planning plus company-wide branch/PR topology, CI, review, merge authority, verification, and stop conditions. Copy the static asset and fill marked blocks. |
+| `docs/engineering/workflow.md` | constitution | Handoff from strategic pack to user-approved tactical planning plus company-wide branch/PR topology, CI, refactor-before-handoff gate, review, merge authority, verification, and stop conditions. Copy the static asset and fill marked blocks. |
 | `docs/engineering/code-quality.md` | constitution | Universal core plus project-specific code rules. Copy the static asset and fill marked blocks. |
 
 ## Greenfield conditional documents
@@ -37,7 +37,7 @@ Place it in `docs/features/<feature-name>/` or the repository's active spec loca
 | `research.md` | Optional source-backed findings when standards, licenses, providers, or feasibility materially shape the feature and do not fit cleanly in `design.md`. |
 | `acceptance.md` | Stable feature-level done criteria plus repository verification that must remain green. Keep separate from execution planning. |
 
-Feature packs do not duplicate constitution content. If the repository lacks usable agent instructions or verification guidance, flag that gap and offer a separate constitution update.
+Feature packs do not duplicate constitution content. If the repository lacks usable agent instructions, verification guidance, or an equivalent refactor-before-handoff gate, flag that gap and offer a separate constitution update.
 
 ## Starting the next pack after delivery
 

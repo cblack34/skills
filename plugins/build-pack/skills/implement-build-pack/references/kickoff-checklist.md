@@ -42,7 +42,8 @@ When an active approved slice exists:
 3. Inspect referenced commits, PRs, reviews, and checks rather than trusting prose summaries.
 4. Audit plan validity with `slice-plan-audit.md`.
 5. If valid, continue the next actionable issue without rewriting the plan.
-6. If materially invalid, stop and propose the smallest amendment supported by evidence.
+6. If every issue is draft-complete, confirm a refactor and handoff receipt exists for the current delivery unit. Without one, the next action is the `refactor-before-handoff` skill, not PR preparation or handoff.
+7. If materially invalid, stop and propose the smallest amendment supported by evidence.
 
 ## New-slice path
 

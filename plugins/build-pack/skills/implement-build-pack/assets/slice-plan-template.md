@@ -101,5 +101,6 @@ Complete once when the final PR is ready for human merge. Do not use this sectio
 - **Verification:** {{CONCISE_EVIDENCE_AND_ISSUE_LINKS}}
 - **Deviations:** {{APPROVED_DEVIATIONS_OR_NONE}}
 - **Unresolved gates or risks:** {{ITEMS_OR_NONE}}
+- **Refactor and handoff receipt:** {{ISSUE_COMMENT_OR_PR_LINK}}
 - **Final PR:** {{URL}}
 - **Merge state:** Ready for the human to merge; agents do not merge to `main`.

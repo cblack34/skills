@@ -14,7 +14,7 @@ These instructions apply to the entire repository.
 - Run `uv run --locked scripts/new_skill.py <name> --description <description>` from the repository root.
 - Use lowercase kebab-case names no longer than 64 characters.
 - Before creating a skill inside an existing plugin, confirm that placement with the user.
-- Keep the plugin folder name and both plugin manifest names identical. Keep each skill folder name identical to its `SKILL.md` frontmatter name.
+- Keep the plugin folder name and both plugin manifest names identical. Keep each skill folder name identical to its `SKILL.md` frontmatter name. Skill names need not match the plugin name; renaming a plugin forces users to reinstall it, so name plugins for their whole purpose and rename skills freely.
 - Do not hand-edit only one marketplace catalog. The Claude and Codex catalogs must contain the same plugin names in the same order.
 - Do not leave placeholder instructions in a published skill.
 

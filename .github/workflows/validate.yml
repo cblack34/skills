@@ -30,6 +30,6 @@ jobs:
             plugins/smoke-test/skills/smoke-test \
             plugins/smoke-test/skills/extra-skill
           if uv run --locked scripts/validate.py; then
-            echo "Expected validation to reject a plugin with multiple skills."
+            echo "Expected validation to reject a skill directory whose name mismatches its frontmatter."
             exit 1
           fi

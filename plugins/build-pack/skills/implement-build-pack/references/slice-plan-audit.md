@@ -27,7 +27,7 @@ Consider an amendment only when evidence shows at least one of these:
 - The slice cannot satisfy its verification or preserve shipped behavior as approved.
 - A material repository change makes the approved outcome or delivery approach impossible or unsafe.
 
-A more elegant design, a preferred library, ordinary refactoring opportunity, or alternate issue ordering is not material invalidation by itself.
+A more elegant design, a preferred library, ordinary refactoring opportunity, or alternate issue ordering is not material invalidation by itself. The mandatory refactor-before-handoff pass is issue-level execution within the approved slice, not a plan amendment.
 
 ## Amendment procedure
 
