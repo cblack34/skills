@@ -44,13 +44,14 @@ Every item in the final acceptance document must also pass. Slice-level checks s
 ## Delivery governance
 
 - A human is the only authority that physically merges to `main` in GitHub. Agents never merge, auto-merge, queue, automate, delegate, or push directly to `main`.
-- **Active topology:** <!-- direct PRs to main OR feature spine with leaf PRs. State one and remove this comment. -->
+- **Active topology:** <!-- direct PRs to main, feature spine with leaf PRs, OR dependency-ordered PR stack. State one and remove this comment. -->
 - Passing checks make a working draft, not a handoff-ready unit. Every delivery unit completes the refactor-before-handoff gate in [`docs/engineering/workflow.md`](docs/engineering/workflow.md) (design pass against code-quality rules, fresh-context read-only design review, post-refactor verification, recorded receipt) before its PR is declared ready.
 - For direct PRs, the agent stops after review and green CI for human merge.
 - For spine-and-leaf delivery, the implementation lead may squash-merge clean leaf PRs to the spine; the final spine PR to `main` requires human merge.
+- For a PR stack, each PR targets its predecessor and the human merges every PR bottom-up. After each merge the agent advances only the next PR with the recorded method, refreshes checks and review, and stops. Agents never merge a stacked PR to `main`; a stack is not a spine.
 - Request GitHub Copilot review first when available; use `pr-review` when it is unavailable; otherwise delegate inline adversarial review to a fresh review sub-agent. The author's own self-review never satisfies the independent gate. Follow the full CI, HEAD-matched review, reply/resolve, re-request-until-clean, and stop loop in [`docs/engineering/workflow.md`](docs/engineering/workflow.md).
 - Use a Conventional Commits PR title and the workflow's issue-closing rules; only a PR to `main` may carry `Closes #N`.
-<!-- Remove the inactive topology bullet and add repository-specific branch/reviewer facts. -->
+<!-- Remove the inactive topology bullets and add repository-specific branch/reviewer facts. For a PR stack, also state the merge strategy, advancement method, and force-push policy or link to the workflow section that records them. -->
 
 ## Always / Ask first / Never
 

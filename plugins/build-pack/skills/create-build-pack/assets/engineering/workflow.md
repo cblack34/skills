@@ -25,12 +25,12 @@ When evidence invalidates the plan, stop affected work, explain the impact, and 
 ## Delivery topology
 
 <!-- PROJECT-FILL: select one topology
-Record exactly one active topology from the choices below, plus repository branch-naming rules. Delete the inactive topology from the generated workflow. Human merge authority for `main` is mandatory in both shapes.
+Record exactly one active topology from the three choices below, plus repository branch-naming rules. Delete the inactive topologies from the generated workflow. Human merge authority for every PR whose base is `main` is mandatory in all three shapes.
 -->
 
 ### Option A — direct PRs to `main`
 
-Use this when the human wants to review and merge every delivery unit:
+Use this when delivery units are independent of each other and the human wants to review and merge each one:
 
 1. Create a branch for the next user-approved tactical unit from current `main`.
 2. Implement the unit, tests, and affected docs; run self-verification, the refactor-before-handoff gate, and self-review.
@@ -55,6 +55,24 @@ Use this when the implementation lead may integrate work while the human keeps t
 9. Stop for the human to review and merge the spine PR.
 
 The agent never merges the spine to `main`, enables auto-merge, uses a merge queue, calls a merge API, automates the GitHub merge UI, pushes directly to `main`, or delegates any of those actions. When the spine PR is ready, the human physically pushes the merge button in GitHub. Do not run multiple spines for the same active scope unless the user approves that coordination cost.
+
+### Option C — dependency-ordered PR stack
+
+Use this when reviewable units have a real dependency order or overlapping ownership but should stay separate PRs, conceptually `main <- PR1 <- PR2 <- PR3`. Independent units are not a stack; use Option A for them.
+
+1. Create the first branch from current `main`. Create each later branch from the preceding stack branch's current head.
+2. PR1 targets `main`; each later PR targets its predecessor's branch. Each PR contains only its incremental change relative to its declared base. The slice plan records the stack order and dependencies.
+3. Implement each layer, its tests, and affected docs; run self-verification, the refactor-before-handoff gate, and self-review on that layer. Never let two agents write the same layer concurrently, and never start a dependent layer from anything but its predecessor's current head.
+4. Open each PR against its declared base, run the review loop, and require green CI. Review may proceed throughout the stack, but a PR is merge-ready only when its current base and head match the reviewed relationship.
+5. Stop for the human to merge the bottom PR to `main`.
+6. After it lands, advance only the next PR: synchronize its branch with updated `main` using the recorded advancement method; confirm its diff against `main` contains only its intended incremental change; retarget the PR to `main`; add its issue-closing references; re-run affected checks; re-request a HEAD-matched, zero-new-finding review. Then stop for the human again.
+7. Repeat until the stack is empty. Stop on a non-trivial conflict, when the incremental diff cannot be restored cleanly, or when stack management cost obscures review, and propose a different topology rather than silently converting the stack.
+
+The agent never merges any stacked PR to `main`, enables auto-merge, uses a merge queue, calls a merge API, automates the GitHub merge UI, pushes directly to `main`, rewrites a shared or protected branch, force-pushes without the exact authorization recorded below, or delegates any of those actions. When each PR becomes the bottom of the stack and is ready, the human physically pushes the merge button in GitHub. A stacked PR is not a spine leaf: no leaf-to-spine merge authority exists in this topology. Keep the stack short enough to review and restack safely, and do not begin a dependent PR ahead of an unmerged prerequisite. No third-party stacking product is required or assumed.
+
+<!-- PROJECT-FILL: stack governance (Option C only)
+Record: the permitted merge strategy for PRs to `main` (squash, merge commit, or rebase; squash-merging a parent changes ancestry, so the advancement method must tolerate it); the stack-advancement method (default: merge updated `main` into the next branch, verify the incremental diff, then retarget; or an explicitly authorized rebase with `--force-with-lease` on agent-owned branches only); the force-push policy; who may retarget PRs; branch naming and ownership; and the expected or maximum stack depth if it is material. Delete this comment.
+-->
 
 ## Delegation
 
@@ -104,7 +122,7 @@ A behaviorally passing implementation is a working draft. Implementation may beg
 - Use one PR for a complete, reviewable delivery unit chosen by the implementation lead; do not let this rule predetermine feature slicing.
 - Follow repository branch naming and use a Conventional Commits PR title.
 - In the PR body, state scope, verification evidence, the refactor and handoff receipt, material risks or deviations, documentation changes, and related issues.
-- Use `Closes #N` only on a PR whose base is `main`. A leaf PR to a spine references its issue without closing it; the final spine PR carries the appropriate closing references. Confirm closure after the human merges to `main`.
+- Use `Closes #N` only on a PR whose base is currently `main`. A leaf PR to a spine references its issue without closing it; the final spine PR carries the appropriate closing references. A stacked PR references its issue without closing it until it is retargeted to `main`, then adds `Closes #N`. Confirm closure after the human merges to `main`.
 - Re-sync the PR base and re-run relevant checks before review. Stop on non-trivial conflicts and never force-push a protected/shared branch.
 
 ## PR review loop
@@ -127,6 +145,7 @@ The **address → reply → resolve** flow is mandatory regardless of reviewer:
 - **Evaluate every comment.** Fix in-scope issues in the branch. Return scope-changing feedback to the user. For valid deferred work, open a follow-up issue only when issue creation is authorized; otherwise record it in the PR handoff.
 - **Reply in every thread, then resolve it.** Push the fix or explain the disposition before resolving—even when pushing back. Resolve before re-requesting so the next pass begins clean.
 - **Re-run self-verification and CI** after every code change prompted by review.
+- **A base change invalidates review.** After a PR is synchronized with its base or retargeted, including every stack advancement, a review against the previous base/head relationship is stale; re-run affected checks and re-request review.
 - **Re-request review and wait for a zero-new-comment, HEAD-matched pass** before any permitted merge. Resolving the first batch alone is not a clean review.
 - **Bound the loop:** at most three request → address cycles total, with a reasonable wait each. If Copilot is unavailable or does not post a usable HEAD review within a reasonable wait, switch to `pr-review`; changing reviewers does not reset the bound. If neither reviewer can complete, delegate the fresh review sub-agent, note that fallback in the PR, and never merge with a genuine unresolved issue.
 
@@ -140,7 +159,7 @@ Record the CI provider, exact workflow, and any project-specific jobs. Delete th
 
 ## Final verification
 
-Slice checks prove progress but never replace [`../acceptance.md`](../acceptance.md). Before the human `main` merge, run every final command and acceptance check on the direct PR branch or completed spine. Reconcile shipped behavior with strategic and descriptive docs. Report unresolved gates, accepted risks, deviations from suggested order, and deferred scope.
+Slice checks prove progress but never replace [`../acceptance.md`](../acceptance.md). Before the human `main` merge, run every final command and acceptance check on the direct PR branch, the completed spine, or the top of the PR stack; re-run affected checks on each stacked PR as it is promoted to `main`. Reconcile shipped behavior with strategic and descriptive docs. Report unresolved gates, accepted risks, deviations from suggested order, and deferred scope.
 
 ## Stop and return to the user
 
@@ -153,6 +172,7 @@ Stop affected work when:
 - two consecutive PRs fail, or the same test flakes across two runs;
 - review finds a genuine unresolved issue or exhausts the fallback;
 - integration needs a non-trivial conflict resolution or force-push;
+- a stacked PR cannot be synchronized, verified incremental, and retargeted within recorded authority, or stack management cost obscures review;
 - an external action exceeds the recorded authority;
 - a bad merge already landed on `main`; open a revert PR, then stop and report.
 

@@ -29,6 +29,7 @@ Search established planning locations and repository history for a durable slice
 - records human approval or otherwise has clear evidence of approval;
 - links the active GitHub issues;
 - describes the same branch, PR, and code state now present;
+- for a PR stack, matches the order reconstructed from PR base branches, heads, merge state, and Git ancestry, allowing only for PRs already promoted to `main`;
 - has not already been completed or superseded.
 
 If more than one slice appears active, stop and ask the human which one owns current implementation. Do not merge their scopes yourself.

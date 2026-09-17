@@ -46,7 +46,8 @@ Do not ask the user for facts current documentation can establish. Research them
 - Which automated commands and observable behaviors constitute final verification?
 - Which criteria require human judgment, external hardware, licensed software, or another environment?
 - Which decisions may the implementation agent make, and which require user approval?
-- Which delivery topology applies: human merge of every PR to `main`, or agent squash-merge of leaf PRs to a feature spine followed by human merge of the spine PR to `main`?
+- Which delivery topology applies: (A) human merge of every independent PR to `main`; (B) agent squash-merge of leaf PRs to a feature spine followed by human merge of the spine PR to `main`; or (C) a dependency-ordered PR stack (`main <- PR1 <- PR2`) where each PR targets its predecessor and the human merges every PR bottom-up?
+- If Option C: which merge strategy is permitted for PRs to `main` (squash-merging a parent changes ancestry); which stack-advancement method is approved (merge updated `main` into the next branch, verify the incremental diff, then retarget, or an explicitly authorized rebase with `--force-with-lease` on agent-owned branches only); what the force-push policy is; who may retarget PRs; branch naming and ownership; and whether an expected or maximum stack depth is material?
 - Is GitHub Copilot review available in this repository, and what exact request method works? Are the `pr-review` and `address-pr-review` fallback skills and sub-agent delegation available?
 - What existing CI, merge, branch-protection, or release policies are durable company-wide governance facts?
 - Which conditions require implementation to stop and return to the user?

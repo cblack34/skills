@@ -11,7 +11,7 @@ An active plan remains valid when all of these are true:
 - Its assumptions and research gates remain supported or explicitly unresolved with safe stop conditions.
 - Its architecture seams and public-contract boundaries still match repository reality.
 - Its verification can still demonstrate the slice outcome.
-- Its branch and issue structure can still deliver the slice safely.
+- Its branch and issue structure can still deliver the slice safely. For a PR stack, the recorded order and advancement method still match GitHub and Git reality, differing only by PRs already promoted to `main`.
 - No later repository change has made the approach unsafe or impossible.
 
 When these hold, keep the plan unchanged. New implementation detail, a different code preference, ordinary task discovery, estimate drift, assignment changes, and routine blockers belong in GitHub issues.
@@ -43,7 +43,7 @@ If the evidence challenges the strategic pack rather than the tactical plan, sto
 
 ## Initial and final edits that are not replanning
 
-The plan may change during initial materialization to add the GitHub issue register after issue creation. It may receive one delivery-record update when the final PR is ready, recording results, deviations, unresolved gates, and links. Neither edit should turn the plan into a status board.
+The plan may change during initial materialization to add the GitHub issue register after issue creation. It may receive one delivery-record update when the final PR is ready, recording results, deviations, unresolved gates, and links. For a PR stack, recording a PR's retarget to `main` in the delivery shape is a delivery fact and is allowed once per PR. None of these edits should turn the plan into a status board.
 
 ## Historical integrity
 

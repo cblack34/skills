@@ -50,15 +50,26 @@ For the default strategic mode:
 - [ ] The handoff tells the implementation agent to inspect the current repository, propose only the single best next slice, and obtain agreement before creating that slice's plan, GitHub issues, branches, assignments, or code.
 - [ ] Authority is clear: the strategic agent sets direction, the implementation lead owns tactical planning and integration, and execution sub-agents receive bounded concrete assignments.
 - [ ] The workflow keeps durable slice plans focused on high-level what and why, uses linked GitHub issues for task checklists and WIP, and selects the least expensive capable model and effort for each execution assignment.
-- [ ] Exactly one delivery topology is active: human-merge-each-PR to `main`, or agent-merge leaves to a spine with human merge of the final spine PR to `main`.
-- [ ] Only a human may physically merge to `main` in GitHub; agents cannot merge, auto-merge, queue, automate, delegate, or push directly to `main`. Agent merge authority, if any, is limited to clean leaf PRs targeting the spine.
+- [ ] Exactly one delivery topology is active: direct PRs to `main`, feature spine with leaf PRs, or dependency-ordered PR stack. Inactive options are removed.
+- [ ] Only a human may physically merge to `main` in GitHub; agents cannot merge, auto-merge, queue, automate, delegate, or push directly to `main`. Agent merge authority, if any, is limited to clean leaf PRs targeting the spine; a stacked PR is never agent-mergeable.
 - [ ] The workflow retains self-verification, CI, review, reply/resolve, re-request-until-clean, clean-HEAD review, documentation, and stop gates without preassigning feature scope to PRs.
 - [ ] Reviewer precedence is explicit: GitHub Copilot first when available, `pr-review` fallback, then a fresh bounded review sub-agent; author self-review never substitutes for independent review.
 - [ ] The workflow states that a behaviorally passing implementation is a working draft and requires, for every tactical delivery unit, a distinct post-implementation refactor/design pass against the repository's code-quality rules before PR readiness, reading changed files in full rather than diff hunks. A pack whose workflow can hand off a merely passing draft fails this item even when tests and PR review are mandatory.
 - [ ] That pass includes a fresh-context, read-only design review separate from author self-review and from the PR correctness/security review; focused then complete verification after structural edits; manifest, built-artifact, and clean-install checks when packages or subpackages move; and a recorded refactor and handoff receipt in which `Structural changes made: none` must name the reviewed surface and justify it.
 - [ ] The gate stays governance: no file-size limits, mandated abstractions, or prescribed refactors; the bundled `design-reviewer` agent is optional with a self-contained fallback (fresh read-only sub-agent or explicit human review).
 - [ ] A feature pack in a repository with equivalent refactor governance references that authority instead of duplicating it; when it is missing, the gap is flagged with an offered constitution update.
-- [ ] PR mechanics retain base synchronization, Conventional Commits titles, verification evidence, protected-branch safety, and issue closure only through a PR to `main`.
+- [ ] PR mechanics retain base synchronization, Conventional Commits titles, verification evidence, protected-branch safety, and issue closure only through a PR whose base is currently `main`.
+
+If the PR stack topology (Option C) is active:
+
+- [ ] The workflow states bottom-up human merge order and that agents never merge any stacked PR to `main`.
+- [ ] Each PR initially targets its predecessor. A dependent PR never targets `main` before its prerequisite lands unless an explicit independent-root decision is recorded, in which case it is direct-PR work, not a stack.
+- [ ] The permitted merge strategy for `main` and the stack-advancement method are recorded; force-push is either prohibited or authorized for an exact operation on agent-owned branches only.
+- [ ] A review against a previous base/head relationship is rejected after synchronization or retargeting; checks and review are refreshed before the promoted PR is declared ready.
+- [ ] `Closes #N` appears only on a PR currently targeting `main`; stacked PRs reference issues without closing them until retargeted.
+- [ ] The stack is not described as a feature spine and grants no leaf-to-spine merge authority.
+- [ ] No third-party stacking product or paid service is required.
+- [ ] The workflow tells the implementation lead to reconstruct stack order, bases, heads, and merge state from GitHub and Git ancestry on resume, and to stop when a dependent PR would be started or advanced ahead of an unmerged prerequisite.
 
 If the user explicitly requested a tactical addendum:
 
