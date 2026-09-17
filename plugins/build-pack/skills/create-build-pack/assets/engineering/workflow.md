@@ -83,19 +83,19 @@ A behaviorally passing implementation is a working draft. Implementation may beg
 6. After every structural edit run the cheapest focused executable check first, then the complete `AGENTS.md` definition of done before handoff.
 7. Record the receipt in the unit's issue and PR:
 
-```markdown
-## Refactor and handoff receipt
-- Changed production files reviewed:
-- Owning abstractions/callers reviewed:
-- Cohesion/SRP findings:
-- Structural changes made:
-- Findings rejected and evidence:
-- Package/artifact verification:
-- Post-refactor focused checks:
-- Complete repository checks:
-- Fresh-context design review:
-- Remaining risks or justified debt:
-```
+   ```markdown
+   ## Refactor and handoff receipt
+   - Changed production files reviewed:
+   - Owning abstractions/callers reviewed:
+   - Cohesion/SRP findings:
+   - Structural changes made:
+   - Findings rejected and evidence:
+   - Package/artifact verification:
+   - Post-refactor focused checks:
+   - Complete repository checks:
+   - Fresh-context design review:
+   - Remaining risks or justified debt:
+   ```
 
 `Structural changes made: none` is valid only when the receipt identifies the reviewed surface and explains why current responsibilities remain cohesive. A unit without this receipt is not PR-ready, regardless of CI or review state.
 
