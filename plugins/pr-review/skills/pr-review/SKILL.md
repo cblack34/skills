@@ -275,7 +275,7 @@ anchor doesn't kill the review, and note any that fail.
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
 - Verifier batches: 6 (grouped by file)
 - Verification: 6/8 verified by execution, 2/8 by doc citation
-- Models: finders haiku, verifiers sonnet
+- Models: finders sonnet, verifiers sonnet
 - Prior threads checked: 4 (2 fixed & resolved, 1 pushback answered, 1 stands)
 
 ### Nits not worth inline comments (3)
