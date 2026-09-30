@@ -45,12 +45,13 @@ Auto-selection is deterministic and runs in the main context before the
 handoff:
 
 ```bash
-gh pr view "$N" --repo "$O/$R" --json additions,deletions,files |
+gh api "repos/$O/$R/pulls/$N/files" --paginate |
   python3 "<skill base dir>/scripts/effort_level.py"   # prints level, then reason
 ```
 
-Rules, first match wins: any path matching auth/session/secret/payment/
-migration/terraform/infra/deploy/CI-workflow/Dockerfile → `high`; every file a
+Rules, first match wins: any path with a whole token (not a substring) of
+auth/session/secret/payment/migration/terraform/infra/deploy/Dockerfile, or a
+CI workflow file, → `high`; every file a
 doc, lockfile, or asset → `low`; over 800 changed lines → `high`; 50 or fewer
 → `low`; otherwise `medium`. Print the reason in the banner so the user can
 override with `--effort` next time. Never post a skip: a trivial PR still gets
