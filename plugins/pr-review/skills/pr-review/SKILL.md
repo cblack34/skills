@@ -131,18 +131,20 @@ off a cliff past that) and returns findings plus a coverage report in the
 format its agent definition fixes.
 
 **Hand context in; do not let finders re-read.** Finders have no shell and a
-turn cap, so the prompt must carry everything. Build ONE shared prefix and
-reuse it byte-for-byte across every finder in the round, with the only varying
-part last:
+turn cap, so the prompt must carry everything. Build ONE shared prefix from
+items 1-3 and reuse it byte-for-byte across every finder in the round. The
+chunk assignment and the lens trail it, and are the only parts that vary:
 
 1. PR metadata and head SHA
 2. The diff (patch hunks)
 3. The Phase 1 context at the level's depth (see the effort table)
-4. Chunk assignment (which files/hunks this finder owns)
+4. Chunk assignment (which files/hunks this finder owns); identical across the
+   lens siblings of one chunk, different between chunks
 5. The lens: category name and what to hunt for — the last thing in the prompt
 
 Identical prefixes let sibling finders read the same prompt cache instead of
-each writing their own; the lens at the tail is the only cold part.
+each writing their own; chunk assignment and lens at the tail are the only cold
+part, and a single-chunk round varies only the lens.
 
 ### Phase 3 — Extra rounds, by effort
 
