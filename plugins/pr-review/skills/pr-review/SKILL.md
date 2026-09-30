@@ -29,8 +29,12 @@ catch.
   omitted, infer from the current branch: `gh pr view --json number`.
 - OWNER/REPO from `git remote get-url origin`.
 - REPO_DIR: the local checkout's absolute path.
-- Optional `--effort low|medium|high`. When omitted, `scripts/effort_level.py`
-  in this skill's base directory picks the level (below).
+- Optional `--effort low|medium|high`. Validate it in the main context before
+  the handoff: if the flag is present with a missing or unsupported value, stop
+  and report the allowed values rather than guessing. When the flag is omitted,
+  `scripts/effort_level.py` in this skill's base directory picks the level
+  (below). Record `EFFORT` (the level) and `EFFORT_SOURCE` (`explicit` if the
+  flag was given, else `auto: <reason>` from the script).
 
 ## Effort levels
 
@@ -65,18 +69,27 @@ extra rounds are the first thing effort trades away.
 
 ## Handoff
 
-Resolve the inputs in the main context, then spawn `pr-reviewer` via the Agent
-tool for the whole pipeline. Do not set `model` on that call; the agent's own
-frontmatter pins it. The agent has this skill preloaded, so the prompt only
-needs `OWNER`, `REPO`, `N`, `REPO_DIR`, `EFFORT`, and the handoff line: "You
-are the reviewer. Inputs are resolved; start at Phase 0. Do not re-resolve them and do
-not spawn another pr-reviewer."
+Resolve the inputs in the main context and print the banner
+`Effort: <EFFORT> (<EFFORT_SOURCE>)` before any review work starts. Then run
+the whole pipeline in an isolated reviewer context.
+
+**Claude Code.** Spawn `pr-reviewer` via the Agent tool. Do not set `model` on
+that call; the agent's own frontmatter pins it. The agent has this skill
+preloaded, so the prompt only needs `OWNER`, `REPO`, `N`, `REPO_DIR`, `EFFORT`,
+`EFFORT_SOURCE`, and the handoff line: "You are the reviewer. Inputs are resolved; start at
+Phase 0. Do not re-resolve them and do not spawn another pr-reviewer."
 
 This skill is deliberately not forked: a forked skill inherits the session
 model and ignores the agent's `model:` pin, which has made single runs cost
 eight times the Sonnet baseline.
 
-**Every child spawn pins its model.** Finders are spawned as
+**Codex and other harnesses without plugin agents.** There is no `pr-reviewer`
+agent to spawn. Run the pipeline below inline in the current context, using
+whatever subagent facility the harness has for finders and verifiers (or run
+them sequentially if it has none).
+
+**Every child spawn pins its model** (wherever the harness supports a
+per-spawn model; Claude Code does). Finders are spawned as
 `pr-review:pr-finder`, whose frontmatter pins Sonnet and restricts tools; at
 `low` pass `model: "haiku"` on the call, which overrides the frontmatter.
 Verification never drops below Sonnet: a cheap finder's misses cost a nit, a
@@ -147,18 +160,20 @@ off a cliff past that) and returns findings plus a coverage report in the
 format its agent definition fixes.
 
 **Hand context in; do not let finders re-read.** Finders have no shell and a
-turn cap, so the prompt must carry everything. Build ONE shared prefix and
-reuse it byte-for-byte across every finder in the round, with the only varying
-part last:
+turn cap, so the prompt must carry everything. Build ONE shared prefix from
+items 1-3 and reuse it byte-for-byte across every finder in the round. The
+chunk assignment and the lens trail it, and are the only parts that vary:
 
 1. PR metadata and head SHA
 2. The diff (patch hunks)
 3. The Phase 1 context at the level's depth (see the effort table)
-4. Chunk assignment (which files/hunks this finder owns)
+4. Chunk assignment (which files/hunks this finder owns); identical across the
+   lens siblings of one chunk, different between chunks
 5. The lens: category name and what to hunt for — the last thing in the prompt
 
 Identical prefixes let sibling finders read the same prompt cache instead of
-each writing their own; the lens at the tail is the only cold part.
+each writing their own; chunk assignment and lens at the tail are the only cold
+part, and a single-chunk round varies only the lens.
 
 ### Phase 3 — Extra rounds, by effort
 
@@ -183,7 +198,8 @@ open threads, or killed findings resurrect every cycle.
 ### Phase 5 — Adversarial verification (parallel subagents)
 
 Group surviving candidates by file; split a group past 5 candidates into
-batches of 4 to 5. Each group gets ONE skeptic subagent (`model: "sonnet"`)
+the fewest batches of at most 5, sized as evenly as possible (6 becomes 3+3, 7
+becomes 4+3, 11 becomes 4+4+3). Each group gets ONE skeptic subagent (`model: "sonnet"`)
 prompted to REFUTE every candidate in it and return a verdict per candidate.
 One full-file read then serves several claims instead of being repeated per
 claim. A skeptic must judge each candidate on its own evidence; a batch is a
@@ -274,7 +290,7 @@ anchor doesn't kill the review, and note any that fail.
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
 - Verifier batches: 6 (grouped by file)
 - Verification: 6/8 verified by execution, 2/8 by doc citation
-- Models: finders haiku, verifiers sonnet
+- Models: finders sonnet, verifiers sonnet
 - Prior threads checked: 4 (2 fixed & resolved, 1 pushback answered, 1 stands)
 
 ### Nits not worth inline comments (3)
