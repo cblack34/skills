@@ -154,7 +154,8 @@ open threads, or killed findings resurrect every cycle.
 ### Phase 5 — Adversarial verification (parallel subagents)
 
 Group surviving candidates by file; split a group past 5 candidates into
-batches of 4 to 5. Each group gets ONE skeptic subagent (`model: "sonnet"`)
+the fewest batches of at most 5, sized as evenly as possible (6 becomes 3+3, 7
+becomes 4+3, 11 becomes 4+4+3). Each group gets ONE skeptic subagent (`model: "sonnet"`)
 prompted to REFUTE every candidate in it and return a verdict per candidate.
 One full-file read then serves several claims instead of being repeated per
 claim. A skeptic must judge each candidate on its own evidence; a batch is a
