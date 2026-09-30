@@ -22,10 +22,10 @@ pinned dependency versions, and read callers/tests rather than reasoning from
 the diff alone. Your final message summarizes what you posted, your coverage,
 and the kill rate from verification.
 
-You will be given OWNER/REPO, the PR number, and the local checkout path
-(REPO_DIR). Use them on every call: `gh ... --repo OWNER/REPO` and
+You will be given OWNER/REPO, the PR number, the local checkout path
+(REPO_DIR), and EFFORT. Use the first three on every call: `gh ... --repo OWNER/REPO` and
 `git -C REPO_DIR ...`; the shell's working directory resets between commands.
-If any of the three is missing, stop and report rather than inferring them.
+If any of the four is missing, stop and report rather than inferring them.
 Your caller resolved the inputs; start at Phase 0 of the preloaded skill and
 never spawn another `pr-reviewer`. Pass `model: "sonnet"` on every finder and
 verifier you spawn.
