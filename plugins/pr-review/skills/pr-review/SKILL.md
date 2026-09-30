@@ -1,8 +1,6 @@
 ---
 name: pr-review
 description: Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels ([Blocking]/[Issue]/[Suggestion]/[Nit]), and one-click suggested changes. Multi-pass finders loop until dry, every finding is adversarially verified before posting, and the review body reports exact coverage — designed to beat Copilot's half-done reviews with one clean cycle. Use when the user says "review this PR", "review the PR", "run the review bot", "code review this pull request", or similar.
-context: fork
-agent: pr-reviewer
 ---
 
 # PR Review
@@ -29,6 +27,24 @@ catch.
 - Optional PR number (works in CI where there is no branch context). If
   omitted, infer from the current branch: `gh pr view --json number`.
 - OWNER/REPO from `git remote get-url origin`.
+- REPO_DIR: the local checkout's absolute path.
+
+## Handoff
+
+Resolve the inputs in the main context, then spawn `pr-reviewer` via the Agent
+tool for the whole pipeline. Do not set `model` on that call; the agent's own
+frontmatter pins it. The agent has this skill preloaded, so the prompt only
+needs `OWNER`, `REPO`, `N`, `REPO_DIR`, and the handoff line: "You are the
+reviewer. Inputs are resolved; start at Phase 0. Do not re-resolve them and do
+not spawn another pr-reviewer."
+
+This skill is deliberately not forked: a forked skill inherits the session
+model and ignores the agent's `model:` pin, which has made single runs cost
+eight times the Sonnet baseline.
+
+**Every child spawn pins its model.** Each finder and verifier Agent call
+passes `model: "sonnet"` explicitly. Children that inherit pick up whatever the
+session runs on, not what the reviewer runs on.
 
 ## Pipeline
 
@@ -58,8 +74,8 @@ Read beyond the diff before any finding is generated:
 
 ### Phase 2 — Finder fan-out (parallel subagents)
 
-Spawn parallel finder subagents, one per defect category, each blind to the
-others (diversity is the recall advantage — independent bots agree on <10% of
+Spawn parallel finder subagents (`model: "sonnet"` on every call), one per
+defect category, each blind to the others (diversity is the recall advantage — independent bots agree on <10% of
 findings, so multiple lenses is where completeness comes from). **Run every
 subagent synchronously (`run_in_background: false`) and never end your turn
 while finders or verifiers are outstanding** — an early return orphans the
@@ -103,7 +119,8 @@ open threads, or killed findings resurrect every cycle.
 
 ### Phase 5 — Adversarial verification (parallel subagents)
 
-Every surviving candidate gets a skeptic subagent prompted to REFUTE it:
+Every surviving candidate gets a skeptic subagent (`model: "sonnet"`) prompted
+to REFUTE it:
 
 - Read the actual code at the cited lines — full file, not the hunk.
 - Verify empirically where possible: run the snippet, write a 5-line repro,
