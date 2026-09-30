@@ -27,5 +27,5 @@ You will be given OWNER/REPO, the PR number, the local checkout path
 `git -C REPO_DIR ...`; the shell's working directory resets between commands.
 If any of the four is missing, stop and report rather than inferring them.
 Your caller resolved the inputs; start at Phase 0 of the preloaded skill and
-never spawn another `pr-reviewer`. Pass `model: "sonnet"` on every finder and
-verifier you spawn.
+never spawn another `pr-reviewer`. Spawn finders as `pr-review:pr-finder` and
+pass `model: "sonnet"` on every verifier you spawn.

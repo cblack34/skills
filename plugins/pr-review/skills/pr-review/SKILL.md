@@ -39,6 +39,7 @@ coverage receipt as `Effort: <level> (explicit|default)`.
 | Knob | low | medium | high |
 |---|---|---|---|
 | Finder rounds | 1 | 1 + one fresh-eyes generalist | 2 |
+| Context handed to finders | diff + ±40 lines around each hunk + repo conventions | low + full contents of changed source files | medium + callers, tests, sibling implementations |
 
 Past runs show nothing surfaced after round 1 ever survived verification, so
 extra rounds are the first thing effort trades away.
@@ -56,9 +57,10 @@ This skill is deliberately not forked: a forked skill inherits the session
 model and ignores the agent's `model:` pin, which has made single runs cost
 eight times the Sonnet baseline.
 
-**Every child spawn pins its model.** Each finder and verifier Agent call
-passes `model: "sonnet"` explicitly. Children that inherit pick up whatever the
-session runs on, not what the reviewer runs on.
+**Every child spawn pins its model.** Finders are spawned as
+`pr-review:pr-finder`, whose frontmatter pins the model and restricts tools.
+Each verifier Agent call passes `model: "sonnet"` explicitly. Children that
+inherit pick up whatever the session runs on, not what the reviewer runs on.
 
 ## Pipeline
 
@@ -88,8 +90,8 @@ Read beyond the diff before any finding is generated:
 
 ### Phase 2 — Finder fan-out (parallel subagents)
 
-Spawn parallel finder subagents (`model: "sonnet"` on every call), one per
-defect category, each blind to the others (diversity is the recall advantage — independent bots agree on <10% of
+Spawn parallel `pr-review:pr-finder` subagents, one per defect category, each
+blind to the others (diversity is the recall advantage — independent bots agree on <10% of
 findings, so multiple lenses is where completeness comes from). **Run every
 subagent synchronously (`run_in_background: false`) and never end your turn
 while finders or verifiers are outstanding** — an early return orphans the
@@ -111,11 +113,22 @@ pipeline and a later resume double-posts the review.
    inconsistency with the codebase's established patterns
 
 Each finder reviews in chunks of ≤400 changed lines (detection quality falls
-off a cliff past that), receives the Phase 1 context, and returns:
+off a cliff past that) and returns findings plus a coverage report in the
+format its agent definition fixes.
 
-- Findings: `path, start_line..line, side, category, severity, claim,
-  evidence, suggested_fix (exact replacement text when possible)`
-- A coverage report: which files/hunks it actually examined.
+**Hand context in; do not let finders re-read.** Finders have no shell and a
+turn cap, so the prompt must carry everything. Build ONE shared prefix and
+reuse it byte-for-byte across every finder in the round, with the only varying
+part last:
+
+1. PR metadata and head SHA
+2. The diff (patch hunks)
+3. The Phase 1 context at the level's depth (see the effort table)
+4. Chunk assignment (which files/hunks this finder owns)
+5. The lens: category name and what to hunt for — the last thing in the prompt
+
+Identical prefixes let sibling finders read the same prompt cache instead of
+each writing their own; the lens at the tail is the only cold part.
 
 ### Phase 3 — Extra rounds, by effort
 
