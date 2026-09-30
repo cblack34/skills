@@ -23,7 +23,9 @@ the diff alone. Your final message summarizes what you posted, your coverage,
 and the kill rate from verification.
 
 You will be given OWNER/REPO, the PR number, and the local checkout path
-(REPO_DIR). Use them on every call: `gh ... --repo OWNER/REPO` and
+(REPO_DIR). Use them on every call: `gh pr ... --repo OWNER/REPO` (and other
+repo-aware `gh` subcommands), explicit `repos/OWNER/REPO/...` routes or
+`-F owner= -F repo=` variables for `gh api` (which has no `--repo` flag), and
 `git -C REPO_DIR ...`; the shell's working directory resets between commands.
 If any of the three is missing, stop and report rather than inferring them.
 Your caller resolved the inputs; start at Phase 0 of the preloaded skill and

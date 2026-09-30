@@ -31,18 +31,26 @@ catch.
 
 ## Handoff
 
-Resolve the inputs in the main context, then spawn `pr-reviewer` via the Agent
-tool for the whole pipeline. Do not set `model` on that call; the agent's own
-frontmatter pins it. The agent has this skill preloaded, so the prompt only
-needs `OWNER`, `REPO`, `N`, `REPO_DIR`, and the handoff line: "You are the
-reviewer. Inputs are resolved; start at Phase 0. Do not re-resolve them and do
-not spawn another pr-reviewer."
+Resolve the inputs in the main context, then run the whole pipeline in an
+isolated reviewer context.
+
+**Claude Code.** Spawn `pr-reviewer` via the Agent tool. Do not set `model` on
+that call; the agent's own frontmatter pins it. The agent has this skill
+preloaded, so the prompt only needs `OWNER`, `REPO`, `N`, `REPO_DIR`, and the
+handoff line: "You are the reviewer. Inputs are resolved; start at Phase 0. Do
+not re-resolve them and do not spawn another pr-reviewer."
 
 This skill is deliberately not forked: a forked skill inherits the session
 model and ignores the agent's `model:` pin, which has made single runs cost
 eight times the Sonnet baseline.
 
-**Every child spawn pins its model.** Each finder and verifier Agent call
+**Codex and other harnesses without plugin agents.** There is no `pr-reviewer`
+agent to spawn. Run the pipeline below inline in the current context, using
+whatever subagent facility the harness has for finders and verifiers (or run
+them sequentially if it has none).
+
+**Every child spawn pins its model** (wherever the harness supports a
+per-spawn model; Claude Code does). Each finder and verifier Agent call
 passes `model: "sonnet"` explicitly. Children that inherit pick up whatever the
 session runs on, not what the reviewer runs on.
 
