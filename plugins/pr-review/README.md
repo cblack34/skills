@@ -26,8 +26,8 @@ other's output.
 ## Usage
 
 ```text
-/pr-review 123
-/pr-review 123 --effort low
+/pr-review 123                 # effort picked from PR size and touched paths
+/pr-review 123 --effort high   # or set it explicitly
 /address-pr-review https://github.com/org/repo/pull/123
 ```
 

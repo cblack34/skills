@@ -29,12 +29,28 @@ catch.
   omitted, infer from the current branch: `gh pr view --json number`.
 - OWNER/REPO from `git remote get-url origin`.
 - REPO_DIR: the local checkout's absolute path.
-- Optional `--effort low|medium|high`. Default `medium`.
+- Optional `--effort low|medium|high`. When omitted, `scripts/effort_level.py`
+  in this skill's base directory picks the level (below).
 
 ## Effort levels
 
 One knob set, chosen once at the start and reported in the banner and the
-coverage receipt as `Effort: <level> (explicit|default)`.
+coverage receipt as `Effort: <level> (explicit|auto: <reason>)`.
+
+Auto-selection is deterministic and runs in the main context before the
+handoff:
+
+```bash
+gh pr view "$N" --repo "$O/$R" --json additions,deletions,files |
+  python3 "<skill base dir>/scripts/effort_level.py"   # prints level, then reason
+```
+
+Rules, first match wins: any path matching auth/session/secret/payment/
+migration/terraform/infra/deploy/CI-workflow/Dockerfile → `high`; every file a
+doc, lockfile, or asset → `low`; over 800 changed lines → `high`; 50 or fewer
+→ `low`; otherwise `medium`. Print the reason in the banner so the user can
+override with `--effort` next time. Never post a skip: a trivial PR still gets
+a `low` review and a coverage receipt.
 
 | Knob | low | medium | high |
 |---|---|---|---|
@@ -252,7 +268,7 @@ anchor doesn't kill the review, and note any that fail.
 
 ```
 ## Review coverage
-- Effort: medium (default)
+- Effort: medium (auto: 212 changed lines, no sensitive paths)
 - Files reviewed: 12/12 (list skipped files + reason if any)
 - Finder rounds: 2 (4 merged lenses + fresh-eyes generalist)
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
