@@ -40,6 +40,8 @@ coverage receipt as `Effort: <level> (explicit|default)`.
 |---|---|---|---|
 | Finder lenses per round | 2 merged | 4 merged | 7 |
 | Finder rounds | 1 | 1 + one fresh-eyes generalist | 2 |
+| Finder model | haiku | sonnet | sonnet |
+| Verifier model | sonnet | sonnet | sonnet |
 | Context handed to finders | diff + ±40 lines around each hunk + repo conventions | low + full contents of changed source files | medium + callers, tests, sibling implementations |
 
 Past runs show nothing surfaced after round 1 ever survived verification, so
@@ -59,8 +61,11 @@ model and ignores the agent's `model:` pin, which has made single runs cost
 eight times the Sonnet baseline.
 
 **Every child spawn pins its model.** Finders are spawned as
-`pr-review:pr-finder`, whose frontmatter pins the model and restricts tools.
-Each verifier Agent call passes `model: "sonnet"` explicitly. Children that
+`pr-review:pr-finder`, whose frontmatter pins Sonnet and restricts tools; at
+`low` pass `model: "haiku"` on the call, which overrides the frontmatter.
+Verification never drops below Sonnet: a cheap finder's misses cost a nit, a
+cheap verifier's false confirm costs trust. Each verifier Agent call passes
+`model: "sonnet"` explicitly. Children that
 inherit pick up whatever the session runs on, not what the reviewer runs on.
 
 ## Pipeline
@@ -253,6 +258,7 @@ anchor doesn't kill the review, and note any that fail.
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
 - Verifier batches: 6 (grouped by file)
 - Verification: 6/8 verified by execution, 2/8 by doc citation
+- Models: finders haiku, verifiers sonnet
 - Prior threads checked: 4 (2 fixed & resolved, 1 pushback answered, 1 stands)
 
 ### Nits not worth inline comments (3)
