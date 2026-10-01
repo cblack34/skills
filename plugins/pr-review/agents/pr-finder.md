@@ -16,6 +16,10 @@ caller, callee, or test you must see to decide a finding, and stop at that.
 Reason from the diff and the context you were given. Report what you examined,
 not what you assumed.
 
+Cost bounds: the tool allowlist (Read, Grep, Glob) is the hard limit. `maxTurns`
+and the instruction not to explore are best-effort, since Claude Code has not
+reliably enforced `maxTurns` on subagents (anthropics/claude-code#41143).
+
 Return exactly two sections and nothing else:
 
 1. `Findings` — one entry per finding: `path, start_line..line, side,

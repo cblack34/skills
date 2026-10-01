@@ -92,9 +92,11 @@ whatever subagent facility the harness has for finders and verifiers (or run
 them sequentially if it has none).
 
 **Every child spawn pins its model** (wherever the harness supports a
-per-spawn model; Claude Code does). Finders are spawned as
-`pr-review:pr-finder`, whose frontmatter pins Sonnet and restricts tools; at
-`low` pass `model: "haiku"` on the call, which overrides the frontmatter.
+per-spawn model; Claude Code does). On Claude Code, finders are
+spawned as `pr-review:pr-finder`, whose frontmatter pins Sonnet and restricts
+tools; at `low` pass `model: "haiku"` on the call, which overrides the
+frontmatter. Elsewhere, use the harness's subagent facility with the same prompt
+and, where it supports them, the same model and a read-only tool set.
 Verification never drops below Sonnet: a cheap finder's misses cost a nit, a
 cheap verifier's false confirm costs trust. Each verifier Agent call passes
 `model: "sonnet"` explicitly. Children that
@@ -128,7 +130,9 @@ Read beyond the diff before any finding is generated:
 
 ### Phase 2 — Finder fan-out (parallel subagents)
 
-Spawn parallel `pr-review:pr-finder` subagents, one per lens, each blind to
+Spawn parallel finder subagents (on Claude Code `pr-review:pr-finder`; elsewhere
+the harness's subagent facility with the same prompt and, where supported, the
+same model and read-only tool set), one per lens, each blind to
 the others (diversity is the recall advantage — independent bots agree on <10%
 of findings, so multiple lenses is where completeness comes from). The seven
 defect categories below are the canonical lenses; effort decides how many
