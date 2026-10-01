@@ -44,7 +44,7 @@ coverage receipt as `Effort: <level> (explicit|default)`.
 
 | Knob | low | medium | high |
 |---|---|---|---|
-| Finder lenses per round | 2 merged | 4 merged | 7 |
+| Finder lenses, round 1 | 2 merged | 4 merged | 7 |
 | Finder rounds | 1 | 1 + one fresh-eyes generalist | 2 |
 | Context handed to finders | diff + ±40 lines around each hunk + repo conventions | low + full contents of changed source files | medium + callers, tests, sibling implementations |
 
