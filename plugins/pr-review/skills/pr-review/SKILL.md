@@ -34,11 +34,11 @@ catch.
 Resolve the inputs in the main context, then run the whole pipeline in an
 isolated reviewer context.
 
-**Claude Code.** Spawn `pr-reviewer` via the Agent tool. Do not set `model` on
+**Claude Code.** Spawn `pr-review:pr-reviewer` via the Agent tool. Do not set `model` on
 that call; the agent's own frontmatter pins it. The agent has this skill
 preloaded, so the prompt only needs `OWNER`, `REPO`, `N`, `REPO_DIR`, and the
 handoff line: "You are the reviewer. Inputs are resolved; start at Phase 0. Do
-not re-resolve them and do not spawn another pr-reviewer."
+not re-resolve them and do not spawn another pr-review:pr-reviewer."
 
 This skill is deliberately not forked: a forked skill inherits the session
 model and ignores the agent's `model:` pin, which has made single runs cost
