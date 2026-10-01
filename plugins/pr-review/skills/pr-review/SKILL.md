@@ -14,8 +14,9 @@ design against, in priority order:
    that cries wolf gets dismissed and trust never recovers. Every finding is
    verified before posting.
 2. **Left-on-the-table findings** — issues that existed in round 1 but only get
-   flagged in round 3. Countered by diverse multi-pass finders that loop until
-   dry, and explicit coverage accounting (no silent file skipping).
+   flagged in round 3. Countered by diverse multi-pass finders that run extra
+   rounds until a round surfaces nothing new or the effort cap is reached, and
+   explicit coverage accounting (no silent file skipping).
 
 Scope: review where review beats tests and lint — logic/correctness, edge
 cases, error handling, validation, concurrency, resource handling, API misuse,
