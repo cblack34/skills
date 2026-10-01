@@ -170,8 +170,9 @@ Each finder reviews in chunks of ≤400 changed lines (detection quality falls
 off a cliff past that) and returns findings plus a coverage report in the
 format its agent definition fixes.
 
-**Hand context in; do not let finders re-read.** Finders have no shell and a
-turn cap, so the prompt must carry everything. Build ONE shared prefix from
+**Hand context in; do not let finders re-read.** Finders have no shell (their
+tool allowlist is Read, Grep, Glob) and are told not to explore, so the prompt
+must carry everything. Build ONE shared prefix from
 items 1-3 and reuse it byte-for-byte across every finder in the round. The
 chunk assignment and the lens trail it, and are the only parts that vary:
 
