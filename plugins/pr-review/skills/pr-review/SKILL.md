@@ -60,7 +60,7 @@ a `low` review and a coverage receipt.
 
 | Knob | low | medium | high |
 |---|---|---|---|
-| Finder lenses per round | 2 merged | 4 merged | 7 |
+| Finder lenses, round 1 | 2 merged | 4 merged | 7 |
 | Finder rounds | 1 | 1 + one fresh-eyes generalist | 2 |
 | Finder model | haiku | sonnet | sonnet |
 | Verifier model | sonnet | sonnet | sonnet |
