@@ -73,8 +73,10 @@ whatever subagent facility the harness has for finders and verifiers (or run
 them sequentially if it has none).
 
 **Every child spawn pins its model** (wherever the harness supports a
-per-spawn model; Claude Code does). Finders are spawned as
-`pr-review:pr-finder`, whose frontmatter pins the model and restricts tools.
+per-spawn model; Claude Code does). On Claude Code, finders are
+spawned as `pr-review:pr-finder`, whose frontmatter pins the model and restricts
+tools; elsewhere, use the harness's subagent facility with the same prompt and,
+where it supports them, the same model and a read-only tool set.
 Each verifier Agent call passes `model: "sonnet"` explicitly. Children that
 inherit pick up whatever the session runs on, not what the reviewer runs on.
 
@@ -106,7 +108,9 @@ Read beyond the diff before any finding is generated:
 
 ### Phase 2 — Finder fan-out (parallel subagents)
 
-Spawn parallel `pr-review:pr-finder` subagents, one per defect category, each
+Spawn parallel finder subagents (on Claude Code `pr-review:pr-finder`; elsewhere
+the harness's subagent facility with the same prompt and, where supported, the
+same model and read-only tool set), one per defect category, each
 blind to the others (diversity is the recall advantage — independent bots agree on <10% of
 findings, so multiple lenses is where completeness comes from). **Run every
 subagent synchronously (`run_in_background: false`) and never end your turn
