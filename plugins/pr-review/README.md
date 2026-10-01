@@ -19,7 +19,7 @@ other's output.
 - `agents/pr-reviewer.md` — spawned by `pr-review` after the inputs are
   resolved in the main context; has the skill preloaded.
 - `agents/pr-finder.md` — one finder lens, spawned in parallel by
-  `pr-reviewer`; read-only tools, turn-capped, context handed in.
+  `pr-reviewer`; read-only tools, best-effort turn limit, context handed in.
 - `agents/pr-review-responder.md` — spawned by `address-pr-review` after the
   target PR is resolved in the main context; has the skill preloaded.
 
