@@ -46,17 +46,20 @@ Auto-selection is deterministic and runs in the main context before the
 handoff:
 
 ```bash
+set -o pipefail
 gh api "repos/$O/$R/pulls/$N/files" --paginate |
   python3 "<skill base dir>/scripts/effort_level.py"   # prints level, then reason
 ```
 
-The script exits non-zero on empty or non-JSON input (a failed fetch, since the
-pipe has no `pipefail`). Treat that as a fetch error: report it and stop rather
-than assuming `low`. Renamed files are scanned under both old and new paths.
+With `pipefail`, a `gh api` failure after some pages were already printed still
+yields a non-zero status; the script itself also exits non-zero on empty or
+non-JSON input. Treat any non-zero status as a fetch error: report it and stop
+rather than assuming `low`. Renamed files are scanned under both old and new paths.
 
 Rules, first match wins: any path with a whole token (not a substring) of
 auth/session/secret/payment/migration/terraform/infra/deploy/Dockerfile, or a
-CI workflow file, → `high`; every file a
+CI config path (GitHub Actions, GitLab CI, CircleCI, Azure Pipelines, Bitbucket
+Pipelines, Jenkinsfile, Buildkite), → `high`; every file a
 doc, lockfile, or asset → `low`; over 800 changed lines → `high`; 50 or fewer
 → `low`; otherwise `medium`. Print the reason in the banner so the user can
 override with `--effort` next time. Never post a skip: a trivial PR still gets
