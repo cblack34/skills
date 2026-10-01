@@ -34,13 +34,14 @@ TRIVIAL = re.compile(
     r"(^|/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|uv\.lock|poetry\.lock|Cargo\.lock|go\.sum)$)",
     re.IGNORECASE,
 )
+TERRAFORM_SUFFIXES = (".tf", ".tfvars", ".tf.json", ".tfvars.json", ".hcl")
 LOW_MAX_LINES = 50
 HIGH_MIN_LINES = 800
 
 
 def _sensitive(path: str) -> bool:
     lower = path.lower()
-    if lower.endswith(".tf") or ".github/workflows/" in lower:
+    if lower.endswith(TERRAFORM_SUFFIXES) or ".github/workflows/" in lower:
         return True
     return any(t in SENSITIVE_TOKENS for t in re.split(r"[^a-z0-9]+", lower))
 
@@ -59,8 +60,10 @@ def _load(text: str) -> list[dict]:
 
 def pick(files: list[dict]) -> tuple[str, str]:
     paths = [f["filename"] for f in files]
+    # A rename carries the old path in `previous_filename`; scan both.
+    scanned = paths + [f["previous_filename"] for f in files if f.get("previous_filename")]
     lines = sum(int(f.get("additions", 0)) + int(f.get("deletions", 0)) for f in files)
-    hot = sorted({p for p in paths if _sensitive(p)})
+    hot = sorted({p for p in scanned if _sensitive(p)})
     if hot:
         return "high", f"sensitive paths: {', '.join(hot[:3])}{'…' if len(hot) > 3 else ''}"
     if paths and all(TRIVIAL.search(p) for p in paths):
@@ -79,6 +82,12 @@ def _self_test() -> None:
     assert pick(f(("src/auth/login.py", 10)))[0] == "high"
     assert pick(f(("src/oauth/callback.py", 5)))[0] == "high"
     assert pick(f(("infra/main.tf", 5)))[0] == "high"
+    for tf in ("prod.tfvars", "main.tf.json", "prod.tfvars.json", "root.hcl"):
+        assert pick(f((tf, 5)))[0] == "high", tf
+    # a rename out of a sensitive path is still sensitive
+    renamed = [{"filename": "src/login.py", "previous_filename": "auth/login.py",
+                "status": "renamed", "additions": 1, "deletions": 1}]
+    assert pick(renamed)[0] == "high"
     assert pick(f(("src/a.py", 900)))[0] == "high"
     assert pick(f(("README.md", 200), ("uv.lock", 200)))[0] == "low"
     assert pick(f(("src/a.py", 40)))[0] == "low"
@@ -93,6 +102,13 @@ def _self_test() -> None:
     # concatenated pages, as printed by `gh api --paginate`
     pages = json.dumps(f(("a.md", 1))) + json.dumps(f(("src/session.py", 1)))
     assert pick(_load(pages))[0] == "high"
+    # blank or non-JSON stdin is a fetch failure, not a zero-file PR
+    import io
+    for bad in ("", "  \n", "not json"):
+        sys.stdin = io.StringIO(bad)
+        assert main([]) != 0, repr(bad)
+    sys.stdin = io.StringIO("[]")
+    assert main([]) == 0
     print("ok")
 
 
@@ -100,7 +116,15 @@ def main(argv: list[str]) -> int:
     if "--self-test" in argv:
         _self_test()
         return 0
-    level, reason = pick(_load(sys.stdin.read()))
+    text = sys.stdin.read()
+    if not text.strip():
+        print("effort_level: empty input; the file-list fetch likely failed", file=sys.stderr)
+        return 2
+    try:
+        level, reason = pick(_load(text))
+    except (ValueError, KeyError, TypeError) as e:
+        print(f"effort_level: invalid file-list input: {e}", file=sys.stderr)
+        return 2
     print(level)
     print(reason)
     return 0

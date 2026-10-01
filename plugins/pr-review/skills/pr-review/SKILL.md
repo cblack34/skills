@@ -50,6 +50,10 @@ gh api "repos/$O/$R/pulls/$N/files" --paginate |
   python3 "<skill base dir>/scripts/effort_level.py"   # prints level, then reason
 ```
 
+The script exits non-zero on empty or non-JSON input (a failed fetch, since the
+pipe has no `pipefail`). Treat that as a fetch error: report it and stop rather
+than assuming `low`. Renamed files are scanned under both old and new paths.
+
 Rules, first match wins: any path with a whole token (not a substring) of
 auth/session/secret/payment/migration/terraform/infra/deploy/Dockerfile, or a
 CI workflow file, → `high`; every file a
