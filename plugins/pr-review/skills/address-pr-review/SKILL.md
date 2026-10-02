@@ -117,7 +117,7 @@ full exchange, say so once more with your strongest evidence, tag the thread
 
 **(a1) Triage by severity prefix** when the reviewer uses labels like
 `[Blocking]`/`[Issue]`/`[Suggestion]`/`[Nit]` (the pr-review skill and
-Clayton's own comments do):
+the operator's own comments do):
 
 - `[Nit]` — low ceremony: apply if trivially correct (often just "Commit
   suggestion"-equivalent), or briefly decline; don't spend validation effort.
@@ -166,6 +166,9 @@ isn't enough:
   that nothing changed and why.
 - If pushing back, reference the concrete evidence (version constraints,
   passing checks, doc citations) — never a bare "disagree".
+- **No new personal names** in replies, top-level PR comments, or commit
+  messages. Do not write the operator's name, handle, or email into generated text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits. Refer to reviewers by role; the thread itself already
+  carries their login.
 - **Sign every reply** with a trailing line identifying who wrote it, in the
   form `- <agent>-<model>-<effort>` using your actual runtime identity (agent
   name, model, and reasoning effort; omit effort if unknown). Example:
@@ -193,7 +196,8 @@ If a check fails, fix and re-run before proceeding.
 
 ### 4. Commit and push (default) — or hand off
 
-Default: commit with a message noting it addresses review feedback, push, and
+Default: commit with a message noting it addresses review feedback (no
+operator name in the message, same rule as replies), push, and
 cite the SHA in replies (replies referencing unpushed code are a broken audit
 trail). Exception: if the user said they want to review or commit themselves,
 do **not** commit — instead reply/resolve only after they confirm, and hand off
