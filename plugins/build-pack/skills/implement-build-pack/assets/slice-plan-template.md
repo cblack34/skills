@@ -7,7 +7,7 @@ This is a durable high-level charter and historical artifact. Record the slice's
 ## Strategic source
 
 - **Active build pack:** {{BUILD_PACK_LINKS}}
-- **Human approval:** {{APPROVAL_EVIDENCE_OR_DATE}}
+- **Human approval:** {{APPROVAL_DATE_OR_LINK}}
 - **Final acceptance advanced:** {{ACCEPTANCE_REFERENCES}}
 
 ## Outcome

@@ -93,7 +93,7 @@ Give every execution agent:
 - **Outcome:** one sentence describing the completed behavior or evidence.
 - **Authority links:** slice-plan path and GitHub issue.
 - **Scope:** exact files, components, or contracts it may change, plus explicit exclusions.
-- **Constraints:** relevant non-negotiables, architecture boundaries, compatibility promises, and repository rules.
+- **Constraints:** relevant non-negotiables, architecture boundaries, compatibility promises, and repository rules. Include that commits, receipts, and issue comments name no person; roles and Git/GitHub metadata carry attribution. Names already present stay as they are, and a name is allowed only when the request asked for it or a required owner or contact field has no role that fits.
 - **Known context:** entry points and facts already established by the implementation lead.
 - **Verification:** exact automated and manual checks it must run.
 - **Ownership:** branch or worktree and whether any other agent may touch overlapping files.
