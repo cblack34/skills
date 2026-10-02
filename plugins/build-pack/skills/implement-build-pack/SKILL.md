@@ -147,7 +147,7 @@ When all slice issues are complete and the refactor and handoff receipt exists f
 1. Reconcile the implementation with the strategic pack and final acceptance it advances.
 2. Run the repository's complete required verification on the proposed final head.
 3. Open or update the PR with scope, issue links, verification evidence, the refactor and handoff receipt, risks, and deviations.
-4. Fill the slice plan's delivery record with the outcome, deviations, unresolved gates, issue links, the receipt link, and final PR link, then push that documentation update to the PR. This is a completion record, not WIP tracking.
+4. Fill the slice plan's delivery record with the outcome, deviations, unresolved gates, the receipt link, and final PR link, then push that documentation update to the PR. This is a completion record, not WIP tracking.
 5. Re-run checks affected by the delivery-record update.
 6. Complete the repository-defined independent review and address-review loop. Prefer the repository's recorded reviewer. Do not invoke an unrelated review or publishing skill unless the human explicitly requests it or `AGENTS.md` requires it for this stage.
 7. Require green CI, no genuine unresolved review findings, and review evidence that matches the current PR head and base.

@@ -112,7 +112,7 @@ Append an amendment only after material invalidation and human approval:
 Complete once when the final PR is ready for human merge. Do not use this section for WIP status.
 
 - **Outcome:** {{DELIVERED_RESULT}}
-- **Verification:** {{CONCISE_EVIDENCE_AND_ISSUE_LINKS}}
+- **Verification:** {{CONCISE_VERIFICATION_EVIDENCE}}
 - **Deviations:** {{APPROVED_DEVIATIONS_OR_NONE}}
 - **Unresolved gates or risks:** {{ITEMS_OR_NONE}}
 - **Refactor and handoff receipt:** {{ISSUE_COMMENT_OR_PR_LINK}}
