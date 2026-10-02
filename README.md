@@ -31,7 +31,7 @@ Then:
 
 1. Replace the generated workflow in `plugins/my-skill/skills/my-skill/SKILL.md` with the real instructions.
 2. Add any supporting `scripts/`, `references/`, or `assets/` inside that skill directory.
-3. Do not bump plugin versions in a PR. CI bumps both manifests of every changed plugin when the PR merges to `main`, using the PR's `release:major` or `release:minor` label, or patch when neither is present. CI adds `release:minor` when a PR adds a skill and `release:major` when it removes or renames one. Preview a bump locally with `uv run --locked scripts/bump_plugin_version.py my-skill minor --dry-run`.
+3. Do not bump plugin versions in a PR. CI bumps both manifests of every changed existing plugin when the PR merges to `main`, using the PR's `release:major` or `release:minor` label, or patch when neither is present. CI adds `release:minor` when a PR adds a skill to an existing plugin and `release:major` when it removes or renames one. A new plugin ships at the version its manifest declares. Preview a bump locally with `uv run --locked scripts/bump_plugin_version.py my-skill minor --dry-run`.
 
 4. Validate the complete marketplace:
 

@@ -24,10 +24,14 @@ jobs:
         run: |
           base="origin/${{ github.base_ref }}"
           # Modified manifests only: a brand-new plugin ships at the version its manifest declares.
-          if git diff --diff-filter=M "$base...HEAD" -- 'plugins/*/.claude-plugin/plugin.json' 'plugins/*/.codex-plugin/plugin.json' | grep -E '^[+-]\s*"version"'; then
-            echo "::error::Plugin versions are bumped by CI on merge to main. Revert the version change in this PR."
-            exit 1
-          fi
+          # Compare parsed values, not diff text, so key reordering passes and reformatting cannot hide a bump.
+          for f in $(git diff --name-only --diff-filter=M "$base...HEAD" -- 'plugins/*/.claude-plugin/plugin.json' 'plugins/*/.codex-plugin/plugin.json'); do
+            was=$(git show "$base:$f" | jq -r .version); now=$(jq -r .version "$f")
+            if [ "$was" != "$now" ]; then
+              echo "::error file=$f::Plugin versions are bumped by CI on merge to main ($was -> $now here). Revert the version change in this PR."
+              exit 1
+            fi
+          done
 
   label:
     if: github.event_name == 'pull_request'
