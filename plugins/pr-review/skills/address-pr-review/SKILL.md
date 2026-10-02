@@ -167,8 +167,8 @@ isn't enough:
 - If pushing back, reference the concrete evidence (version constraints,
   passing checks, doc citations) — never a bare "disagree".
 - **No new personal names** in replies, top-level PR comments, or commit
-  messages. Do not write the operator's name, handle, or email into generated text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits. Refer to reviewers by role, or by GitHub login only when
-  quoting their thread.
+  messages. Do not write the operator's name, handle, or email into generated text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits. Refer to reviewers by role; the thread itself already
+  carries their login.
 - **Sign every reply** with a trailing line identifying who wrote it, in the
   form `- <agent>-<model>-<effort>` using your actual runtime identity (agent
   name, model, and reasoning effort; omit effort if unknown). Example:
