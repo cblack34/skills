@@ -44,6 +44,7 @@ coverage receipt as `Effort: <level> (explicit|default)`.
 
 | Knob | low | medium | high |
 |---|---|---|---|
+| Finder lenses, round 1 | 2 merged | 4 merged | 7 |
 | Finder rounds | 1 | 1 + one fresh-eyes generalist | 2 |
 | Context handed to finders | diff + ±40 lines around each hunk + repo conventions | low + full contents of changed source files | medium + callers, tests, sibling implementations |
 
@@ -113,9 +114,11 @@ the harness's subagent facility with the same prompt and, where supported, the
 same model and read-only tool set; on harnesses without plugin agents, seed the
 subagent with the body of `agents/pr-finder.md` at the plugin root, everything
 below the frontmatter, before the shared prompt, so the single-lens,
-no-exploration, and Findings/Coverage format rules still apply), one per defect category, each
-blind to the others (diversity is the recall advantage — independent bots agree on <10% of
-findings, so multiple lenses is where completeness comes from). **Run every
+no-exploration, and Findings/Coverage format rules still apply), one per lens, each blind to
+the others (diversity is the recall advantage — independent bots agree on <10%
+of findings, so multiple lenses is where completeness comes from). The seven
+defect categories below are the canonical lenses; effort decides how many
+finders they are spread across. **Run every
 subagent synchronously (`run_in_background: false`) and never end your turn
 while finders or verifiers are outstanding** — an early return orphans the
 pipeline and a later resume double-posts the review.
@@ -134,6 +137,12 @@ pipeline and a later resume double-posts the review.
    negative cases
 7. **Design & maintainability** — wrong-layer changes, needless complexity,
    inconsistency with the codebase's established patterns
+
+Lens grouping by effort (a merged finder gets every category's hunt list):
+
+- `low`: 2 finders — {1, 2, 5} and {3, 4, 6, 7}
+- `medium`: 4 finders — {1, 2}, {3, 4}, {5, 6}, {7}
+- `high`: 7 finders, one per category
 
 Each finder reviews in chunks of ≤400 changed lines (detection quality falls
 off a cliff past that) and returns findings plus a coverage report in the
@@ -268,7 +277,7 @@ anchor doesn't kill the review, and note any that fail.
 ## Review coverage
 - Effort: medium (default)
 - Files reviewed: 12/12 (list skipped files + reason if any)
-- Finder rounds: 2 (7 lenses + fresh-eyes generalist)
+- Finder rounds: 2 (4 merged lenses + fresh-eyes generalist)
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
 - Verifier batches: 6 (grouped by file)
 - Verification: 6/8 verified by execution, 2/8 by doc citation
