@@ -78,7 +78,7 @@ Write the receipt to the record target and include it in the PR body or handoff 
 - Remaining risks or justified debt:
 ```
 
-`Structural changes made: none` is valid only when the receipt identifies the reviewed surface and explains why current responsibilities remain cohesive. `Fresh-context design review` names the reviewer used (agent, fallback subagent, or human) and its coverage.
+`Structural changes made: none` is valid only when the receipt identifies the reviewed surface and explains why current responsibilities remain cohesive. `Fresh-context design review` states the reviewer kind used (agent, fallback subagent, or human) and its coverage.
 
 ## Hard rules
 
@@ -86,4 +86,5 @@ Write the receipt to the record target and include it in the PR body or handoff 
 - It does not create branches, open or merge PRs, or run the PR review loop. It ends at the receipt.
 - Line count is never the sole argument for a finding or a split.
 - Author self-review never substitutes for the fresh-context review.
+- **No new personal names.** Do not write the operator's name, handle, or email into receipts, issue comments, or PR text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits.
 - Never claim a check, review, or coverage that was not run.
