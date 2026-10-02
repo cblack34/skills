@@ -57,7 +57,7 @@ Summarize the few project invariants in `AGENTS.md`, explain them in the brief o
 - Do not claim a procedure worked elsewhere. Mark anything unverified in this repository.
 - Make agent-specific tools optional and provide an inline fallback.
 - Resolve placeholders or surface them explicitly in delivery.
-- Include personal or account identifiers only when they are facts required for this project.
+- Do not write the operator's name, handle, or email into generated text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits. Include other account identifiers only when they are facts required for this project.
 - Make active versus historical authority explicit. Root navigation leads to exactly one roadmap or active pack; archives state their status, current entry point, and precedence without retelling another project's convention.
 - Preserve completed contracts as evidence. Limit archive edits to status, provenance, and link repair; do not rewrite history to make the old design resemble the new one.
 

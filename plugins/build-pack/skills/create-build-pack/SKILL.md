@@ -147,6 +147,7 @@ Present the file tree, research performed, inferred assumptions, unresolved gate
 - **One active entry point.** After a completed-pack transition, root navigation must lead to the roadmap or current feature pack. Completed specs are clearly historical and never silently remain co-equal instructions.
 - **Archive by role, not filename.** Move completed strategic and execution records; keep constitution and genuinely living references active. Reconcile acceptance before declaring a pack completed, and never mark missing evidence complete.
 - **Cold-read ready.** Assume no shared conversation history. Include no references to unrelated projects, people, employers, or repositories.
+- **No new personal names.** Do not write the operator's name, handle, or email into generated text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits.
 - **No numeric filename prefixes.** Put reading order in one navigation document.
 - **Portable core.** Keep agent-specific helpers optional and provide a self-contained fallback.
 - **Never invent facts.** Source repository facts, research claims, tool availability, and constraints; otherwise mark them as an explicit assumption or unresolved user decision.
