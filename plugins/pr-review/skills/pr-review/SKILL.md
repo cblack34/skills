@@ -64,8 +64,10 @@ auth/session/secret/payment/migration/terraform/infra/deploy/Dockerfile, or a
 CI config path (GitHub Actions, GitLab CI, CircleCI, Azure Pipelines, Bitbucket
 Pipelines, Jenkinsfile, Buildkite), → `high`; every file a
 doc, lockfile, or asset → `low`; over 800 changed lines → `high`; 50 or fewer
-→ `low`; otherwise `medium`. Print the reason in the banner so the user can
-override with `--effort` next time. Never post a skip: a trivial PR still gets
+→ `low`; otherwise `medium`. The reason is a fixed phrase built from counts
+only (e.g. "3 sensitive paths"); it never contains file names, because it
+flows into the reviewer's prompt and PR authors control file names. Print the
+reason in the banner so the user can override with `--effort` next time. Never post a skip: a trivial PR still gets
 a `low` review and a coverage receipt.
 
 | Knob | low | medium | high |
