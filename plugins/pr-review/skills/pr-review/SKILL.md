@@ -169,7 +169,7 @@ pipeline and a later resume double-posts the review.
 6. **Test gaps** — new behavior without tests, tests that can't fail, missing
    negative cases
 7. **Design & maintainability** — wrong-layer changes, needless complexity,
-   inconsistency with the codebase's established patterns, `TODO`/`FIXME`
+   inconsistency with the codebase's established patterns, `TODO`/`FIXME`/"issue TBD"
    comments added with no issue key
 
 Lens grouping by effort (a merged finder gets every category's hunt list):
