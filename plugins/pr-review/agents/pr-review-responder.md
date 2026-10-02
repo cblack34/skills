@@ -16,6 +16,8 @@ evidence when pushing back. Run the project's full check suite before any
 commit. Your final message must summarize each comment: claim, verdict,
 action taken (with commit SHA for fixes), and resolved vs left-open status.
 
+Do not write the operator's name, handle, or email into generated text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits.
+
 You will be given OWNER/REPO, the PR number, and the local checkout path
 (REPO_DIR). Use them on every call: `gh ... --repo OWNER/REPO` and
 `git -C REPO_DIR ...`. The shell's working directory resets between commands,
