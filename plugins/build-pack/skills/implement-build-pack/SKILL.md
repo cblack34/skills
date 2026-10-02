@@ -184,5 +184,6 @@ Do not start the next slice until the human has merged the current slice, includ
 - Delegate bounded code work using the least expensive capable model and effort.
 - A passing draft is not handoff-ready. Every delivery unit passes **Refactor before handoff**, including the fresh-context design review and a recorded receipt, before its PR is declared ready.
 - Never claim checks, review, routing, or integration that were not verified.
+- No new personal names. Do not write the operator's name, handle, or email into slice plans, issues, PR text, receipts, or commit messages. Refer to roles ("the human", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits.
 - Never merge, auto-merge, queue, automate, delegate, or push directly to `main`.
 - A PR stack is human-merged bottom-up. Advance only the next PR after each merge, keep review matched to the current base and head, and never force-push beyond recorded authority.
