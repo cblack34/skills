@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Validate cross-harness marketplace catalogs and their skill plugins."""
 
-from __future__ import annotations
-
 import json
 import re
 import sys
