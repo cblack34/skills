@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bump_plugin_version import PLUGINS_ROOT, update_plugin_version  # noqa: E402
 
 CONVENTIONAL_RE = re.compile(r"^(?P<type>[a-z]+)(?:\([^)]*\))?(?P<bang>!)?:")
+BREAKING_FOOTER_RE = re.compile(r"^BREAKING[ -]CHANGE:", re.MULTILINE)
 MANIFESTS = {".claude-plugin/plugin.json", ".codex-plugin/plugin.json"}
 
 
@@ -24,7 +25,7 @@ def git(*args: str) -> str:
 def bump_level(message: str) -> str:
     subject, _, body = message.partition("\n")
     match = CONVENTIONAL_RE.match(subject)
-    if (match and match.group("bang")) or "BREAKING CHANGE" in body:
+    if (match and match.group("bang")) or BREAKING_FOOTER_RE.search(body):
         return "major"
     if match and match.group("type") == "feat":
         return "minor"

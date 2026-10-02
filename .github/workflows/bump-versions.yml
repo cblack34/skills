@@ -27,6 +27,9 @@ jobs:
   bump:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    concurrency:
+      group: bump-main
+      cancel-in-progress: false
     steps:
       - uses: actions/create-github-app-token@v2
         id: app
@@ -35,6 +38,7 @@ jobs:
           private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
@@ -59,4 +63,4 @@ jobs:
 
           ${{ steps.bump.outputs.summary }}
           MSG
-          git push origin HEAD:main
+          git push origin HEAD:main || { git fetch origin main && git rebase origin/main && git push origin HEAD:main; }

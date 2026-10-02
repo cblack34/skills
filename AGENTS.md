@@ -22,7 +22,7 @@ These instructions apply to the entire repository.
 ## Changing a skill
 
 - Preserve cross-harness behavior in the shared `SKILL.md`; isolate unavoidable harness differences in clearly labeled sections.
-- Do not bump plugin versions in a PR. CI bumps both manifests of every changed plugin when the PR squash-merges to `main`, reading the level from the Conventional Commits subject: `!` after the type is major, `feat` is minor, anything else is patch. `scripts/bump_plugin_version.py` remains for local dry runs.
+- Do not bump plugin versions in a PR. CI bumps both manifests of every changed plugin when the PR squash-merges to `main`, reading the level from the Conventional Commits subject: `!` after the type or a `BREAKING CHANGE:` footer is major, `feat` is minor, anything else is patch. `scripts/bump_plugin_version.py` remains for local dry runs.
 - Do not add secrets, credentials, machine-specific absolute paths, or private source material.
 - Prefer deterministic helper scripts for mechanical work and keep them inside the owning skill.
 
