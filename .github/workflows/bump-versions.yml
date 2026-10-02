@@ -64,7 +64,7 @@ jobs:
 
   bump:
     # Skip the bot's own bump commit by its message marker; a skipped job never enters the queue.
-    if: github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore: bump plugin versions after')
+    if: "github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore: bump plugin versions after')"
     runs-on: ubuntu-latest
     permissions:
       contents: read
