@@ -1,6 +1,7 @@
 ---
 name: pr-review
-description: Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels ([Blocking]/[Issue]/[Suggestion]/[Nit]), and one-click suggested changes. Multi-pass finders loop until dry, every finding is adversarially verified before posting, and the review body reports exact coverage — designed to beat Copilot's half-done reviews with one clean cycle. Use when the user says "review this PR", "review the PR", "run the review bot", "code review this pull request", or similar.
+description: Run a complete, verified code review of a pull request and post it as ONE GitHub review with inline line-level comments, severity labels ([Blocking]/[Issue]/[Suggestion]/[Nit]), and one-click suggested changes. Effort levels (low/medium/high) scale finder rounds, every finding is adversarially verified before posting, and the review body reports exact coverage — designed to beat Copilot's half-done reviews with one clean cycle. Use when the user says "review this PR", "review the PR", "run the review bot", "code review this pull request", or similar.
+argument-hint: "[PR-number] [--effort low|medium|high]"
 ---
 
 # PR Review
@@ -13,8 +14,9 @@ design against, in priority order:
    that cries wolf gets dismissed and trust never recovers. Every finding is
    verified before posting.
 2. **Left-on-the-table findings** — issues that existed in round 1 but only get
-   flagged in round 3. Countered by diverse multi-pass finders that loop until
-   dry, and explicit coverage accounting (no silent file skipping).
+   flagged in round 3. Countered by diverse multi-pass finders that run extra
+   rounds until a round surfaces nothing new or the effort cap is reached, and
+   explicit coverage accounting (no silent file skipping).
 
 Scope: review where review beats tests and lint — logic/correctness, edge
 cases, error handling, validation, concurrency, resource handling, API misuse,
@@ -28,17 +30,37 @@ catch.
   omitted, infer from the current branch: `gh pr view --json number`.
 - OWNER/REPO from `git remote get-url origin`.
 - REPO_DIR: the local checkout's absolute path.
+- Optional `--effort low|medium|high`. Default `medium`. Validate it in the
+  main context before the handoff: if the flag is present with a missing or
+  unsupported value, stop and report the allowed values rather than guessing.
+  Default to `medium` only when the flag is omitted. Record `EFFORT` (the
+  level) and `EFFORT_SOURCE` (`explicit` if the flag was given, else
+  `default`).
+
+## Effort levels
+
+One knob set, chosen once at the start and reported in the banner and the
+coverage receipt as `Effort: <level> (explicit|default)`.
+
+| Knob | low | medium | high |
+|---|---|---|---|
+| Finder rounds | 1 | 1 + one fresh-eyes generalist | 2 |
+
+Past runs show nothing surfaced after round 1 ever survived verification, so
+extra rounds are the first thing effort trades away.
 
 ## Handoff
 
-Resolve the inputs in the main context, then run the whole pipeline in an
-isolated reviewer context.
+Resolve the inputs in the main context and print the banner
+`Effort: <EFFORT> (<EFFORT_SOURCE>)` before any review work starts. Then run
+the whole pipeline in an isolated reviewer context.
 
 **Claude Code.** Spawn `pr-review:pr-reviewer` via the Agent tool. Do not set `model` on
 that call; the agent's own frontmatter pins it. The agent has this skill
-preloaded, so the prompt only needs `OWNER`, `REPO`, `N`, `REPO_DIR`, and the
-handoff line: "You are the reviewer. Inputs are resolved; start at Phase 0. Do
-not re-resolve them and do not spawn another pr-review:pr-reviewer."
+preloaded, so the prompt only needs `OWNER`, `REPO`, `N`, `REPO_DIR`, `EFFORT`,
+`EFFORT_SOURCE`, and the handoff line: "You are the reviewer. Inputs are resolved; start at
+Phase 0. Do not re-resolve them and do not spawn another
+pr-review:pr-reviewer."
 
 This skill is deliberately not forked: a forked skill inherits the session
 model and ignores the agent's `model:` pin, which has made single runs cost
@@ -111,12 +133,18 @@ off a cliff past that), receives the Phase 1 context, and returns:
   evidence, suggested_fix (exact replacement text when possible)`
 - A coverage report: which files/hunks it actually examined.
 
-### Phase 3 — Loop until dry
+### Phase 3 — Extra rounds, by effort
 
-Merge findings, then run ANOTHER finder round (vary the file order and prompt
-angle). Repeat until **two consecutive rounds surface nothing new**, max 4
-rounds. This directly attacks stochastic misses — the root cause of
-issues-found-next-cycle.
+Merge round-1 findings, then:
+
+- `low`: stop.
+- `medium`: one more finder — a single generalist with a fresh-eyes prompt over
+  the whole diff in a different file order, told what round 1 already found.
+- `high`: a full second round of every lens, varied file order and prompt
+  angle.
+
+Never a third round. Stochastic misses are real, but the measured yield of
+rounds past these caps is zero.
 
 ### Phase 4 — Dedup
 
@@ -209,8 +237,9 @@ anchor doesn't kill the review, and note any that fail.
 
 ```
 ## Review coverage
+- Effort: medium (default)
 - Files reviewed: 12/12 (list skipped files + reason if any)
-- Finder rounds: 3 (round 3 found nothing new)
+- Finder rounds: 2 (7 lenses + fresh-eyes generalist)
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
 - Verification: 6/8 verified by execution, 2/8 by doc citation
 - Prior threads checked: 4 (2 fixed & resolved, 1 pushback answered, 1 stands)
@@ -241,8 +270,8 @@ against every prior thread:
 ### Sign everything
 
 Every inline comment, reply, and the review body ends with:
-`- pr-reviewer-<model>-<effort>` (actual runtime identity; omit effort if
-unknown).
+`- pr-reviewer-<model>-<effort>` (actual runtime model and the effort level
+used).
 
 ## Anti-patterns
 

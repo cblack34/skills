@@ -25,6 +25,7 @@ other's output.
 
 ```text
 /pr-review 123
+/pr-review 123 --effort low
 /address-pr-review https://github.com/org/repo/pull/123
 ```
 
