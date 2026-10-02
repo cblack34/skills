@@ -43,7 +43,7 @@ def select_plugins(paths: Iterable[str], new_plugins: Collection[str] = ()) -> l
         plugin = plugin_of(path)
         if plugin:
             changed.setdefault(plugin, set()).add("/".join(Path(path).parts[2:]))
-    # ponytail: a manifest-only change is itself a bump, and a new plugin ships at its declared version
+    # A manifest-only change is itself a bump, and a new plugin ships at its declared version.
     return sorted(p for p, files in changed.items() if not files <= MANIFESTS and p not in new_plugins)
 
 
