@@ -56,4 +56,8 @@ Return exactly this receipt:
 ```
 
 State explicitly when no structural change is justified and why the current
-responsibilities remain cohesive. Do not post this anywhere; hand it back.
+responsibilities remain cohesive. Write no person's name, handle, or email
+into the receipt: refer to roles or omit attribution, leave names already
+present in the repository as they are, and name someone only when the
+request asked for it or a required owner or contact field has no role that
+fits. Do not post this anywhere; hand it back.
