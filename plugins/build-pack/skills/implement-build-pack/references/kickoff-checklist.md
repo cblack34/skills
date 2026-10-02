@@ -27,8 +27,8 @@ Search established planning locations and repository history for a durable slice
 
 - identifies the strategic pack it serves;
 - records human approval or otherwise has clear evidence of approval;
-- links the active GitHub issues;
-- describes the same branch, PR, and code state now present;
+- links the slice's GitHub issue query;
+- describes the same branch and code state now present;
 - for a PR stack, matches the order reconstructed from PR base branches, heads, merge state, and Git ancestry, allowing only for PRs already promoted to `main`;
 - has not already been completed or superseded.
 

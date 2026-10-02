@@ -43,12 +43,12 @@ If the evidence challenges the strategic pack rather than the tactical plan, sto
 
 ## Initial and final edits that are not replanning
 
-The plan may change during initial materialization to add the GitHub issue register after issue creation. It may receive one delivery-record update when the final PR is ready, recording results, deviations, unresolved gates, and links. For a PR stack, recording a PR's retarget to `main` in the delivery shape is a delivery fact and is allowed once per PR. None of these edits should turn the plan into a status board.
+The plan may receive one delivery-record update when the final PR is ready, recording results, deviations, unresolved gates, and links. That edit must not turn the plan into a status board; PR bases, heads, and retargets live in GitHub.
 
 ## Historical integrity
 
 - Keep the document in the repository after completion.
 - Preserve approved outcome, rationale, boundaries, and amendment history.
-- Keep closed issue and PR links so future developers can recover detailed execution evidence.
+- Keep the issue query and final PR links so future developers can recover detailed execution evidence.
 - Do not replace the plan with a retrospective. Record concise delivery facts in its designated section.
 - Do not update issue status, assignment, or checklist state in the plan.
