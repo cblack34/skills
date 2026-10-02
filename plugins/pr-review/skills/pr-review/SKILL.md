@@ -110,7 +110,10 @@ Read beyond the diff before any finding is generated:
 
 Spawn parallel finder subagents (on Claude Code `pr-review:pr-finder`; elsewhere
 the harness's subagent facility with the same prompt and, where supported, the
-same model and read-only tool set), one per defect category, each
+same model and read-only tool set; on harnesses without plugin agents, seed the
+subagent with the body of `agents/pr-finder.md` at the plugin root, everything
+below the frontmatter, before the shared prompt, so the single-lens,
+no-exploration, and Findings/Coverage format rules still apply), one per defect category, each
 blind to the others (diversity is the recall advantage — independent bots agree on <10% of
 findings, so multiple lenses is where completeness comes from). **Run every
 subagent synchronously (`run_in_background: false`) and never end your turn
