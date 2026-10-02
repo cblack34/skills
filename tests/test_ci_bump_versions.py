@@ -34,12 +34,8 @@ class SelectPluginsTests(unittest.TestCase):
         paths = ["plugins/pr-review/skills/x/SKILL.md", "plugins/build-pack/README.md", "AGENTS.md"]
         self.assertEqual(select_plugins(paths), ["build-pack", "pr-review"])
 
-    def test_manifest_only_change_is_skipped(self) -> None:
+    def test_manifest_only_change_is_bumped(self) -> None:
         paths = ["plugins/build-pack/.claude-plugin/plugin.json", "plugins/build-pack/.codex-plugin/plugin.json"]
-        self.assertEqual(select_plugins(paths), [])
-
-    def test_manifest_plus_content_change_is_bumped(self) -> None:
-        paths = ["plugins/build-pack/.claude-plugin/plugin.json", "plugins/build-pack/README.md"]
         self.assertEqual(select_plugins(paths), ["build-pack"])
 
     def test_new_plugin_is_skipped(self) -> None:

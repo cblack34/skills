@@ -12,7 +12,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bump_plugin_version import PLUGINS_ROOT, update_plugin_version  # noqa: E402
 
 LABEL_LEVELS = {"release:major": "major", "release:minor": "minor"}
-MANIFESTS = {".claude-plugin/plugin.json", ".codex-plugin/plugin.json"}
 
 
 def git(*args: str) -> str:
@@ -38,13 +37,9 @@ def plugin_of(path: str) -> str | None:
 
 
 def select_plugins(paths: Iterable[str], new_plugins: Collection[str] = ()) -> list[str]:
-    changed: dict[str, set[str]] = {}
-    for path in paths:
-        plugin = plugin_of(path)
-        if plugin:
-            changed.setdefault(plugin, set()).add("/".join(Path(path).parts[2:]))
-    # A manifest-only change is itself a bump, and a new plugin ships at its declared version.
-    return sorted(p for p, files in changed.items() if not files <= MANIFESTS and p not in new_plugins)
+    # A new plugin ships at its declared version; the workflow skips the bot's own bump commit by its message.
+    changed = {plugin_of(path) for path in paths} - {None}
+    return sorted(p for p in changed if p not in new_plugins)
 
 
 def changed_plugins(before: str, after: str) -> list[str]:

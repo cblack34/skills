@@ -3,10 +3,6 @@ name: Bump plugin versions
 on:
   push:
     branches: [main]
-    # The bump commit itself touches only manifests; ignoring it keeps it from starting a run.
-    paths-ignore:
-      - "plugins/*/.claude-plugin/plugin.json"
-      - "plugins/*/.codex-plugin/plugin.json"
   pull_request:
 
 permissions:
@@ -67,7 +63,8 @@ jobs:
             || { echo "::error::Could not add $label (fork PR?). Add it by hand and re-run this check."; exit 1; }
 
   bump:
-    if: github.event_name == 'push'
+    # Skip the bot's own bump commit by its message marker; a skipped job never enters the queue.
+    if: github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore: bump plugin versions after')
     runs-on: ubuntu-latest
     permissions:
       contents: read
