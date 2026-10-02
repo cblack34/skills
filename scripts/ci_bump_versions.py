@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
-"""Bump every plugin changed between two commits; CI runs this after a merge to main."""
+"""Bump every plugin changed by a push to main; the level comes from the merged PR's release labels."""
 
 from __future__ import annotations
 
 import argparse
-import re
 import subprocess
 import sys
+from collections.abc import Collection, Iterable
 from pathlib import Path
 from typing import Sequence
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bump_plugin_version import PLUGINS_ROOT, update_plugin_version  # noqa: E402
 
-CONVENTIONAL_RE = re.compile(r"^(?P<type>[a-z]+)(?:\([^)]*\))?(?P<bang>!)?:")
-BREAKING_FOOTER_RE = re.compile(r"^BREAKING[ -]CHANGE:", re.MULTILINE)
+LABEL_LEVELS = {"release:major": "major", "release:minor": "minor"}
 MANIFESTS = {".claude-plugin/plugin.json", ".codex-plugin/plugin.json"}
 
 
@@ -22,35 +21,55 @@ def git(*args: str) -> str:
     return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout
 
 
-def bump_level(message: str) -> str:
-    subject, _, body = message.partition("\n")
-    match = CONVENTIONAL_RE.match(subject)
-    if (match and match.group("bang")) or BREAKING_FOOTER_RE.search(body):
+def level_from_labels(labels: Iterable[str]) -> str:
+    levels = {LABEL_LEVELS[label] for label in labels if label in LABEL_LEVELS}
+    if "major" in levels:
         return "major"
-    if match and match.group("type") == "feat":
+    if "minor" in levels:
         return "minor"
     return "patch"
 
 
-def changed_plugins(before: str, after: str) -> list[str]:
-    base = f"{after}~1" if set(before) <= {"0"} else before
+def resolve_base(before: str, after: str) -> str:
+    return f"{after}~1" if set(before) <= {"0"} else before
+
+
+def plugin_of(path: str) -> str | None:
+    parts = Path(path).parts
+    return parts[1] if len(parts) >= 3 and parts[0] == "plugins" else None
+
+
+def select_plugins(paths: Iterable[str], new_plugins: Collection[str] = ()) -> list[str]:
     changed: dict[str, set[str]] = {}
-    for line in git("diff", "--name-only", base, after).splitlines():
-        parts = Path(line).parts
-        if len(parts) >= 3 and parts[0] == "plugins" and (PLUGINS_ROOT / parts[1]).is_dir():
-            changed.setdefault(parts[1], set()).add("/".join(parts[2:]))
-    # ponytail: a push touching only manifests is a bump itself; skip it so CI never re-bumps its own commit
-    return sorted(p for p, files in changed.items() if not files <= MANIFESTS)
+    for path in paths:
+        plugin = plugin_of(path)
+        if plugin:
+            changed.setdefault(plugin, set()).add("/".join(Path(path).parts[2:]))
+    # ponytail: a manifest-only change is itself a bump, and a new plugin ships at its declared version
+    return sorted(p for p, files in changed.items() if not files <= MANIFESTS and p not in new_plugins)
+
+
+def changed_plugins(before: str, after: str) -> list[str]:
+    base = resolve_base(before, after)
+    paths = git("diff", "--name-only", base, after).splitlines()
+    touched = {plugin_of(p) for p in paths} - {None}
+    new = {
+        p for p in touched
+        if subprocess.run(["git", "cat-file", "-e", f"{base}:plugins/{p}/.claude-plugin/plugin.json"],
+                          capture_output=True).returncode != 0
+    }
+    return [p for p in select_plugins(paths, new) if (PLUGINS_ROOT / p).is_dir()]
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("before", help="Commit before the push (all zeros for a new branch)")
     parser.add_argument("after", help="Head commit of the push")
+    parser.add_argument("--labels", default="", help="Comma-separated labels of the merged PR")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
 
-    level = bump_level(git("log", "-1", "--format=%s%n%b", args.after))
+    level = level_from_labels(label.strip() for label in args.labels.split(","))
     try:
         for plugin in changed_plugins(args.before, args.after):
             current, target, _ = update_plugin_version(PLUGINS_ROOT, plugin, level, dry_run=args.dry_run)

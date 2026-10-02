@@ -22,14 +22,14 @@ These instructions apply to the entire repository.
 ## Changing a skill
 
 - Preserve cross-harness behavior in the shared `SKILL.md`; isolate unavoidable harness differences in clearly labeled sections.
-- Do not bump plugin versions in a PR. CI bumps both manifests of every changed plugin when the PR squash-merges to `main`, reading the level from the Conventional Commits subject: `!` after the type or a `BREAKING CHANGE:` footer is major, `feat` is minor, anything else is patch. `scripts/bump_plugin_version.py` remains for local dry runs.
+- Do not bump plugin versions in a PR. CI bumps both manifests of every changed plugin when the PR squash-merges to `main`. The level comes from the PR's labels: `release:major`, `release:minor`, or patch when neither is present. CI adds `release:minor` when a PR adds a skill to an existing plugin and `release:major` when it removes or renames a skill or changes a plugin's manifest name; it never removes a label. A new plugin ships at the version its manifest declares. `scripts/bump_plugin_version.py` remains for local dry runs.
 - Do not add secrets, credentials, machine-specific absolute paths, or private source material.
 - Prefer deterministic helper scripts for mechanical work and keep them inside the owning skill.
 
 ## Verification
 
 - Manage Python and Python dependencies with `uv`; do not introduce `pip`, Poetry, or ad hoc virtual-environment instructions.
-- Run `uv lock --check` and `uv run --locked scripts/validate.py` after every marketplace or plugin change.
+- Run `uv lock --check`, `uv run --locked scripts/validate.py`, and `uv run --locked python -m unittest discover -s tests` after every marketplace, plugin, or script change.
 - If Claude Code is installed, also run `claude plugin validate .`.
 - If Grok is installed, run `grok plugin validate plugins/<plugin>` for each changed plugin.
 - Review `git diff --check` before committing.

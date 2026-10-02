@@ -3,6 +3,10 @@ name: Bump plugin versions
 on:
   push:
     branches: [main]
+    # The bump commit itself touches only manifests; ignoring it keeps it from starting a run.
+    paths-ignore:
+      - "plugins/*/.claude-plugin/plugin.json"
+      - "plugins/*/.codex-plugin/plugin.json"
   pull_request:
 
 permissions:
@@ -24,6 +28,34 @@ jobs:
             exit 1
           fi
 
+  label:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Add release labels implied by the diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          base="origin/${{ github.base_ref }}"
+          new_plugins=$(git diff --name-only --diff-filter=A "$base...HEAD" -- 'plugins/*/.claude-plugin/plugin.json' | cut -d/ -f2)
+          label=""
+          for skill in $(git diff --name-only --diff-filter=A "$base...HEAD" -- 'plugins/*/skills/*/SKILL.md'); do
+            grep -qx "$(cut -d/ -f2 <<<"$skill")" <<<"$new_plugins" || label="release:minor"
+          done
+          if git diff --name-only --diff-filter=DR "$base...HEAD" -- 'plugins/*/skills/*/SKILL.md' | grep -q . \
+             || git diff "$base...HEAD" -- 'plugins/*/.claude-plugin/plugin.json' | grep -Eq '^[-+]\s*"name"'; then
+            label="release:major"
+          fi
+          if [ -n "$label" ]; then
+            echo "Adding $label"
+            gh pr edit "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --add-label "$label"
+          fi
+
   bump:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -34,7 +66,7 @@ jobs:
       - uses: actions/create-github-app-token@v2
         id: app
         with:
-          app-id: ${{ secrets.RELEASE_BOT_APP_ID }}
+          client-id: ${{ secrets.RELEASE_BOT_CLIENT_ID }}
           private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
       - uses: actions/checkout@v4
         with:
@@ -47,8 +79,12 @@ jobs:
           enable-cache: true
       - name: Bump changed plugins
         id: bump
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          summary=$(uv run --locked scripts/ci_bump_versions.py "${{ github.event.before }}" "${{ github.sha }}")
+          labels=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" --jq '[.[0].labels[]?.name] | join(",")')
+          echo "PR labels: ${labels:-none}"
+          summary=$(uv run --locked scripts/ci_bump_versions.py "${{ github.event.before }}" "${{ github.sha }}" --labels "$labels")
           echo "$summary"
           echo "summary<<EOF" >> "$GITHUB_OUTPUT"; echo "$summary" >> "$GITHUB_OUTPUT"; echo "EOF" >> "$GITHUB_OUTPUT"
       - name: Validate and push
