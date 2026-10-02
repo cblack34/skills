@@ -346,6 +346,8 @@ Every inline comment, reply, and the review body ends with:
 `- pr-reviewer-<model>-<effort>` (actual runtime model and the effort level
 used).
 
+Do not write the operator's name, handle, or email into generated text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits.
+
 ## Anti-patterns
 
 - Posting a finding that no verifier confirmed.
