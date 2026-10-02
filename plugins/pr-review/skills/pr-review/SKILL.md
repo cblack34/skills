@@ -156,7 +156,8 @@ must carry everything. Build ONE shared prefix from
 items 1-3 and reuse it byte-for-byte across every finder in the round. The
 chunk assignment and the lens trail it, and are the only parts that vary:
 
-1. PR metadata and head SHA
+1. PR metadata, head SHA, and `REPO_DIR` (the resolved absolute checkout path;
+   tell finders to use it for every Read/Grep, never the current directory)
 2. The diff (patch hunks)
 3. The Phase 1 context at the level's depth (see the effort table)
 4. Chunk assignment (which files/hunks this finder owns); identical across the
