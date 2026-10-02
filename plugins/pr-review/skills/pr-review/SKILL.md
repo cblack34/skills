@@ -47,14 +47,17 @@ handoff:
 
 ```bash
 set -o pipefail
+CHANGED=$(gh pr view "$N" --repo "$O/$R" --json changedFiles --jq .changedFiles) || exit 1
 gh api "repos/$O/$R/pulls/$N/files" --paginate |
-  python3 "<skill base dir>/scripts/effort_level.py"   # prints level, then reason
+  python3 "<skill base dir>/scripts/effort_level.py" --changed-files "$CHANGED"   # prints level, then reason
 ```
 
 With `pipefail`, a `gh api` failure after some pages were already printed still
 yields a non-zero status; the script itself also exits non-zero on empty or
 non-JSON input. Treat any non-zero status as a fetch error: report it and stop
-rather than assuming `low`. Renamed files are scanned under both old and new paths.
+rather than assuming `low`. GitHub caps the file list at 3,000 files; when the
+list is shorter than `changedFiles` the script returns `high` ("file list
+truncated") because a sensitive path may be hidden. Renamed files are scanned under both old and new paths.
 
 Rules, first match wins: any path with a whole token (not a substring) of
 auth/session/secret/payment/migration/terraform/infra/deploy/Dockerfile, or a

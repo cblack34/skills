@@ -2,13 +2,18 @@
 """Pick a pr-review effort level from the PR's changed-file list.
 
 Usage:
-    gh api repos/O/R/pulls/N/files --paginate | python3 effort_level.py
+    gh api repos/O/R/pulls/N/files --paginate |
+        python3 effort_level.py --changed-files "$CHANGED"
     python3 effort_level.py --self-test
 
 Input is the REST "list pull request files" payload: file objects with
 `filename`, `additions` and `deletions`. `--paginate` prints one JSON array per
 page; any number of concatenated arrays is accepted, so PRs past 100 files are
 fully seen (`gh pr view --json files` caps at 100).
+
+GitHub caps that endpoint at 3,000 files, so a sensitive path past the cap would
+be invisible. `--changed-files N` (the PR's `changedFiles` total) makes a
+shorter list fail safe: the result is `high` with a "file list truncated" reason.
 
 Prints two lines: the level and the reason. Sensitive paths win, then
 trivial-only PRs, then size. Stdlib only; deterministic.
@@ -67,7 +72,9 @@ def _load(text: str) -> list[dict]:
     return out
 
 
-def pick(files: list[dict]) -> tuple[str, str]:
+def pick(files: list[dict], changed_files: int | None = None) -> tuple[str, str]:
+    if changed_files is not None and len(files) < changed_files:
+        return "high", f"file list truncated ({len(files)} of {changed_files} files)"
     paths = [f["filename"] for f in files]
     # A rename carries the old path in `previous_filename`; scan both.
     scanned = paths + [f["previous_filename"] for f in files if f.get("previous_filename")]
@@ -120,8 +127,16 @@ def _self_test() -> None:
     # concatenated pages, as printed by `gh api --paginate`
     pages = json.dumps(f(("a.md", 1))) + json.dumps(f(("src/session.py", 1)))
     assert pick(_load(pages))[0] == "high"
-    # blank or non-JSON stdin is a fetch failure, not a zero-file PR
+    # a list shorter than the PR's file total is truncated: fail safe to high
+    assert pick(f(("README.md", 1)), 3400) == ("high", "file list truncated (1 of 3400 files)")
+    assert pick(f(("README.md", 1)), 1)[0] == "low"
+    assert pick(f(("src/a.py", 100), ("tests/test_a.py", 112)), 2)[0] == "medium"
     import io
+    sys.stdin = io.StringIO(json.dumps(f(("README.md", 1))))
+    assert main(["--changed-files", "5"]) == 0
+    sys.stdin = io.StringIO(json.dumps(f(("README.md", 1))))
+    assert main(["--changed-files", "x"]) == 2
+    # blank or non-JSON stdin is a fetch failure, not a zero-file PR
     for bad in ("", "  \n", "not json"):
         sys.stdin = io.StringIO(bad)
         assert main([]) != 0, repr(bad)
@@ -134,12 +149,19 @@ def main(argv: list[str]) -> int:
     if "--self-test" in argv:
         _self_test()
         return 0
+    changed = None
+    if "--changed-files" in argv:
+        try:
+            changed = int(argv[argv.index("--changed-files") + 1])
+        except (IndexError, ValueError):
+            print("effort_level: --changed-files needs an integer", file=sys.stderr)
+            return 2
     text = sys.stdin.read()
     if not text.strip():
         print("effort_level: empty input; the file-list fetch likely failed", file=sys.stderr)
         return 2
     try:
-        level, reason = pick(_load(text))
+        level, reason = pick(_load(text), changed)
     except (ValueError, KeyError, TypeError) as e:
         print(f"effort_level: invalid file-list input: {e}", file=sys.stderr)
         return 2
