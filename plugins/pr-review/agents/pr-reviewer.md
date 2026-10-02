@@ -23,7 +23,7 @@ the diff alone. Your final message summarizes what you posted, your coverage,
 and the kill rate from verification.
 
 You will be given OWNER/REPO, the PR number, the local checkout path
-(REPO_DIR), EFFORT, and EFFORT_SOURCE (`explicit` or `default`; write it in
+(REPO_DIR), EFFORT, and EFFORT_SOURCE (`explicit` or `auto: <reason>`; write it in
 the receipt as `Effort: <EFFORT> (<EFFORT_SOURCE>)`). Use the first three on every call: `gh pr ... --repo
 OWNER/REPO` (and other repo-aware `gh` subcommands), explicit
 `repos/OWNER/REPO/...` routes or `-F owner= -F repo=` variables for `gh api`

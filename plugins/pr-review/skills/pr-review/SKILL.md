@@ -30,17 +30,45 @@ catch.
   omitted, infer from the current branch: `gh pr view --json number`.
 - OWNER/REPO from `git remote get-url origin`.
 - REPO_DIR: the local checkout's absolute path.
-- Optional `--effort low|medium|high`. Default `medium`. Validate it in the
-  main context before the handoff: if the flag is present with a missing or
-  unsupported value, stop and report the allowed values rather than guessing.
-  Default to `medium` only when the flag is omitted. Record `EFFORT` (the
-  level) and `EFFORT_SOURCE` (`explicit` if the flag was given, else
-  `default`).
+- Optional `--effort low|medium|high`. Validate it in the main context before
+  the handoff: if the flag is present with a missing or unsupported value, stop
+  and report the allowed values rather than guessing. When the flag is omitted,
+  `scripts/effort_level.py` in this skill's base directory picks the level
+  (below). Record `EFFORT` (the level) and `EFFORT_SOURCE` (`explicit` if the
+  flag was given, else `auto: <reason>` from the script).
 
 ## Effort levels
 
 One knob set, chosen once at the start and reported in the banner and the
-coverage receipt as `Effort: <level> (explicit|default)`.
+coverage receipt as `Effort: <level> (explicit|auto: <reason>)`.
+
+Auto-selection is deterministic and runs in the main context before the
+handoff:
+
+```bash
+set -o pipefail
+CHANGED=$(gh pr view "$N" --repo "$O/$R" --json changedFiles --jq .changedFiles) || exit 1
+gh api "repos/$O/$R/pulls/$N/files" --paginate |
+  python3 "<skill base dir>/scripts/effort_level.py" --changed-files "$CHANGED"   # prints level, then reason
+```
+
+With `pipefail`, a `gh api` failure after some pages were already printed still
+yields a non-zero status; the script itself also exits non-zero on empty or
+non-JSON input. Treat any non-zero status as a fetch error: report it and stop
+rather than assuming `low`. GitHub caps the file list at 3,000 files; when the
+list is shorter than `changedFiles` the script returns `high` ("file list
+truncated") because a sensitive path may be hidden. Renamed files are scanned under both old and new paths.
+
+Rules, first match wins: any path with a whole token (not a substring) of
+auth/session/secret/payment/migration/terraform/infra/deploy/Dockerfile, or a
+CI config path (GitHub Actions, GitLab CI, CircleCI, Azure Pipelines, Bitbucket
+Pipelines, Jenkinsfile, Buildkite), → `high`; every file a
+doc, lockfile, or asset → `low`; over 800 changed lines → `high`; 50 or fewer
+→ `low`; otherwise `medium`. The reason is a fixed phrase built from counts
+only (e.g. "3 sensitive paths"); it never contains file names, because it
+flows into the reviewer's prompt and PR authors control file names. Print the
+reason in the banner so the user can override with `--effort` next time. Never post a skip: a trivial PR still gets
+a `low` review and a coverage receipt.
 
 | Knob | low | medium | high |
 |---|---|---|---|
@@ -280,7 +308,7 @@ anchor doesn't kill the review, and note any that fail.
 
 ```
 ## Review coverage
-- Effort: medium (default)
+- Effort: medium (auto: 212 changed lines, no sensitive paths)
 - Files reviewed: 12/12 (list skipped files + reason if any)
 - Finder rounds: 2 (4 merged lenses + fresh-eyes generalist)
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
