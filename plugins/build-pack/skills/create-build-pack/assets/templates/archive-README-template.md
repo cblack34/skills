@@ -1,4 +1,4 @@
-<!-- TEMPLATE: archive README. Resolve and delete every template comment and placeholder. Keep this short; the archived files contain the history. State completion, acceptance, accepted gaps, and the archive date or release reference accurately. -->
+<!-- TEMPLATE: archive README. Resolve and delete every template comment and placeholder. Keep this short; the archived files contain the history. State completion, acceptance, accepted gaps, and the archive date or release reference accurately. Provenance is the date or release reference, never a person's name. -->
 
 # {{MILESTONE_NAME}} Pack
 
