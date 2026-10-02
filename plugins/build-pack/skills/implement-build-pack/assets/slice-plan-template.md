@@ -65,11 +65,7 @@ This is a durable high-level charter and historical artifact. Record the slice's
 
 ## Execution issues
 
-GitHub issues are the WIP tracker and source of task-level detail.
-
-| Issue | Purpose | Dependencies |
-| --- | --- | --- |
-| [#{{NUMBER}}]({{URL}}) — {{TITLE}} | {{WHY_THIS_ISSUE_EXISTS}} | {{ISSUE_LINKS_OR_NONE}} |
+GitHub issues are the WIP tracker and source of task-level detail. Every issue for this slice carries the `{{SLICE_LABEL_OR_MILESTONE}}` label or milestone; this plan links the query, not the issues: {{ISSUE_QUERY_URL}}.
 
 ## Delivery shape
 
@@ -81,26 +77,20 @@ Keep only the block for the repository's active topology.
 ### Direct PRs
 
 - **Branch:** {{NAME}}
-- **Final PR:** {{URL_WHEN_AVAILABLE}}
 
 ### Feature spine
 
 - **Spine:** {{NAME}}
 - **Leaf merge authority:** the implementation lead may squash-merge clean leaf PRs to the spine; the spine PR to `main` is human-merged.
-- **Spine PR:** {{URL_WHEN_AVAILABLE}}
 
 ### PR stack
 
 - **Merge strategy for `main`:** {{RECORDED_IN_WORKFLOW}}
 - **Advancement method:** {{RECORDED_IN_WORKFLOW}}
 - **Predecessor merges:** Agents never merge a stacked PR into its predecessor branch; only the bottom PR is ever merged, only by the human, only to `main`. Advancing the stack is sync + verify incremental diff + retarget, never a merge.
+- **Layers in dependency order:** {{BRANCH_LIST}}
 
-| Position | Branch | PR | Base | Predecessor | Dependents | Issues |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | {{BRANCH}} | {{URL}} | `main` | none | {{POSITION_2_OR_NONE}} | {{ISSUE_LINKS}} |
-| 2 | {{BRANCH}} | {{URL}} | {{POSITION_1_BRANCH}} | 1 | {{POSITION_3_OR_NONE}} | {{ISSUE_LINKS}} |
-
-Record each Base at PR creation. When a PR is retargeted to `main` after its predecessor lands, update its Base cell once. Current heads, checks, and review state live in GitHub, not here.
+PR URLs, bases, heads, checks, and review state live in GitHub, not here.
 
 ## Amendments
 
@@ -127,4 +117,3 @@ Complete once when the final PR is ready for human merge. Do not use this sectio
 - **Unresolved gates or risks:** {{ITEMS_OR_NONE}}
 - **Refactor and handoff receipt:** {{ISSUE_COMMENT_OR_PR_LINK}}
 - **Final PR:** {{URL_OR_STACK_PR_LIST}}
-- **Merge state:** Ready for the human to merge; agents do not merge to `main`.

@@ -1,6 +1,6 @@
 {
   "name": "build-pack",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Author, transition, implement, and refactor-before-handoff strategic build packs through approved, rolling slices with durable history and delegated execution.",
   "author": {
     "name": "Clayton Black",

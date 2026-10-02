@@ -90,8 +90,8 @@ After approval, create only the tactical artifacts needed for this slice:
 
 1. Create the slice plan from `assets/slice-plan-template.md` at the approved path. Prefer the repository's established location; otherwise use `docs/implementation/slices/<slice-name>.md`.
 2. Create only the authorized GitHub issues for this slice. Each issue is an execution-sized tracker with its own task checklist, dependencies, verification, and completion evidence.
-3. Link every issue to the slice-plan path. Add an issue register to the plan with each issue's number, title, purpose, and dependency relationship.
-4. Treat this issue-linking pass as initial plan materialization. After it, keep the plan stable and use issues for live work.
+3. Label or milestone every issue with the slice's name and link each to the slice-plan path. The plan carries one link to that issue query, never a per-issue register.
+4. After materialization, keep the plan stable and use issues for live work.
 5. Establish the approved branch, feature-spine, or stack state according to the repository workflow. For a PR stack, create branches and PR bases in dependency order: the first from current `main`, each later one from its predecessor's current head, and record each layer's branch ownership.
 
 The slice plan records the high-level **what** and **why**. GitHub issues record the execution **how**, WIP, ownership, checklists, blockers, and evidence. Do not duplicate issue checklists into the plan.
@@ -138,7 +138,7 @@ When the delivery unit's issues are draft-complete and its focused behavioral ch
 5. Obtain a fresh-context, read-only design review of the complete changed surface with explicit file coverage, using the plugin's `design-reviewer` agent when available and the documented fallback otherwise.
 6. Validate every finding against the code before acting; apply correct findings, reject weak ones with evidence.
 7. After each structural edit run the cheapest focused check first, then the complete repository verification before handoff.
-8. Post the refactor and handoff receipt on the covered GitHub issue(s) and carry it into the PR and delivery record.
+8. Post the refactor and handoff receipt on the covered GitHub issue(s) and carry it into the PR; the delivery record links it.
 
 ## Prepare the slice PR
 
@@ -179,6 +179,7 @@ Do not start the next slice until the human has merged the current slice, includ
 - One approved slice at a time; no upfront execution backlog for the whole feature.
 - Strategic scope and final acceptance always outrank tactical plans and issue text.
 - Keep the slice plan stable; issues are the execution tracker.
+- No stale-by-design docs. The plan and every repo doc record decisions, rationale, and contracts. No placeholder cells, per-task checklists, or tables mirroring issue or PR state; one link to the issue query or final PR is the ceiling. Deferred work becomes an opened issue cited by key, never a `TODO` or `FIXME` comment.
 - Preserve the shipped MVP unless the approved slice explicitly changes it.
 - Distinguish hard causal dependencies from preferred sequence.
 - Delegate bounded code work using the least expensive capable model and effort.
