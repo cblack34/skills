@@ -45,6 +45,7 @@ coverage receipt as `Effort: <level> (explicit|default)`.
 | Knob | low | medium | high |
 |---|---|---|---|
 | Finder rounds | 1 | 1 + one fresh-eyes generalist | 2 |
+| Context handed to finders | diff + ±40 lines around each hunk + repo conventions | low + full contents of changed source files | medium + callers, tests, sibling implementations |
 
 Past runs show nothing surfaced after round 1 ever survived verification, so
 extra rounds are the first thing effort trades away.
@@ -72,9 +73,12 @@ whatever subagent facility the harness has for finders and verifiers (or run
 them sequentially if it has none).
 
 **Every child spawn pins its model** (wherever the harness supports a
-per-spawn model; Claude Code does). Each finder and verifier Agent call
-passes `model: "sonnet"` explicitly. Children that inherit pick up whatever the
-session runs on, not what the reviewer runs on.
+per-spawn model; Claude Code does). On Claude Code, finders are
+spawned as `pr-review:pr-finder`, whose frontmatter pins the model and restricts
+tools; elsewhere, use the harness's subagent facility with the same prompt and,
+where it supports them, the same model and a read-only tool set.
+Each verifier Agent call passes `model: "sonnet"` explicitly. Children that
+inherit pick up whatever the session runs on, not what the reviewer runs on.
 
 ## Pipeline
 
@@ -104,8 +108,13 @@ Read beyond the diff before any finding is generated:
 
 ### Phase 2 — Finder fan-out (parallel subagents)
 
-Spawn parallel finder subagents (`model: "sonnet"` on every call), one per
-defect category, each blind to the others (diversity is the recall advantage — independent bots agree on <10% of
+Spawn parallel finder subagents (on Claude Code `pr-review:pr-finder`; elsewhere
+the harness's subagent facility with the same prompt and, where supported, the
+same model and read-only tool set; on harnesses without plugin agents, seed the
+subagent with the body of `agents/pr-finder.md` at the plugin root, everything
+below the frontmatter, before the shared prompt, so the single-lens,
+no-exploration, and Findings/Coverage format rules still apply), one per defect category, each
+blind to the others (diversity is the recall advantage — independent bots agree on <10% of
 findings, so multiple lenses is where completeness comes from). **Run every
 subagent synchronously (`run_in_background: false`) and never end your turn
 while finders or verifiers are outstanding** — an early return orphans the
@@ -127,11 +136,26 @@ pipeline and a later resume double-posts the review.
    inconsistency with the codebase's established patterns
 
 Each finder reviews in chunks of ≤400 changed lines (detection quality falls
-off a cliff past that), receives the Phase 1 context, and returns:
+off a cliff past that) and returns findings plus a coverage report in the
+format its agent definition fixes.
 
-- Findings: `path, start_line..line, side, category, severity, claim,
-  evidence, suggested_fix (exact replacement text when possible)`
-- A coverage report: which files/hunks it actually examined.
+**Hand context in; do not let finders re-read.** Finders have no shell (their
+tool allowlist is Read, Grep, Glob) and are told not to explore, so the prompt
+must carry everything. Build ONE shared prefix from
+items 1-3 and reuse it byte-for-byte across every finder in the round. The
+chunk assignment and the lens trail it, and are the only parts that vary:
+
+1. PR metadata, head SHA, and `REPO_DIR` (the resolved absolute checkout path;
+   tell finders to use it for every Read/Grep, never the current directory)
+2. The diff (patch hunks)
+3. The Phase 1 context at the level's depth (see the effort table)
+4. Chunk assignment (which files/hunks this finder owns); identical across the
+   lens siblings of one chunk, different between chunks
+5. The lens: category name and what to hunt for — the last thing in the prompt
+
+Identical prefixes let sibling finders read the same prompt cache instead of
+each writing their own; chunk assignment and lens at the tail are the only cold
+part, and a single-chunk round varies only the lens.
 
 ### Phase 3 — Extra rounds, by effort
 
