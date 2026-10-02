@@ -169,7 +169,8 @@ pipeline and a later resume double-posts the review.
 6. **Test gaps** — new behavior without tests, tests that can't fail, missing
    negative cases
 7. **Design & maintainability** — wrong-layer changes, needless complexity,
-   inconsistency with the codebase's established patterns
+   inconsistency with the codebase's established patterns, `TODO`/`FIXME`/"issue TBD"
+   comments added with no issue key
 
 Lens grouping by effort (a merged finder gets every category's hunt list):
 
@@ -256,6 +257,11 @@ Never post a bare question as a finding. Cap inline nits at **5**; overflow
 nits go in a collapsed section of the review body. If total inline comments
 would exceed ~25, keep all Blocking/Issue inline and move the rest to the
 body (GitHub's spam detection 422s large reviews).
+
+Fixes never introduce `TODO`/`FIXME`/`TBD` or placeholder text; deferred work
+is stated in the review. A `TODO`, `FIXME`, or "issue TBD" comment the PR adds with no issue key
+is itself a `[Suggestion]`: open the issue and cite its key, or drop the
+comment.
 
 ### Phase 7 — Compose and post ONE review
 
