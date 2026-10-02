@@ -16,7 +16,7 @@ Establish before starting:
 - **Changed surface:** a base ref (`git diff --name-only <base>...HEAD`) or an explicit changed-file list. Never infer it from memory. The diff only selects the files; it is not what gets reviewed.
 - **Rules:** the applicable `AGENTS.md` family and the repository's code-quality document. If the repository has a workflow document with its own refactor-before-handoff section, it is stricter or equal; follow it.
 - **Verification:** the repository's exact definition-of-done commands and the cheapest focused check for the touched area.
-- **Record target:** where the receipt goes. A GitHub issue when one tracks this work, otherwise the PR body, otherwise the reply to the user.
+- **Record target:** where the receipt goes. A GitHub issue when one tracks this work, otherwise the PR body, otherwise the reply to the user; never a file in the repository.
 - **Edit authority:** whether to apply refactors directly or route them as bounded assignments (an orchestrating skill such as `implement-build-pack` says which). Direct invocation by the user means apply them directly.
 
 ## 1. Review the changed surface
@@ -62,7 +62,7 @@ After the last structural edit, run the complete repository verification from `A
 
 ## 6. Record the receipt
 
-Write the receipt to the record target and include it in the PR body or handoff message.
+Post the receipt to the record target and include it in the PR body or handoff message.
 
 ```markdown
 ## Refactor and handoff receipt
@@ -75,7 +75,7 @@ Write the receipt to the record target and include it in the PR body or handoff 
 - Post-refactor focused checks:
 - Complete repository checks:
 - Fresh-context design review:
-- Remaining risks or justified debt:
+- Remaining risks or justified debt (opened issue keys):
 ```
 
 `Structural changes made: none` is valid only when the receipt identifies the reviewed surface and explains why current responsibilities remain cohesive. `Fresh-context design review` states the reviewer kind used (agent, fallback subagent, or human) and its coverage.
@@ -87,4 +87,5 @@ Write the receipt to the record target and include it in the PR body or handoff 
 - Line count is never the sole argument for a finding or a split.
 - Author self-review never substitutes for the fresh-context review.
 - **No new personal names.** Do not write the operator's name, handle, or email into receipts, issue comments, or PR text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits.
+- **No stale-by-design docs.** The receipt lives on the covered issue(s) and the PR, never in a file committed to the repository. Deferred work becomes an opened issue cited by key, not a `TODO`/`FIXME` comment or a note in a doc; if the issue is not opened, leave the comment out.
 - Never claim a check, review, or coverage that was not run.
