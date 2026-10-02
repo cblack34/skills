@@ -87,5 +87,5 @@ Post the receipt to the record target and include it in the PR body or handoff m
 - Line count is never the sole argument for a finding or a split.
 - Author self-review never substitutes for the fresh-context review.
 - **No new personal names.** Do not write the operator's name, handle, or email into receipts, issue comments, or PR text. Refer to roles ("the maintainer", "the implementation lead") or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present in the target repository as they are. Exceptions: the user asked to be named in this request, or a required owner or contact field has no role that fits.
-- **No stale-by-design docs.** The receipt lives on the covered issue(s) and the PR, never in a file committed to the repository. Deferred work becomes an opened issue cited by key, not a `TODO`/`FIXME` comment or a note in a doc; if the issue is not opened, leave the comment out.
+- **No stale-by-design docs.** The receipt lives on the selected record target, never in a file committed to the repository. Deferred work becomes an opened issue cited by key, not a `TODO`/`FIXME` comment or a note in a doc; if the issue is not opened, leave the comment out.
 - Never claim a check, review, or coverage that was not run.
