@@ -1,0 +1,62 @@
+name: Bump plugin versions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fail if a PR bumps a plugin manifest version
+        run: |
+          base="origin/${{ github.base_ref }}"
+          if git diff "$base...HEAD" -- 'plugins/*/.claude-plugin/plugin.json' 'plugins/*/.codex-plugin/plugin.json' | grep -E '^[+-]\s*"version"'; then
+            echo "::error::Plugin versions are bumped by CI on merge to main. Revert the version change in this PR."
+            exit 1
+          fi
+
+  bump:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app
+        with:
+          app-id: ${{ secrets.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app.outputs.token }}
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.11.29"
+          enable-cache: true
+      - name: Bump changed plugins
+        id: bump
+        run: |
+          summary=$(uv run --locked scripts/ci_bump_versions.py "${{ github.event.before }}" "${{ github.sha }}")
+          echo "$summary"
+          echo "summary<<EOF" >> "$GITHUB_OUTPUT"; echo "$summary" >> "$GITHUB_OUTPUT"; echo "EOF" >> "$GITHUB_OUTPUT"
+      - name: Validate and push
+        if: steps.bump.outputs.summary != ''
+        run: |
+          uv run --locked scripts/validate.py
+          git config user.name "${{ steps.app.outputs.app-slug }}[bot]"
+          git config user.email "${{ steps.app.outputs.app-slug }}[bot]@users.noreply.github.com"
+          git add plugins/*/.claude-plugin/plugin.json plugins/*/.codex-plugin/plugin.json
+          git commit -F - <<MSG
+          chore: bump plugin versions after ${{ github.sha }}
+
+          ${{ steps.bump.outputs.summary }}
+          MSG
+          git push origin HEAD:main

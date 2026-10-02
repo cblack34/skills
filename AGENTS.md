@@ -12,7 +12,7 @@ These instructions apply to the entire repository.
 ## Adding a skill
 
 - Run `uv run --locked scripts/new_skill.py <name> --description <description>` from the repository root to create a new plugin with its first skill.
-- Add `--plugin <existing-plugin>` to add a skill to an existing plugin instead; this writes only the skill's `SKILL.md`, so update the plugin README and bump its version yourself.
+- Add `--plugin <existing-plugin>` to add a skill to an existing plugin instead; this writes only the skill's `SKILL.md`, so update the plugin README yourself.
 - Use lowercase kebab-case names no longer than 64 characters.
 - Before creating a skill inside an existing plugin, confirm that placement with the user.
 - Keep the plugin folder name and both plugin manifest names identical. Keep each skill folder name identical to its `SKILL.md` frontmatter name. Skill names need not match the plugin name; renaming a plugin forces users to reinstall it, so name plugins for their whole purpose and rename skills freely.
@@ -22,7 +22,7 @@ These instructions apply to the entire repository.
 ## Changing a skill
 
 - Preserve cross-harness behavior in the shared `SKILL.md`; isolate unavoidable harness differences in clearly labeled sections.
-- When publishing changes to an existing plugin, bump both plugin manifests together with `uv run --locked scripts/bump_plugin_version.py <plugin> <major|minor|patch|VERSION>`.
+- Do not bump plugin versions in a PR. CI bumps both manifests of every changed plugin when the PR squash-merges to `main`, reading the level from the Conventional Commits subject: `!` after the type is major, `feat` is minor, anything else is patch. `scripts/bump_plugin_version.py` remains for local dry runs.
 - Do not add secrets, credentials, machine-specific absolute paths, or private source material.
 - Prefer deterministic helper scripts for mechanical work and keep them inside the owning skill.
 

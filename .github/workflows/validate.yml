@@ -17,7 +17,7 @@ jobs:
           version: "0.11.29"
           enable-cache: true
       - run: uv lock --check
-      - run: uv run --locked python -m py_compile scripts/new_skill.py scripts/validate.py
+      - run: uv run --locked python -m py_compile scripts/new_skill.py scripts/validate.py scripts/bump_plugin_version.py scripts/ci_bump_versions.py
       - run: uv run --locked scripts/validate.py
       - name: Smoke-test the skill generator
         run: |
