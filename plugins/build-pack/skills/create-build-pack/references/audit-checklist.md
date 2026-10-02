@@ -6,7 +6,7 @@ Run after generation and before delivery. Fix findings, then re-run affected che
 
 - [ ] A fresh agent can understand the product or feature, intended users, active scope, and final outcome without conversation history.
 - [ ] No names or assumptions from unrelated projects, repositories, organizations, teams, or people leaked into the pack.
-- [ ] No generated document, template, or archive README introduces the operator's name, handle, or email; roles or Git/GitHub metadata carry attribution.
+- [ ] No generated document, template, or archive README introduces the operator's name, handle, or email; roles or Git/GitHub metadata carry attribution. Names already in the target repository are left as they are, and a name is allowed only when the user asked for it in this request or a required owner or contact field has no role that fits.
 - [ ] No past-verification claim is borrowed from another context. Procedures not verified in this repository say so.
 - [ ] Repository slugs, URLs, account identifiers, tool availability, and workflow claims come from this repository or the user.
 - [ ] Optional tools or skills are “if available” and have a self-contained fallback.

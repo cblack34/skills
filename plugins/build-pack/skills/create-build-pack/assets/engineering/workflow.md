@@ -121,7 +121,7 @@ A behaviorally passing implementation is a working draft. Implementation may beg
 
 - Use one PR for a complete, reviewable delivery unit chosen by the implementation lead; do not let this rule predetermine feature slicing.
 - Follow repository branch naming and use a Conventional Commits PR title.
-- Do not write a person's name, handle, or email into PR bodies, receipts, issues, review replies, or commit messages. Refer to roles or omit attribution; Git author metadata and GitHub login are the only attribution.
+- Do not write a person's name, handle, or email into PR bodies, receipts, issues, review replies, or commit messages. Refer to roles or omit attribution; Git author metadata and GitHub login are the only attribution. Leave names already present as they are. Exceptions: the request asked for a name, or a required owner or contact field has no role that fits.
 - In the PR body, state scope, verification evidence, the refactor and handoff receipt, material risks or deviations, documentation changes, and related issues.
 - Use `Closes #N` only on a PR whose base is currently `main`. A leaf PR to a spine references its issue without closing it; the final spine PR carries the appropriate closing references. A stacked PR references its issue without closing it until it is retargeted to `main`, then adds `Closes #N`. Confirm closure after the human merges to `main`.
 - Re-sync the PR base and re-run relevant checks before review. Stop on non-trivial conflicts and never force-push a protected/shared branch.
