@@ -259,7 +259,7 @@ would exceed ~25, keep all Blocking/Issue inline and move the rest to the
 body (GitHub's spam detection 422s large reviews).
 
 Fixes never introduce `TODO`/`FIXME`/`TBD` or placeholder text; deferred work
-is stated in the review. A `TODO`, `FIXME`, or "issue TBD" comment the PR adds
+is stated in the review. A `TODO`, `FIXME`, or "issue TBD" comment the PR adds with no issue key
 is itself a `[Suggestion]`: open the issue and cite its key, or drop the
 comment.
 
