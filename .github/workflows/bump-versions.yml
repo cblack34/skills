@@ -33,6 +33,7 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
@@ -48,14 +49,18 @@ jobs:
           for skill in $(git diff --name-only --diff-filter=A "$base...HEAD" -- 'plugins/*/skills/*/SKILL.md'); do
             grep -qx "$(cut -d/ -f2 <<<"$skill")" <<<"$new_plugins" || label="release:minor"
           done
-          if git diff --name-only --diff-filter=DR "$base...HEAD" -- 'plugins/*/skills/*/SKILL.md' | grep -q . \
-             || git diff --diff-filter=M "$base...HEAD" -- 'plugins/*/.claude-plugin/plugin.json' | grep -Eq '^[-+]\s*"name"'; then
+          if git diff --name-only --diff-filter=DR "$base...HEAD" -- 'plugins/*/skills/*/SKILL.md' | grep -q .; then
             label="release:major"
           fi
-          if [ -n "$label" ]; then
-            echo "Adding $label"
-            gh pr edit "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --add-label "$label"
+          [ -n "$label" ] || exit 0
+          pr="${{ github.event.pull_request.number }}"
+          if gh pr view "$pr" --repo "${{ github.repository }}" --json labels --jq '.labels[].name' | grep -qx "$label"; then
+            echo "$label already present"; exit 0
           fi
+          echo "Adding $label"
+          # On a fork PR the token is read-only and this write fails; the check then fails until a maintainer adds the label.
+          gh pr edit "$pr" --repo "${{ github.repository }}" --add-label "$label" \
+            || { echo "::error::Could not add $label (fork PR?). Add it by hand and re-run this check."; exit 1; }
 
   bump:
     if: github.event_name == 'push'

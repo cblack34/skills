@@ -31,13 +31,7 @@ Then:
 
 1. Replace the generated workflow in `plugins/my-skill/skills/my-skill/SKILL.md` with the real instructions.
 2. Add any supporting `scripts/`, `references/`, or `assets/` inside that skill directory.
-3. When releasing changes to an existing plugin, update both manifest versions together:
-
-    ```bash
-    uv run --locked scripts/bump_plugin_version.py my-skill minor
-    ```
-
-Use `major`, `minor`, `patch`, or an explicit semantic version. Add `--dry-run` to preview the change without writing either manifest.
+3. Do not bump plugin versions in a PR. CI bumps both manifests of every changed plugin when the PR merges to `main`, using the PR's `release:major` or `release:minor` label, or patch when neither is present. CI adds `release:minor` when a PR adds a skill and `release:major` when it removes or renames one. Preview a bump locally with `uv run --locked scripts/bump_plugin_version.py my-skill minor --dry-run`.
 
 4. Validate the complete marketplace:
 
@@ -45,7 +39,7 @@ Use `major`, `minor`, `patch`, or an explicit semantic version. Add `--dry-run` 
 uv run --locked scripts/validate.py
 ```
 
-The generator creates both plugin manifests and appends matching entries to both catalogs. To add a skill to an existing plugin instead, pass `--plugin <existing-plugin>`; that writes only the new `SKILL.md`, and you then update the plugin README and bump its version. Separate plugins remain the default when skills should be installed or versioned independently; closely related companion skills may share a plugin after confirming that placement with the user. Add future Python dependencies with `uv add` or development-only dependencies with `uv add --dev` so `pyproject.toml` and `uv.lock` stay synchronized.
+The generator creates both plugin manifests and appends matching entries to both catalogs. To add a skill to an existing plugin instead, pass `--plugin <existing-plugin>`; that writes only the new `SKILL.md`, and you then update the plugin README; CI labels and bumps the version on merge. Separate plugins remain the default when skills should be installed or versioned independently; closely related companion skills may share a plugin after confirming that placement with the user. Add future Python dependencies with `uv add` or development-only dependencies with `uv add --dev` so `pyproject.toml` and `uv.lock` stay synchronized.
 
 ## Repository layout
 
