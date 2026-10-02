@@ -65,6 +65,6 @@ Summarize the few project invariants in `AGENTS.md`, explain them in the brief o
 
 - Use no numeric filename prefixes; state reading order once.
 - Use relative links within the pack and verify every link.
-- Use tables for genuine comparisons or contract mappings, prose for rules, and checkboxes for final acceptance.
-- Use task checkboxes only in an explicitly requested tactical addendum.
+- Use tables for genuine comparisons or contract mappings, prose for rules, and plain bullets or numbered items for final acceptance stated as stable product-level outcomes.
+- Keep task state out of every shipped document, including a tactical addendum: no working checklists or definition-of-done lists, no placeholder cells such as `TBD` or a URL to add later, and no tables that mirror issue or PR state. Those live in the tracker; one link to the issue, epic, or search is the ceiling.
 - Keep root agent instructions well under 150 lines and every document only as long as its non-obvious content requires.

@@ -11,6 +11,7 @@ Run after generation and before delivery. Fix findings, then re-run affected che
 - [ ] Repository slugs, URLs, account identifiers, tool availability, and workflow claims come from this repository or the user.
 - [ ] Optional tools or skills are “if available” and have a self-contained fallback.
 - [ ] Every unresolved placeholder is removed or surfaced in delivery as an explicit user decision or research gate.
+- [ ] No generated document carries task state: no placeholder cells such as `TBD` or a URL to add later, no working or definition-of-done checklists, and no table mirroring issue or PR state; at most one link points to the tracker.
 
 ## B. Reference integrity
 
