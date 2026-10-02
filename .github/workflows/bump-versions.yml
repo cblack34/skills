@@ -63,8 +63,8 @@ jobs:
             || { echo "::error::Could not add $label (fork PR?). Add it by hand and re-run this check."; exit 1; }
 
   bump:
-    # Skip the bot's own bump commit by its message marker; a skipped job never enters the queue.
-    if: "github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore: bump plugin versions after')"
+    # Skip the bot's own bump commit, identified by actor and message marker together; a skipped job never enters the queue.
+    if: "github.event_name == 'push' && !(github.actor == 'cblack34-release-bot[bot]' && startsWith(github.event.head_commit.message, 'chore: bump plugin versions after'))"
     runs-on: ubuntu-latest
     permissions:
       contents: read
