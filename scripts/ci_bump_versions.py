@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Bump every plugin changed by a push to main; the level comes from the merged PR's release labels."""
 
-from __future__ import annotations
-
 import argparse
 import subprocess
 import sys
