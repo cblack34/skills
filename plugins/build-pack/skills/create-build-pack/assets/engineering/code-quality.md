@@ -33,8 +33,9 @@ Intention-revealing names that encode the domain **and** unit where units exist 
 `isRetryEnabled`); booleans read as questions. Small functions that do one thing at one level of
 abstraction, few params (group data clumps into typed objects). Queries return and don't mutate;
 commands mutate and return nothing meaningful. One home per concept (**DRY**). Comments explain
-**why**, not what — refactor confusing code instead of narrating it. Delete dead and commented-out
-code; don't add generality for a hypothetical second case.
+**why**, not what — refactor confusing code instead of narrating it. No `TODO`/`FIXME` comments: open
+the issue and reference its key, or leave the comment out. Delete dead and commented-out code; don't
+add generality for a hypothetical second case.
 
 ## Project-specific rules (these earn their place)
 

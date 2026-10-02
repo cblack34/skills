@@ -10,14 +10,14 @@ The active scope is complete when every criterion below holds and every required
 # PROJECT-FILL: Exact install, run, smoke, lint, typecheck, test, and build commands required for final verification. Keep them character-identical to AGENTS.md.
 ```
 
-<!-- Create one H2 section per user-visible capability or strategic invariant. Each active brief capability must map to at least one criterion, and each criterion must trace to active scope.
+<!-- Create one H2 section per user-visible capability or strategic invariant. Each active brief capability must map to at least one criterion, and each criterion must trace to active scope. Write criteria as plain bullets or numbered items, never checkboxes; pass/fail state belongs to the tracker and verification evidence, not this document.
 
-- [ ] Use one observable, checkable result per item.
-- [ ] For conditional behavior, use “WHEN <event or condition>, <observable outcome>.”
-- [ ] Quantify limits and failure behavior; avoid phrases such as “works correctly” or “handles errors gracefully.”
-- [ ] For an automated check, add: _Automated check:_ <specific assertion>.
-- [ ] For human judgment or external-environment verification, name the actor, setup, observation, and evidence to record.
-- [ ] Cover every non-negotiable here or name its human review method in the brief.
+- Use one observable, checkable result per item.
+- For conditional behavior, use “WHEN <event or condition>, <observable outcome>.”
+- Quantify limits and failure behavior; avoid phrases such as “works correctly” or “handles errors gracefully.”
+- For an automated check, add: _Automated check:_ <specific assertion>.
+- For human judgment or external-environment verification, name the actor, setup, observation, and evidence to record.
+- Cover every non-negotiable here or name its human review method in the brief.
 -->
 
 ## Research and decision gates
