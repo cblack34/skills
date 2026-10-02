@@ -152,12 +152,14 @@ review ran.
   isn't right; fix it properly and say so in the reply.
 - **Push back** — the reviewer is wrong, or the suggestion would degrade the
   system for this phase. Cite the source that disproves it. If the same wrong
-  flag is likely to recur, document the trade-off in code/README so the next
-  review round doesn't re-flag it.
+  flag is likely to recur, document the trade-off (rationale, never a `TODO`)
+  in code/README so the next review round doesn't re-flag it.
 
 **(d) Apply the change** surgically. Where the same flaw exists elsewhere in
 the same file/module, fix it consistently; add a small test pinning the
-behavior when cheap.
+behavior when cheap. Deferred work is an opened issue cited by key (when issue
+creation is authorized) or stated in the reply, never a `TODO`/`FIXME`/`TBD`
+comment or doc note.
 
 **(e) Reply to the comment** — the reply is the audit trail; "fixed" alone
 isn't enough:
@@ -219,8 +221,7 @@ wrong resolution is visible at the top rather than buried in the table:
 - Applying a reviewer's suggested code verbatim without checking it parses/validates.
 - Accepting "security" suggestions that would break the current operational
   flow (e.g. disabling public network access on a resource operators still
-  need to bootstrap through). Push back with a documented trade-off and a
-  future-improvement note.
+  need to bootstrap through). Push back with a documented trade-off.
 - Skipping the "low confidence" comments listed only in the review body.
 - Rewriting historical decision-log/changelog entries to satisfy a reviewer.
   Prefer `**[Superseded YYYY-MM-DD: ...]**` annotations over rewriting history,
