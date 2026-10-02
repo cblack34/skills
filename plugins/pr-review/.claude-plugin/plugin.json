@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "pr-review",
   "displayName": "PR Review",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Review pull requests and address their review comments: one complete, verified GitHub review with inline severity-labeled comments, and a validate-then-fix loop for every unresolved thread.",
   "author": {
     "name": "Clayton Black"

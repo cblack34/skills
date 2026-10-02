@@ -155,8 +155,13 @@ open threads, or killed findings resurrect every cycle.
 
 ### Phase 5 — Adversarial verification (parallel subagents)
 
-Every surviving candidate gets a skeptic subagent (`model: "sonnet"`) prompted
-to REFUTE it:
+Group surviving candidates by file; split a group past 5 candidates into
+the fewest batches of at most 5, sized as evenly as possible (6 becomes 3+3, 7
+becomes 4+3, 11 becomes 4+4+3). Each group gets ONE skeptic subagent (`model: "sonnet"`)
+prompted to REFUTE every candidate in it and return a verdict per candidate.
+One full-file read then serves several claims instead of being repeated per
+claim. A skeptic must judge each candidate on its own evidence; a batch is a
+cost boundary, not a reason for verdicts to agree. For each candidate:
 
 - Read the actual code at the cited lines — full file, not the hunk.
 - Verify empirically where possible: run the snippet, write a 5-line repro,
@@ -241,6 +246,7 @@ anchor doesn't kill the review, and note any that fail.
 - Files reviewed: 12/12 (list skipped files + reason if any)
 - Finder rounds: 2 (7 lenses + fresh-eyes generalist)
 - Candidates: 31 found → 9 duplicates dropped → 14 killed in verification → 8 posted
+- Verifier batches: 6 (grouped by file)
 - Verification: 6/8 verified by execution, 2/8 by doc citation
 - Prior threads checked: 4 (2 fixed & resolved, 1 pushback answered, 1 stands)
 
