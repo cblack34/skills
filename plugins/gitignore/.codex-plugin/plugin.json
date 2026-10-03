@@ -1,0 +1,25 @@
+{
+  "name": "gitignore",
+  "version": "0.1.0",
+  "description": "Create or update a repository .gitignore from gitignore.io templates: always the Windows, macOS, Linux, VS Code, and JetBrains defaults plus the stack templates you name, merged without losing existing custom rules. Use when asked to add or refresh a .gitignore for a language, framework, OS, or editor. Not for ignoring a single path; append that line directly.",
+  "author": {
+    "name": "Clayton Black",
+    "url": "https://github.com/cblack34"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "keywords": [
+    "agent-skill"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Gitignore",
+    "shortDescription": "Create or update a repository .gitignore from gitignore.io templates: always the Windows, macOS, Linux, VS Code, and JetBrains defaults plus the stack templates you name, merged without losing existing custom rules. Use when asked to add or refresh a .gitignore for a language, framework, OS, or editor. Not for ignoring a single path; append that line directly.",
+    "longDescription": "Create or update a repository .gitignore from gitignore.io templates: always the Windows, macOS, Linux, VS Code, and JetBrains defaults plus the stack templates you name, merged without losing existing custom rules. Use when asked to add or refresh a .gitignore for a language, framework, OS, or editor. Not for ignoring a single path; append that line directly.",
+    "developerName": "Clayton Black",
+    "category": "Developer",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Help me use Gitignore."
+    ]
+  }
+}

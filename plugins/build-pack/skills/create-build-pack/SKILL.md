@@ -95,15 +95,7 @@ For a greenfield pack, copy:
 - `assets/engineering/code-quality.md` to `docs/engineering/`;
 - `assets/engineering/workflow.md` to `docs/engineering/`.
 
-Ensure the repository has a `.gitignore` covering `windows,macos,linux,visualstudiocode,jetbrains+all` plus the stack's template names. Fetch the template, then combine it with any existing file and remove duplicate lines while preserving order and existing custom rules, collapsing blank-line runs to a single separator between kept lines. Chain the fetch to the merge so a failed download leaves the repository unchanged:
-
-```bash
-STACK=python,node  # replace with the template names matching the inspected repo's stack(s)
-URL="https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,$STACK"
-O=$( [ ! -f .gitignore ] || cat .gitignore ) && G=$(curl -fsSL "$URL") && printf '%s\n%s\n' "$O" "$G" | awk 'NR==1&&$0==""{next}$0==""{p=1;next}seen[$0]++{next}p{print "";p=0}{print}' > .gitignore.tmp && mv .gitignore.tmp .gitignore
-```
-
-Unknown template names return only the header comment with no rules rather than an error, so check names against `https://www.toptal.com/developers/gitignore/api/list?format=lines` when unsure and confirm the written file contains real entries.
+Ensure the repository has a `.gitignore` covering the Windows, macOS, Linux, VS Code, and JetBrains templates plus the stack's template names. Use the `gitignore` skill when it is installed. Otherwise fetch `https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,<stack>` and merge it with any existing file without dropping custom rules; an unknown template name returns only a header comment, so confirm the result contains real entries. Project-specific paths are plain lines appended directly.
 
 For a completed-pack transition, copy `assets/templates/archive-README-template.md` into the archive as `README.md`, then resolve every placeholder and template comment from repository evidence.
 
