@@ -154,7 +154,7 @@ def main() -> None:
         if name != args.name:
             print(f"Normalized skill name to {name!r}.")
         print(f"Edit: {skill_path.relative_to(ROOT)}")
-        print(f"Then bump: uv run --locked scripts/bump_plugin_version.py {plugin_name} minor")
+        print("Do not bump the version: CI labels the PR release:minor and bumps on merge.")
         print("Validate: uv run --locked scripts/validate.py")
         return
     if not category:
