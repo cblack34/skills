@@ -22,6 +22,15 @@
       "tags": [
         "skill"
       ]
+    },
+    {
+      "name": "gitignore",
+      "source": "./plugins/gitignore",
+      "description": "Create or update a repository .gitignore from gitignore.io templates: always the Windows, macOS, Linux, VS Code, and JetBrains defaults plus the stack templates you name, merged without losing existing custom rules. Use when asked to add or refresh a .gitignore for a language, framework, OS, or editor. Not for ignoring a single path; append that line directly.",
+      "category": "Developer",
+      "tags": [
+        "skill"
+      ]
     }
   ]
 }
