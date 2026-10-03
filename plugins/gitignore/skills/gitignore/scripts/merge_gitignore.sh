@@ -18,9 +18,9 @@ FILE=".gitignore"
 # negation only when no plain rule has). Comments always dedupe.
 merge() {
   { [ -f "$1" ] && cat "$1" && echo; cat; } | awk '
-                        { sub(/\r$/, ""); sub(/[[:space:]]+$/, "") }
-    NR == 1 && $0 == "" { next }
-    $0 == ""            { blank = 1; next }
+                        { sub(/\r$/, "") }
+    NR == 1 && /^[[:space:]]*$/ { next }
+    /^[[:space:]]*$/    { blank = 1; next }
     /^#/                { if (seen[$0]++) next }
     /^!/                { if (($0 in nl) && nl[$0] == pos) next; nl[$0] = pos; neg++ }
     !/^[#!]/            { if (($0 in pl) && pl[$0] == neg) next; pl[$0] = neg; pos++ }
@@ -52,6 +52,8 @@ self_check() {
   has_rules $'# Created by gitignore.io\n\n### Nothing ###\n' && { echo "header-only template accepted"; return 1; }
   local crlf; crlf=$(printf 'secrets.env\r\n\r\n   \r\n*.pyc\r\n' | merge /dev/null)
   [ "$crlf" = $'secrets.env\n\n*.pyc' ] || { echo "CRLF or whitespace-only lines not normalized"; return 1; }
+  local escaped; escaped=$(printf 'literal\\ \n' | merge /dev/null)
+  [ "$escaped" = 'literal\ ' ] || { echo "escaped trailing space was altered"; return 1; }
   local big; big=$(printf '%s\n' "# header" "$(seq -f 'rule-%g' 1 200000)")
   has_rules "$big" || { echo "large template rejected"; return 1; }
   echo "self-check ok"
