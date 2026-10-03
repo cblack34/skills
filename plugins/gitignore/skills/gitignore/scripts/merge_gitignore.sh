@@ -13,11 +13,16 @@ API="https://www.toptal.com/developers/gitignore/api"
 FILE=".gitignore"
 
 # stdin: fetched template. $1: existing file, may be absent. stdout: merged content.
+# Order matters in .gitignore because the last matching rule wins, so a repeated rule is
+# dropped only when no negation has appeared since its previous occurrence (and a repeated
+# negation only when no plain rule has). Comments always dedupe.
 merge() {
   { [ -f "$1" ] && cat "$1"; cat; } | awk '
     NR == 1 && $0 == "" { next }
     $0 == ""            { blank = 1; next }
-    seen[$0]++          { next }
+    /^#/                { if (seen[$0]++) next }
+    /^!/                { if (($0 in nl) && nl[$0] == pos) next; nl[$0] = pos; neg++ }
+    !/^[#!]/            { if (($0 in pl) && pl[$0] == neg) next; pl[$0] = neg; pos++ }
     blank               { print ""; blank = 0 }
                         { print }'
 }
@@ -35,6 +40,10 @@ self_check() {
   [ "$(grep -c '^### Python ###$' <<<"$out")" = 1 ] || { echo "duplicate header not collapsed"; return 1; }
   ! grep -qE '^$' <(printf '%s\n' "$out" | awk 'prev=="" && $0=="" {print} {prev=$0}') || { echo "blank run not collapsed"; return 1; }
   [ "$(head -1 <<<"$out")" = "# mine" ] || { echo "order not preserved"; return 1; }
+  local ordered; ordered=$(printf '*.log\n!important.log\n*.log\n' | merge /dev/null)
+  [ "$(grep -c '^\*\.log$' <<<"$ordered")" = 2 ] || { echo "rule repeated across a negation was dropped"; return 1; }
+  local plain; plain=$(printf '*.log\n*.tmp\n*.log\n' | merge /dev/null)
+  [ "$(grep -c '^\*\.log$' <<<"$plain")" = 1 ] || { echo "plain duplicate not collapsed"; return 1; }
   printf '# Created by gitignore.io\n\n### Nothing ###\n' | has_rules && { echo "header-only template accepted"; return 1; }
   echo "self-check ok"
 }

@@ -10,13 +10,13 @@ Templates are named categories such as `python`, `node`, `terraform`, or `macos`
 ## Workflow
 
 1. Identify the stack's template names from the repository (lockfiles, manifests, build files). Check an unfamiliar name against `https://www.toptal.com/developers/gitignore/api/list?format=lines`.
-2. From the repository root, run the bundled script with those names. The OS and editor defaults are always included, so pass only the stack:
+2. From the target repository's root, run the bundled script with those names. It lives in this skill's base directory, not in the target repository. The OS and editor defaults are always included, so pass only the stack:
 
    ```bash
-   scripts/merge_gitignore.sh python node
+   bash "<skill base dir>/scripts/merge_gitignore.sh" python node
    ```
 
    The script fetches the templates, merges them with any existing `.gitignore` while keeping every existing line that is not in the template, removes duplicates, collapses blank runs, and writes atomically. If the API returns a header-only body, which is what an unknown template name produces, the script exits non-zero and leaves the file untouched.
 3. Report the templates applied. If a name was rejected, say which and offer the closest names from the list endpoint.
 
-Run `scripts/merge_gitignore.sh --check` to exercise the merge logic offline.
+Run `bash "<skill base dir>/scripts/merge_gitignore.sh" --check` to exercise the merge logic offline.
