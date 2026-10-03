@@ -18,6 +18,7 @@ FILE=".gitignore"
 # negation only when no plain rule has). Comments always dedupe.
 merge() {
   { [ -f "$1" ] && cat "$1" && echo; cat; } | awk '
+                        { sub(/\r$/, ""); sub(/[[:space:]]+$/, "") }
     NR == 1 && $0 == "" { next }
     $0 == ""            { blank = 1; next }
     /^#/                { if (seen[$0]++) next }
@@ -27,8 +28,9 @@ merge() {
                         { print }'
 }
 
-# Fail unless stdin holds at least one line that is neither blank nor a comment.
-has_rules() { grep -qvE '^[[:space:]]*(#|$)'; }
+# Fail unless $1 holds at least one line that is neither blank nor a comment.
+# A here-string, not a pipe: grep -q exits early and would SIGPIPE a large producer under pipefail.
+has_rules() { grep -qvE '^[[:space:]]*(#|$)' <<<"$1"; }
 
 self_check() {
   local dir; dir=$(mktemp -d); trap 'rm -rf "$dir"' RETURN
@@ -47,7 +49,11 @@ self_check() {
   printf 'secrets.env' > "$dir/no-newline"
   local joined; joined=$(printf '# Created by gitignore.io\n*.pyc\n' | merge "$dir/no-newline")
   [ "$(grep -c '^secrets.env$' <<<"$joined")" = 1 ] || { echo "last line without newline was glued to the template"; return 1; }
-  printf '# Created by gitignore.io\n\n### Nothing ###\n' | has_rules && { echo "header-only template accepted"; return 1; }
+  has_rules $'# Created by gitignore.io\n\n### Nothing ###\n' && { echo "header-only template accepted"; return 1; }
+  local crlf; crlf=$(printf 'secrets.env\r\n\r\n   \r\n*.pyc\r\n' | merge /dev/null)
+  [ "$crlf" = $'secrets.env\n\n*.pyc' ] || { echo "CRLF or whitespace-only lines not normalized"; return 1; }
+  local big; big=$(printf '%s\n' "# header" "$(seq -f 'rule-%g' 1 200000)")
+  has_rules "$big" || { echo "large template rejected"; return 1; }
   echo "self-check ok"
 }
 
@@ -56,7 +62,8 @@ if [ "${1:-}" = "--check" ]; then self_check; exit; fi
 TEMPLATES="$DEFAULTS"
 for t in "$@"; do TEMPLATES="$TEMPLATES,$t"; done
 fetched=$(curl -fsSL "$API/$TEMPLATES")
-printf '%s\n' "$fetched" | has_rules || { echo "No rules returned for '$TEMPLATES'; check names at $API/list?format=lines" >&2; exit 1; }
+has_rules "$fetched" || { echo "No rules returned for '$TEMPLATES'; check names at $API/list?format=lines" >&2; exit 1; }
 tmp=$(mktemp "$FILE.XXXXXX"); trap 'rm -f "$tmp"' EXIT
+chmod 644 "$tmp"  # mktemp creates 0600; .gitignore is a shared, world-readable file
 printf '%s\n' "$fetched" | merge "$FILE" > "$tmp" && mv "$tmp" "$FILE"
 echo "Wrote $FILE with templates: $TEMPLATES"
