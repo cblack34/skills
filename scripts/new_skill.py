@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Create a cross-harness plugin with its first skill, or add a skill to an existing plugin."""
 
-from __future__ import annotations
-
 import argparse
 import json
 import re

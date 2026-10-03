@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Update the Claude and Codex manifest versions for one plugin."""
 
-from __future__ import annotations
-
 import argparse
 import json
 import re
