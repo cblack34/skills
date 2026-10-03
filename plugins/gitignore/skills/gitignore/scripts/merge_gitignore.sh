@@ -29,8 +29,9 @@ merge() {
                         { print }'
 }
 
-# Fail unless $1 contains the "### Name ###" header the API emits for template $2 (case-insensitive).
-has_template() { grep -qi "^### $2 ###" <<<"$1"; }
+# Fail unless $1 contains the "### Name ###" header line the API emits for template $2.
+# Fixed-string, whole-line, case-insensitive, so metacharacters in a name cannot match another header.
+has_template() { grep -qixF -- "### $2 ###" <<<"$1"; }
 
 # Fail unless $1 holds at least one line that is neither blank nor a comment.
 # A here-string, not a pipe: grep -q exits early and would SIGPIPE a large producer under pipefail.
@@ -52,6 +53,8 @@ self_check() {
   [ "$prec" = $'*.log\n\n!important.log' ] || { echo "existing exception lost last-match precedence: $prec"; return 1; }
   has_template "$(printf '### Python ###\n*.pyc\n')" python || { echo "present template not detected"; return 1; }
   has_template "$(printf '### Python ###\n*.pyc\n')" node && { echo "missing template not detected"; return 1; }
+  has_template "$(printf '### Python ###\n*.pyc\n')" '.*' && { echo "regex metacharacters bypassed the header check"; return 1; }
+  has_template "$(printf '### JetBrains+all ###\n.idea/*\n')" 'jetbrains+all' || { echo "plus sign in a name broke the header check"; return 1; }
   local ordered; ordered=$(printf '*.log\n!important.log\n*.log\n' | merge /dev/null)
   [ "$(grep -c '^\*\.log$' <<<"$ordered")" = 2 ] || { echo "rule repeated across a negation was dropped"; return 1; }
   local plain; plain=$(printf '*.log\n*.tmp\n*.log\n' | merge /dev/null)
