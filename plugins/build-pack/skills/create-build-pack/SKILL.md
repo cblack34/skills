@@ -95,7 +95,7 @@ For a greenfield pack, copy:
 - `assets/engineering/code-quality.md` to `docs/engineering/`;
 - `assets/engineering/workflow.md` to `docs/engineering/`.
 
-Ensure the repository has a `.gitignore` covering the Windows, macOS, Linux, VS Code, and JetBrains templates plus the stack's template names. Use the `gitignore` skill when it is installed. Otherwise fetch `https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,<stack>` and merge it with any existing file without dropping custom rules; an unknown template name returns only a header comment, so confirm the result contains real entries. Project-specific paths are plain lines appended directly.
+Ensure the repository has a `.gitignore` covering the Windows, macOS, Linux, VS Code, and JetBrains templates plus the stack's template names. Use the `gitignore` skill when it is installed. Otherwise fetch `https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,jetbrains+all,<stack>` and write it ahead of any existing rules so custom exceptions keep last-match precedence; confirm every requested template's `### Name ###` header appears in the response, since the defaults contribute rules even when a stack name is unknown, and check unfamiliar names against `https://www.toptal.com/developers/gitignore/api/list?format=lines` first. Project-specific paths are plain lines appended directly.
 
 For a completed-pack transition, copy `assets/templates/archive-README-template.md` into the archive as `README.md`, then resolve every placeholder and template comment from repository evidence.
 

@@ -16,7 +16,7 @@ Templates are named categories such as `python`, `node`, `terraform`, or `macos`
    bash "<skill base dir>/scripts/merge_gitignore.sh" python node
    ```
 
-   The script fetches the templates, merges them with any existing `.gitignore` while keeping every existing line that is not in the template, removes duplicates, collapses blank runs, and writes atomically. If the API returns a header-only body, which is what an unknown template name produces, the script exits non-zero and leaves the file untouched.
+   The script fetches the templates and writes them first, then the existing `.gitignore` lines, so project-specific rules and exceptions keep last-match precedence. It removes duplicates without changing which rule wins, collapses blank runs, and writes atomically. If a requested template's `### Name ###` header is missing from the response, or the API returns no rules or an error, the script exits non-zero and leaves the file untouched.
 3. Report the templates applied. If a name was rejected, say which and offer the closest names from the list endpoint.
 
 Run `bash "<skill base dir>/scripts/merge_gitignore.sh" --check` to exercise the merge logic offline.
