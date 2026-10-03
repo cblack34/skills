@@ -17,7 +17,7 @@ FILE=".gitignore"
 # dropped only when no negation has appeared since its previous occurrence (and a repeated
 # negation only when no plain rule has). Comments always dedupe.
 merge() {
-  { [ -f "$1" ] && cat "$1" && echo; cat; } | awk '
+  { if [ -f "$1" ]; then cat "$1" || { echo "Cannot read $1" >&2; exit 1; }; echo; fi; cat; } | awk '
                         { sub(/\r$/, "") }
     NR == 1 && /^[[:space:]]*$/ { next }
     /^[[:space:]]*$/    { blank = 1; next }
@@ -54,6 +54,10 @@ self_check() {
   [ "$crlf" = $'secrets.env\n\n*.pyc' ] || { echo "CRLF or whitespace-only lines not normalized"; return 1; }
   local escaped; escaped=$(printf 'literal\\ \n' | merge /dev/null)
   [ "$escaped" = 'literal\ ' ] || { echo "escaped trailing space was altered"; return 1; }
+  if [ "$(id -u)" != 0 ]; then
+    printf 'keep\n' > "$dir/unreadable"; chmod 000 "$dir/unreadable"
+    if printf '*.pyc\n' | merge "$dir/unreadable" >/dev/null 2>&1; then echo "unreadable file was silently replaced"; return 1; fi
+  fi
   local big; big=$(printf '%s\n' "# header" "$(seq -f 'rule-%g' 1 200000)")
   has_rules "$big" || { echo "large template rejected"; return 1; }
   echo "self-check ok"
@@ -61,6 +65,7 @@ self_check() {
 
 if [ "${1:-}" = "--check" ]; then self_check; exit; fi
 
+[ ! -e "$FILE" ] || [ -r "$FILE" ] || { echo "Cannot read $FILE; refusing to overwrite it" >&2; exit 1; }
 TEMPLATES="$DEFAULTS"
 for t in "$@"; do TEMPLATES="$TEMPLATES,$t"; done
 fetched=$(curl -fsSL "$API/$TEMPLATES")
