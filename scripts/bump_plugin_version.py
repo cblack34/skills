@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGINS_ROOT = ROOT / "plugins"
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SEMVER_RE = re.compile(
-    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
     r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?"
     r"(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
 )
@@ -90,6 +90,14 @@ class SemVer:
         if len(self.prerelease) == len(other.prerelease):
             return 0
         return 1 if len(self.prerelease) > len(other.prerelease) else -1
+
+
+def is_valid_semver(value: str) -> bool:
+    try:
+        SemVer.parse(value)
+    except ValueError:
+        return False
+    return True
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
