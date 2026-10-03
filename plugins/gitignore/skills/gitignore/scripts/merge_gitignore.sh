@@ -47,7 +47,8 @@ self_check() {
   ! grep -qE '^$' <(printf '%s\n' "$out" | awk 'prev=="" && $0=="" {print} {prev=$0}') || { echo "blank run not collapsed"; return 1; }
   [ "$(head -1 <<<"$out")" = "# Created by gitignore.io" ] || { echo "template does not come first"; return 1; }
   [ "$(tail -1 <<<"$out")" = "secrets.env" ] || { echo "existing rules do not come last"; return 1; }
-  local prec; prec=$(printf '*.log\n' | merge <(printf '*.log\n!important.log\n'))
+  printf '*.log\n!important.log\n' > "$dir/exceptions"
+  local prec; prec=$(printf '*.log\n' | merge "$dir/exceptions")
   [ "$prec" = $'*.log\n\n!important.log' ] || { echo "existing exception lost last-match precedence: $prec"; return 1; }
   has_template "$(printf '### Python ###\n*.pyc\n')" python || { echo "present template not detected"; return 1; }
   has_template "$(printf '### Python ###\n*.pyc\n')" node && { echo "missing template not detected"; return 1; }
