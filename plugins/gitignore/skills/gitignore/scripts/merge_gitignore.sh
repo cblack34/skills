@@ -17,7 +17,7 @@ FILE=".gitignore"
 # dropped only when no negation has appeared since its previous occurrence (and a repeated
 # negation only when no plain rule has). Comments always dedupe.
 merge() {
-  { [ -f "$1" ] && cat "$1"; cat; } | awk '
+  { [ -f "$1" ] && cat "$1" && echo; cat; } | awk '
     NR == 1 && $0 == "" { next }
     $0 == ""            { blank = 1; next }
     /^#/                { if (seen[$0]++) next }
@@ -44,6 +44,9 @@ self_check() {
   [ "$(grep -c '^\*\.log$' <<<"$ordered")" = 2 ] || { echo "rule repeated across a negation was dropped"; return 1; }
   local plain; plain=$(printf '*.log\n*.tmp\n*.log\n' | merge /dev/null)
   [ "$(grep -c '^\*\.log$' <<<"$plain")" = 1 ] || { echo "plain duplicate not collapsed"; return 1; }
+  printf 'secrets.env' > "$dir/no-newline"
+  local joined; joined=$(printf '# Created by gitignore.io\n*.pyc\n' | merge "$dir/no-newline")
+  [ "$(grep -c '^secrets.env$' <<<"$joined")" = 1 ] || { echo "last line without newline was glued to the template"; return 1; }
   printf '# Created by gitignore.io\n\n### Nothing ###\n' | has_rules && { echo "header-only template accepted"; return 1; }
   echo "self-check ok"
 }
@@ -54,5 +57,6 @@ TEMPLATES="$DEFAULTS"
 for t in "$@"; do TEMPLATES="$TEMPLATES,$t"; done
 fetched=$(curl -fsSL "$API/$TEMPLATES")
 printf '%s\n' "$fetched" | has_rules || { echo "No rules returned for '$TEMPLATES'; check names at $API/list?format=lines" >&2; exit 1; }
-printf '%s\n' "$fetched" | merge "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+tmp=$(mktemp "$FILE.XXXXXX"); trap 'rm -f "$tmp"' EXIT
+printf '%s\n' "$fetched" | merge "$FILE" > "$tmp" && mv "$tmp" "$FILE"
 echo "Wrote $FILE with templates: $TEMPLATES"
