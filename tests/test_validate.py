@@ -59,6 +59,9 @@ class RejectedFrontmatterTests(unittest.TestCase):
     def test_duplicate_description(self) -> None:
         self.assert_rejected("name: demo\ndescription: a\ndescription: b", "duplicate key")
 
+    def test_unhashable_key(self) -> None:
+        self.assert_rejected("? [a, b]\n: 1\nname: demo\ndescription: ok", "unhashable mapping key")
+
     def test_non_mapping(self) -> None:
         self.assert_rejected("- name\n- description", "must be a YAML mapping")
 

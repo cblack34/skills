@@ -107,7 +107,13 @@ class StrictLoader(yaml.SafeLoader):
         seen: set[Any] = set()
         for key_node, _ in node.value:
             key = self.construct_object(key_node, deep=True)
-            if key in seen:
+            try:
+                is_duplicate = key in seen
+            except TypeError:
+                raise yaml.constructor.ConstructorError(
+                    None, None, f"unhashable mapping key {key!r}", key_node.start_mark
+                ) from None
+            if is_duplicate:
                 raise yaml.constructor.ConstructorError(
                     None, None, f"duplicate key {key!r}", key_node.start_mark
                 )
