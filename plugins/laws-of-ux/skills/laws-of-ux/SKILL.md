@@ -25,7 +25,7 @@ Use when building or changing UI. Read the screens, components, styles, and scri
 
 Scope is one screen, one flow (several screens plus the transitions between them), or a feature. Infer it from the request or the diff; ask only if neither says.
 
-**Who reviews.** Hand the review to a fresh sub-agent if your harness can start one. Give it this skill's path, the files and routes in scope, and how to run the app or the screenshots you took. Do not give it your design reasoning, what you changed, or what you expect it to find; that is what biases the review. If you cannot start a sub-agent, run the review yourself and title the report "Self-review".
+**Who reviews.** Hand the review to a fresh sub-agent if your harness can start one. Give it this skill's path, the files and routes in scope, and how to run the app or the screenshots you took. Do not give it your design reasoning, what you changed, or what you expect it to find; that is what biases the review. If you cannot start a sub-agent, run the review yourself and title the report "Self-review". If you are the delegated reviewer, start at **Procedure** and do not start another sub-agent.
 
 **Procedure.** Read the screens, their partials or child components, the scripts they attach, and the styles they use. See the UI. Walk the check table. When one root cause breaks several rows (a form with no loading state, a generic error, and no cancel), file it once and list every heuristic and law it touches. Drop findings you cannot point at.
 
