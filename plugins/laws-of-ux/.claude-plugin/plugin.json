@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "laws-of-ux",
+  "displayName": "Laws of UX",
+  "version": "0.1.0",
+  "description": "Design and review user interfaces against the Laws of UX and Nielsen's 10 usability heuristics. Design mode applies them while building or changing a screen, form, flow, or component; review mode hands the UI to a fresh reviewer that reports ranked, evidence-backed findings with fixes. Use whenever building or changing UI, even if UX is not mentioned, and when asked for a UX review, UI review, usability audit, or heuristic evaluation, or when Fitts's Law, Hick's Law, or another Law of UX comes up. Not for visual branding or aesthetics, or a WCAG conformance audit.",
+  "author": {
+    "name": "Clayton Black"
+  },
+  "repository": "https://github.com/cblack34/skills",
+  "skills": "./skills/"
+}
