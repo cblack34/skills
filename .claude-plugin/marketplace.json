@@ -31,6 +31,15 @@
       "tags": [
         "skill"
       ]
+    },
+    {
+      "name": "laws-of-ux",
+      "source": "./plugins/laws-of-ux",
+      "description": "Design and review user interfaces against the Laws of UX and Nielsen's 10 usability heuristics. Design mode applies them while building or changing a screen, form, flow, or component; review mode hands the UI to a fresh reviewer that reports ranked, evidence-backed findings with fixes. Use whenever building or changing UI, even if UX is not mentioned, and when asked for a UX review, UI review, usability audit, or heuristic evaluation, or when Fitts's Law, Hick's Law, or another Law of UX comes up. Not for visual branding or aesthetics, or a WCAG conformance audit.",
+      "category": "Design",
+      "tags": [
+        "skill"
+      ]
     }
   ]
 }
