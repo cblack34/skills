@@ -40,6 +40,15 @@
       "tags": [
         "skill"
       ]
+    },
+    {
+      "name": "tech-writing",
+      "source": "./plugins/tech-writing",
+      "description": "Write and rewrite technical documentation that is typed, clear, and concise. Classifies each doc as a Di\u00e1taxis tutorial, how-to guide, reference, or explanation, drafts from a short recipe for that type with Google developer style and STE-inspired sentence limits, then runs a ranked review that cuts AI filler, hedging, padding, and stock phrases. Use whenever writing or rewriting a README, guide, tutorial, runbook, API or CLI reference, design doc, ADR, or any other technical doc, even if style is not mentioned. For existing docs, flags what does not conform but rewrites only when asked. Not for marketing copy, fiction, or code comments.",
+      "category": "Productivity",
+      "tags": [
+        "skill"
+      ]
     }
   ]
 }
