@@ -10,7 +10,7 @@ When rewriting someone else's doc, keep every fact, command, and warning it had 
 
 Fix each of these on a single sighting.
 
-- **Mixed types.** The doc teaches *and* explains *and* lists options. Find sections that belong to another type (a "How it works" section in a how-to, a "Why" section in a reference, internals in a README) and move them out or link to them.
+- **Mixed types.** The doc teaches *and* explains *and* lists options. Find content of another type blended into the doc's main type (a "How it works" section in a how-to, a "Why" section in a reference, internals in a README). Move it to its own doc and link to it. If the user asked for one doc, keep it in a clearly separated section instead.
 - **Sections the reader did not need.** Delete any section that does not serve the named reader's goal, such as a feature tour, history, roadmap, a "Benefits" list, or troubleshooting for failures nobody hits.
 - **Announcing openers.** "This guide covers…", "In this document, we will…", "Overview" sections that restate the title. Start with the content.
 - **Closing summaries.** "In summary", "Conclusion", "Key takeaways", or a last paragraph that restates the doc. Delete it. If the point survives without it, it stays deleted.
