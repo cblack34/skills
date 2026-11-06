@@ -26,7 +26,7 @@ A how-to guide gets a competent reader to a goal they already have. They are wor
 ## Rules
 
 - Start from the reader's goal, not from the tool's features. Title it as the task: "Rotate the API key", not "API key rotation".
-- Number the steps. Write one action per step, with the imperative verb first.
+- Number the steps. Write one action per step. Start the action with an imperative verb, after any condition: "If the build fails, check the log."
 - Assume the reader knows the basics. Do not explain how to open a terminal or what Git is.
 - Handle real forks with a condition: "If you use Docker, run X. Otherwise, run Y." Keep it to the forks the reader will hit.
 - Give exact commands, paths, and values the reader can copy. Mark placeholders as `<like-this>` and say what goes in them.
