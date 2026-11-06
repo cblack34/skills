@@ -6,7 +6,7 @@ Reference is for lookup. The reader knows what they want and needs the fact fast
 
 Mirror the structure of the thing you document: one section per command, endpoint, resource, or config block, in the order the product uses. Give every entry the same pattern.
 
-```markdown
+````markdown
 ## `<name>`
 
 <One sentence: what it is or does.>
@@ -21,7 +21,7 @@ Mirror the structure of the thing you document: one section per command, endpoin
 ```<lang>
 <smallest example that shows usage>
 ```
-```
+````
 
 ## Rules
 

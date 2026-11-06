@@ -4,7 +4,7 @@ A how-to guide gets a competent reader to a goal they already have. They are wor
 
 ## Shape
 
-```markdown
+````markdown
 # <Task in the reader's words, starting with a verb>
 
 <One sentence on when you need this, only if the title does not make it obvious.>
@@ -21,7 +21,7 @@ A how-to guide gets a competent reader to a goal they already have. They are wor
 
 ## Verify
 <One check that proves it worked, and the expected output.>
-```
+````
 
 ## Rules
 
